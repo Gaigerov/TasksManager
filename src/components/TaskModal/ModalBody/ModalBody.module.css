@@ -1,0 +1,60 @@
+.modalBody {
+    padding: 20px;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.formRow {
+    display: flex;
+    gap: 15px;
+}
+
+.formRow .formGroup {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.inputError {
+    border-color: #e53e3e;
+    background-color: #fff5f5;
+}
+
+.errorContainer {
+    background-color: #fff5f5;
+    border: 1px solid #fc8181;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.error {
+    color: #e53e3e;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.errorText {
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.requiredStar {
+    color: #e53e3e;
+}

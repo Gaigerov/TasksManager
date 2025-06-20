@@ -1,0 +1,7 @@
+.tasksContainer {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  margin: 0 10px;
+  padding: 0;
+}
