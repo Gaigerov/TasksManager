@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.996d913b.css",
-    "main.js": "/TasksManager/static/js/main.dc996f65.js",
+    "main.css": "/TasksManager/static/css/main.cefc2ac1.css",
+    "main.js": "/TasksManager/static/js/main.e836c5ea.js",
     "static/media/delete.svg": "/TasksManager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
     "static/media/ChevronDown.svg": "/TasksManager/static/media/ChevronDown.847d4f1c4be8401248ea8c256fe90339.svg",
     "static/media/clone.svg": "/TasksManager/static/media/clone.60e0badc80b9e16881f0f0b0a53e1e14.svg",
     "index.html": "/TasksManager/index.html",
     "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.996d913b.css.map": "/TasksManager/static/css/main.996d913b.css.map",
-    "main.dc996f65.js.map": "/TasksManager/static/js/main.dc996f65.js.map"
+    "main.cefc2ac1.css.map": "/TasksManager/static/css/main.cefc2ac1.css.map",
+    "main.e836c5ea.js.map": "/TasksManager/static/js/main.e836c5ea.js.map"
   },
   "entrypoints": [
-    "static/css/main.996d913b.css",
-    "static/js/main.dc996f65.js"
+    "static/css/main.cefc2ac1.css",
+    "static/js/main.e836c5ea.js"
   ]
 }
