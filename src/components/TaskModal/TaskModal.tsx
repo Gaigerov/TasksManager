@@ -6,9 +6,8 @@ import ModalBody from './ModalBody/ModalBody';
 import ModalHeader from './ModalHeader/ModalHeader';
 import ModalFooter from './ModalFooter/ModalFooter';
 import {useTaskStore} from '../../stores/storeContext'; 
-import {validateTask, TaskValidationErrors} from '../../utils/taskValidation'; // Добавлен импорт типа
+import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
 
-// Создаем пустой объект задачи для инициализации
 const emptyTask: TaskItem = {
     id: '',
     title: '',
@@ -18,7 +17,6 @@ const emptyTask: TaskItem = {
     status: 'To Do' as TaskStatus,
 };
 
-// Начальное состояние для ошибок
 const initialErrors: TaskValidationErrors = {
     title: [],
     description: [],
@@ -29,8 +27,7 @@ const initialErrors: TaskValidationErrors = {
 const TaskModal: React.FC = observer(() => {
     const taskStore = useTaskStore();
     const [task, setTask] = useState<TaskItem>(emptyTask);
-    const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors); // Изменен тип ошибок
-
+    const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors); 
     const isOpen = taskStore.isModalOpen;
 
     useEffect(() => {
@@ -39,13 +36,12 @@ const TaskModal: React.FC = observer(() => {
         } else {
             setTask({...emptyTask});
         }
-        setErrors(initialErrors); // Сбрасываем ошибки при открытии модалки
+        setErrors(initialErrors);
     }, [taskStore.currentTask, taskStore.isModalOpen]);
 
     const handleChange = (field: keyof TaskItem, value: string) => {
         setTask(prev => ({...prev, [field]: value}));
         
-        // Очищаем ошибку для изменяемого поля
         setErrors(prev => ({
             ...prev,
             [field]: []
@@ -55,7 +51,6 @@ const TaskModal: React.FC = observer(() => {
     const handleSubmit = () => {
         const validationErrors = validateTask(task);
         
-        // Проверяем наличие ошибок в любом из полей
         const hasErrors = Object.values(validationErrors).some(
             fieldErrors => fieldErrors.length > 0
         );
@@ -82,7 +77,7 @@ const TaskModal: React.FC = observer(() => {
 
                     <ModalBody
                         task={task}
-                        errors={errors} // Передаем объект ошибок
+                        errors={errors}
                         onChange={handleChange}
                     />
 

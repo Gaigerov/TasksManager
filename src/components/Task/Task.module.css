@@ -11,12 +11,12 @@
     display: flex;
     flex-direction: column;
     min-height: 120px;
-    transition: background-color 0.3s ease; /* Добавляем плавный переход */
+    transition: background-color 0.3s ease;
 }
 
 .card:hover {
-    background-color: #f0f0f0; /* Цвет при наведении */
-    cursor: pointer; /* Меняем курсор */
+    background-color: #f0f0f0;
+    cursor: pointer; 
 }
 
 .contentWrapper {
@@ -33,25 +33,23 @@
     overflow: hidden;
 }
 
-/* Обновленные стили для заголовка с правильным троеточием */
 .title {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap; /* Обрезаем в одну строку */
+    white-space: nowrap; 
 }
 
-/* Обновленные стили для описания с правильным троеточием */
 .description {
     color: #555;
     font-size: 14px;
     line-height: 1.4;
 
-    /* Многострочное обрезание с троеточием */
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Количество строк перед обрезанием */
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -183,5 +181,6 @@
 @media (max-width: 480px) {
     .description {
         -webkit-line-clamp: 2;
+        line-clamp: 2;
     }
 }

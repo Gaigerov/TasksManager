@@ -1,11 +1,9 @@
 import React, {ElementType, forwardRef} from 'react';
 import styles from './Button.module.css';
 
-// Типы для вариантов кнопки
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'link' | 'header' | 'card';
 type ButtonSize = 'small' | 'medium' | 'large';
 
-// Пропсы компонента
 interface ButtonProps {
     children: React.ReactNode;
     variant?: ButtonVariant;
@@ -30,7 +28,6 @@ const Button = forwardRef<HTMLElement, ButtonProps>((
     },
     ref
 ) => {
-    // Формируем классы на основе пропсов
     const variantClass = styles[variant] || '';
     const sizeClass = styles[size] || '';
     const fullWidthClass = fullWidth ? styles.fullWidth : '';
@@ -45,7 +42,6 @@ const Button = forwardRef<HTMLElement, ButtonProps>((
         className
     ].filter(Boolean).join(' ').trim();
 
-    // Если компонент - это button, добавляем disabled атрибут
     const isButton = Component === 'button';
     const buttonProps = isButton ? {disabled} : {};
 

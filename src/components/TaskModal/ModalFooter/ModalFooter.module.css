@@ -60,7 +60,7 @@
     color: #3b82f6;
     border: none;
     text-decoration: underline;
-    padding: 8px 8px; /* Меньший padding */
+    padding: 8px 8px;
 }
 
 .link:hover {

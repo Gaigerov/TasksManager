@@ -34,7 +34,6 @@
     transform: translateY(-2px);
 }
 
-/* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .buttonGroup {
         flex-direction: column;

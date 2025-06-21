@@ -9,9 +9,7 @@ const TaskManager: React.FC = observer(() => {
     return (
         <div className="task-manager">
             {taskStore.tasks.length > 0 ? (
-                <TasksList
-                    tasks={taskStore.tasks}
-                />
+                <TasksList />
             ) : (
                 <div className="empty-state">
                     <p>Задачи не найдены</p>

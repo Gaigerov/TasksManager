@@ -1,18 +1,14 @@
-import React from 'react';
 import {observer} from 'mobx-react-lite';
 import Task from '../Task/Task';
-import {TaskItem as TaskType} from '../../types/types';
+import {useTaskStore} from '../../stores/storeContext';
 
-interface TasksListProps {
-    tasks: TaskType[];
-}
+const TasksList = observer(() => {
+    const taskStore = useTaskStore();
+    const {filteredTasks} = taskStore;
 
-const TasksList: React.FC<TasksListProps> = observer(({
-    tasks,
-}) => {
     return (
-        <div className="tasks-list">
-            {tasks.map(task => (
+        <div>
+            {filteredTasks.map(task => (
                 <Task
                     key={task.id}
                     task={task}

@@ -7,7 +7,7 @@ interface CalendarProps {
   className?: string;
   minDate?: Date;
   maxDate?: Date;
-  weekStart?: 0 | 1; // 0 - Sunday, 1 - Monday
+  weekStart?: 0 | 1;
   locale?: string;
 }
 
@@ -17,20 +17,18 @@ const Calendar: React.FC<CalendarProps> = ({
   className = '',
   minDate,
   maxDate,
-  weekStart = 1, // Monday as default
+  weekStart = 1,
   locale = 'ru-RU'
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'days' | 'months' | 'years'>('days');
   
-  // Set initial month to view
   useEffect(() => {
     if (selectedDate) {
       setCurrentDate(new Date(selectedDate));
     }
   }, [selectedDate]);
 
-  // Navigation
   const navigateMonth = (direction: number) => {
     const newDate = new Date(currentDate);
     if (viewMode === 'days') {
@@ -41,14 +39,12 @@ const Calendar: React.FC<CalendarProps> = ({
     setCurrentDate(newDate);
   };
 
-  // Date selection
   const handleDateSelect = (date: Date) => {
     if (onDateChange) {
       onDateChange(date);
     }
   };
 
-  // Month selection
   const handleMonthSelect = (month: number) => {
     const newDate = new Date(currentDate);
     newDate.setMonth(month);
@@ -56,7 +52,6 @@ const Calendar: React.FC<CalendarProps> = ({
     setViewMode('days');
   };
 
-  // Year selection
   const handleYearSelect = (year: number) => {
     const newDate = new Date(currentDate);
     newDate.setFullYear(year);
@@ -64,7 +59,6 @@ const Calendar: React.FC<CalendarProps> = ({
     setViewMode(viewMode === 'years' ? 'days' : 'months');
   };
 
-  // Generate calendar days
   const getDaysInMonth = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
@@ -74,7 +68,6 @@ const Calendar: React.FC<CalendarProps> = ({
     
     const days = [];
     
-    // Previous month days
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     const firstDayOfWeek = (firstDay.getDay() - weekStart + 7) % 7;
     
@@ -89,7 +82,6 @@ const Calendar: React.FC<CalendarProps> = ({
       });
     }
     
-    // Current month days
     for (let day = 1; day <= lastDay.getDate(); day++) {
       const date = new Date(year, month, day);
       days.push({
@@ -100,8 +92,7 @@ const Calendar: React.FC<CalendarProps> = ({
       });
     }
     
-    // Next month days
-    const totalCells = 42; // 6 weeks
+    const totalCells = 42;
     const nextDaysCount = totalCells - days.length;
     
     for (let day = 1; day <= nextDaysCount; day++) {
@@ -117,7 +108,6 @@ const Calendar: React.FC<CalendarProps> = ({
     return days;
   };
 
-  // Helper functions
   const isSameDay = (date1: Date, date2: Date) => {
     return (
       date1.getDate() === date2.getDate() &&
@@ -132,7 +122,6 @@ const Calendar: React.FC<CalendarProps> = ({
     return false;
   };
 
-  // Render methods
   const renderHeader = () => (
     <div className={styles.header}>
       <button 
@@ -182,7 +171,7 @@ const Calendar: React.FC<CalendarProps> = ({
 
   const renderDaysOfWeek = () => {
     const days = [];
-    const date = new Date(2023, 0, weekStart === 0 ? 1 : 2); // Sunday or Monday
+    const date = new Date(2023, 0, weekStart === 0 ? 1 : 2);
     
     for (let i = 0; i < 7; i++) {
       days.push(
@@ -245,31 +234,30 @@ const Calendar: React.FC<CalendarProps> = ({
     return <div className={styles.monthsGrid}>{months}</div>;
   };
 
-  const renderYears = () => {
-    const years = [];
-    const startYear = currentDate.getFullYear() - 6;
+const renderYears = () => {
+  const years = [];
+  const startYear = currentDate.getFullYear() - 6;
+  
+  for (let i = 0; i < 12; i++) {
+    const year = startYear + i;
+    const isDisabled = 
+      (minDate && year < minDate.getFullYear()) ||
+      (maxDate && year > maxDate.getFullYear());
     
-    for (let i = 0; i < 12; i++) {
-      const year = startYear + i;
-      const date = new Date(year, 0, 1);
-      const isDisabled = 
-        (minDate && year < minDate.getFullYear()) ||
-        (maxDate && year > maxDate.getFullYear());
-      
-      years.push(
-        <button
-          key={year}
-          className={`${styles.year} ${year === currentDate.getFullYear() ? styles.selected : ''}`}
-          onClick={() => handleYearSelect(year)}
-          disabled={isDisabled}
-        >
-          {year}
-        </button>
-      );
-    }
-    
-    return <div className={styles.yearsGrid}>{years}</div>;
-  };
+    years.push(
+      <button
+        key={year}
+        className={`${styles.year} ${year === currentDate.getFullYear() ? styles.selected : ''}`}
+        onClick={() => handleYearSelect(year)}
+        disabled={isDisabled}
+      >
+        {year}
+      </button>
+    );
+  }
+  
+  return <div className={styles.yearsGrid}>{years}</div>;
+};
 
   return (
     <div className={`${styles.calendar} ${className}`}>

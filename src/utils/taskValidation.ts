@@ -2,13 +2,12 @@ import {TaskItem} from '../types/types';
 
 // Валидация даты в формате DD.MM.YYYY
 export const isValidDate = (date: string, minDate?: Date): boolean => {
-    if (!date) return true; // Разрешаем пустую дату
+    if (!date) return true;
 
     // Проверка формата с помощью регулярного выражения
     const regex = /^\d{2}\.\d{2}\.\d{4}$/;
     if (!regex.test(date)) return false;
 
-    // Разбор даты на компоненты
     const [day, month, year] = date.split('.').map(Number);
 
     // Проверка корректности числовых значений
@@ -26,7 +25,7 @@ export const isValidDate = (date: string, minDate?: Date): boolean => {
 
     // Проверка минимальной даты
     if (isValid && minDate) {
-        // Создаем minDate без времени для корректного сравнения
+
         const minDateWithoutTime = new Date(minDate);
         minDateWithoutTime.setHours(0, 0, 0, 0);
 
@@ -38,20 +37,17 @@ export const isValidDate = (date: string, minDate?: Date): boolean => {
 
 // Валидация времени в формате HH:MM
 export const isValidTime = (time: string): boolean => {
-    if (!time) return true; // Разрешаем пустое время
+    if (!time) return true;
 
-    // Проверка формата
     const regex = /^\d{2}:\d{2}$/;
     if (!regex.test(time)) return false;
 
-    // Разбор времени на компоненты
     const [hours, minutes] = time.split(':').map(Number);
 
     // Проверка диапазонов
     return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
 };
 
-// Тип для ошибок валидации
 export type TaskValidationErrors = {
     title: string[];
     description: string[];
@@ -59,7 +55,7 @@ export type TaskValidationErrors = {
     time: string[];
 };
 
-// Основная функция валидации задачи (исправленная)
+// Основная функция валидации задачи
 export const validateTask = (task: TaskItem): TaskValidationErrors => {
     const errors: TaskValidationErrors = {
         title: [],

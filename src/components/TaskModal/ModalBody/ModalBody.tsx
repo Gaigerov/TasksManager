@@ -7,7 +7,7 @@ import {TaskValidationErrors} from '../../../utils/taskValidation';
 interface ModalBodyProps {
     task: TaskItem;
     onChange: (field: keyof TaskItem, value: string) => void;
-    errors: TaskValidationErrors; // Изменили тип ошибок
+    errors: TaskValidationErrors;
 }
 
 const ModalBody: React.FC<ModalBodyProps> = ({
@@ -22,7 +22,6 @@ const ModalBody: React.FC<ModalBodyProps> = ({
     onChange,
     errors
 }) => {
-    // Получаем первую ошибку для каждого поля
     const titleError = errors.title.length > 0 ? errors.title[0] : undefined;
     const descriptionError = errors.description.length > 0 ? errors.description[0] : undefined;
     const dateError = errors.date.length > 0 ? errors.date[0] : undefined;
@@ -37,7 +36,6 @@ const ModalBody: React.FC<ModalBodyProps> = ({
     const handleClearTitle = () => onChange('title', '');
     const handleClearDescription = () => onChange('description', '');
 
-    // Конвертация строки в Date для DatePicker
     const parseDate = useCallback((dateStr: string): Date | null => {
         if (!dateStr) return null;
         const [day, month, year] = dateStr.split('.').map(Number);
@@ -45,7 +43,6 @@ const ModalBody: React.FC<ModalBodyProps> = ({
         return isNaN(date.getTime()) ? null : date;
     }, []);
 
-    // Обработчик для DatePicker
     const handleDateChange = (date: Date | null) => {
         if (date) {
             const day = String(date.getDate()).padStart(2, '0');
@@ -59,8 +56,6 @@ const ModalBody: React.FC<ModalBodyProps> = ({
 
     return (
         <div className={styles.modalBody}>
-            {/* Убрали общий блок ошибок - теперь ошибки показываются под полями */}
-
             <div className={styles.formGroup}>
                 <label htmlFor="title" className={styles.label}>
                     Заголовок

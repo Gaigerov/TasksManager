@@ -30,14 +30,13 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
         }
     };
 
-    // Определяем класс кнопки на основе submitLabel
     const getSubmitButtonClass = () => {
         if (submitLabel === 'Создать') {
             return `${styles.button} ${styles.success}`;
         } else if (submitLabel === 'Сохранить') {
             return `${styles.button} ${styles.warning}`;
         }
-        // Возвращаем primary по умолчанию
+
         return `${styles.button} ${styles.primary}`;
     };
 

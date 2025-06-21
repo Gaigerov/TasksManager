@@ -16,7 +16,6 @@
     overscroll-behavior: contain;
 }
 
-/* Адаптивные стили */
 @media (max-width: 768px) {
     .content {
         padding: 15px;

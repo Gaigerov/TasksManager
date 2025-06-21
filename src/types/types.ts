@@ -2,8 +2,8 @@ export interface TaskItem {
     id: string;
     title: string;
     description: string;
-    time: string; // формат HH:mm
-    date: string; // формат DD.MM.YYYY
+    time: string;
+    date: string; 
     status: TaskStatus;
 }
 

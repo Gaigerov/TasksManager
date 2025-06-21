@@ -10,7 +10,7 @@
 .formRow {
     display: flex;
     gap: 15px;
-    align-items: flex-start; /* Выравнивание по верхнему краю */
+    align-items: flex-start;
 }
 
 .formRow .formGroup {
@@ -34,7 +34,7 @@
     border-radius: 4px;
     font-size: 14px;
     box-sizing: border-box;
-    height: 36px; /* Фиксированная высота для всех инпутов */
+    height: 36px;
 }
 
 .inputContainer {
@@ -95,15 +95,13 @@
     color: #e53e3e;
 }
 
-/* Специальные стили для поля времени */
 .timeInput {
     appearance: none; /* Убираем браузерные стили */
     -webkit-appearance: none; /* Для Safari */
-    height: 36px; /* Фиксированная высота */
-    padding: 8px 12px; /* Такие же отступы */
+    height: 36px; 
+    padding: 8px 12px; 
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
     .formRow {
         flex-direction: column;

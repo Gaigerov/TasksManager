@@ -48,7 +48,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             icon = <img src={chevronDown} alt="Calendar" />,
             ...props
         },
-        ref
     ) => {
         const [isOpen, setIsOpen] = useState(false);
         const [inputValue, setInputValue] = useState('');
@@ -69,7 +68,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 .replace('yyyy', year.toString());
         }, [format]);
 
-        // Синхронизация значения из props
         useEffect(() => {
             if (!isFocused) {
                 setInputValue(formatDate(value));
@@ -82,11 +80,9 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             setInputValue(formatDate(date));
         };
 
-        // Парсинг ручного ввода даты
         const parseInputDate = useCallback((value: string): Date | null => {
             if (!value.trim()) return null;
 
-            // Поддержка разных разделителей
             const parts = value.split(/[./-]/).map(p => p.trim());
             if (parts.length !== 3) return null;
 
@@ -116,16 +112,13 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             return dateObj;
         }, []);
 
-        // Форматирование ввода с автоматической расстановкой точек
         const formatInputValue = (value: string): string => {
-            // Удаляем все нецифровые символы
             const digits = value.replace(/\D/g, '');
 
             // Ограничиваем длину (день - 2, месяц - 2, год - 4)
             const maxLength = 8;
             const limited = digits.slice(0, maxLength);
 
-            // Расставляем точки в нужных позициях
             let formatted = '';
             for (let i = 0; i < limited.length; i++) {
                 if (i === 2 || i === 4) {
@@ -136,7 +129,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             return formatted;
         };
 
-        // Обработчики ручного ввода
         const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const rawValue = e.target.value;
             const formatted = formatInputValue(rawValue);
@@ -171,7 +163,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             setIsOpen(true);
         };
 
-        // Позиционирование календаря
         const calculatePosition = useCallback(() => {
             if (datePickerRef.current) {
                 const rect = datePickerRef.current.getBoundingClientRect();

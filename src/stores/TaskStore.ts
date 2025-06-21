@@ -5,14 +5,29 @@ export default class TaskStore {
     tasks: TaskItem[] = [];
     currentTask: TaskItem | null = null;
     isModalOpen = false;
+    searchQuery = "";
 
     constructor() {
         makeAutoObservable(this, {}, {autoBind: true});
         this.loadTasks();
 
         reaction(
-            () => this.tasks.slice(), // Создаем копию массива для отслеживания изменений
+            () => this.tasks.slice(),
             tasks => localStorage.setItem("tasks", JSON.stringify(tasks))
+        );
+    }
+
+    setSearchQuery = (query: string) => {
+        this.searchQuery = query;
+    };
+
+    get filteredTasks() {
+        const query = this.searchQuery.toLowerCase();
+        if (!query.trim()) return this.tasks;
+
+        return this.tasks.filter(task =>
+            task.title.toLowerCase().includes(query) ||
+            (task.description && task.description.toLowerCase().includes(query))
         );
     }
 
@@ -34,7 +49,6 @@ export default class TaskStore {
     updateTask(updatedTask: TaskItem) {
         const index = this.tasks.findIndex(t => t.id === updatedTask.id);
         if (index !== -1) {
-            // Создаем новый объект задачи вместо изменения существующего
             this.tasks[index] = {...this.tasks[index], ...updatedTask};
         }
     }
@@ -56,7 +70,6 @@ export default class TaskStore {
     changeTaskStatus(taskId: string, newStatus: TaskStatus) {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
-            // Используем updateTask для гарантированного сохранения изменений
             this.updateTask({...task, status: newStatus});
         }
     }
