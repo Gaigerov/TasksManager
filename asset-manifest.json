@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/tasksmanager/static/css/main.20d5b078.css",
-    "main.js": "/tasksmanager/static/js/main.18c03f09.js",
-    "static/media/delete.svg": "/tasksmanager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
-    "static/media/clone.svg": "/tasksmanager/static/media/clone.60e0badc80b9e16881f0f0b0a53e1e14.svg",
-    "index.html": "/tasksmanager/index.html",
-    "static/media/edit.svg": "/tasksmanager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.20d5b078.css.map": "/tasksmanager/static/css/main.20d5b078.css.map",
-    "main.18c03f09.js.map": "/tasksmanager/static/js/main.18c03f09.js.map"
+    "main.css": "/static/css/main.9fb7fb25.css",
+    "main.js": "/static/js/main.a2770780.js",
+    "static/media/delete.svg": "/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
+    "static/media/clone.svg": "/static/media/clone.60e0badc80b9e16881f0f0b0a53e1e14.svg",
+    "index.html": "/index.html",
+    "static/media/edit.svg": "/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
+    "main.9fb7fb25.css.map": "/static/css/main.9fb7fb25.css.map",
+    "main.a2770780.js.map": "/static/js/main.a2770780.js.map"
   },
   "entrypoints": [
-    "static/css/main.20d5b078.css",
-    "static/js/main.18c03f09.js"
+    "static/css/main.9fb7fb25.css",
+    "static/js/main.a2770780.js"
   ]
 }
