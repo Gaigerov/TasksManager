@@ -1,12 +1,12 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useCallback} from 'react';
 import styles from './ModalBody.module.css';
 import {TaskItem} from '../../../types/types';
-import DateInput from '../../DateInput/DateInput';
+import DatePicker from '../../DatePicker/DatePicker';
 
 interface ModalBodyProps {
     task: TaskItem;
     onChange: (field: keyof TaskItem, value: string) => void;
-    errors: string[]; 
+    errors: string[];
 }
 
 const ModalBody: React.FC<ModalBodyProps> = ({
@@ -19,9 +19,8 @@ const ModalBody: React.FC<ModalBodyProps> = ({
         status: 'To Do'
     },
     onChange,
-    errors // Получаем ошибки из родителя
+    errors
 }) => {
-    // Фильтруем ошибки для каждого поля
     const titleError = errors.find(e => e.includes('Название'));
     const dateError = errors.find(e => e.includes('дату') || e.includes('Дату'));
     const timeError = errors.find(e => e.includes('время') || e.includes('Время'));
@@ -31,14 +30,28 @@ const ModalBody: React.FC<ModalBodyProps> = ({
             onChange(field, e.target.value);
         };
 
-    // Валидация при изменении даты через DateInput
-    const handleDateChange = (value: string) => {
-        onChange('date', value);
+    // Конвертация строки в Date для DatePicker
+    const parseDate = useCallback((dateStr: string): Date | null => {
+        if (!dateStr) return null;
+        const [day, month, year] = dateStr.split('.').map(Number);
+        const date = new Date(year, month - 1, day);
+        return isNaN(date.getTime()) ? null : date;
+    }, []);
+
+    // Обработчик для DatePicker
+    const handleDateChange = (date: Date | null) => {
+        if (date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            onChange('date', `${day}.${month}.${year}`);
+        } else {
+            onChange('date', '');
+        }
     };
 
     return (
         <div className={styles.modalBody}>
-            {/* Область для отображения общих ошибок */}
             {errors.length > 0 && !(titleError || dateError || timeError) && (
                 <div className={styles.errorContainer}>
                     {errors.map((error, index) => (
@@ -82,10 +95,13 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                         Дата
                         {dateError && <span className={styles.requiredStar}> *</span>}
                     </label>
-                    <DateInput
-                        value={task.date}
+                    <DatePicker
+                        value={parseDate(task.date)}
                         onChange={handleDateChange}
-                        hasError={!!dateError}
+                        format="dd.MM.yyyy"
+                        placeholder="ДД.ММ.ГГГГ"
+                        inputClassName={`${styles.input} ${dateError ? styles.inputError : ''}`}
+                        showIcon={true}
                     />
                     {dateError && <div className={styles.errorText}>{dateError}</div>}
                 </div>

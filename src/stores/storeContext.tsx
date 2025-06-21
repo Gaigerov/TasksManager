@@ -1,4 +1,4 @@
-import {createContext, useContext, ReactNode} from "react";
+import {createContext, useContext, ReactNode, useRef} from "react";
 import TaskStore from "./TaskStore";
 
 type TaskStoreContextType = TaskStore | null;
@@ -10,10 +10,14 @@ interface TaskStoreProviderProps {
 }
 
 export function TaskStoreProvider({children}: TaskStoreProviderProps) {
-    const store = new TaskStore();
+    const storeRef = useRef<TaskStore | null>(null);
+
+    if (!storeRef.current) {
+        storeRef.current = new TaskStore();
+    }
 
     return (
-        <StoreContext.Provider value={store}>
+        <StoreContext.Provider value={storeRef.current}>
             {children}
         </StoreContext.Provider>
     );

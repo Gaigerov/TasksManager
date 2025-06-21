@@ -3,8 +3,10 @@ import React, {
     useState,
     useRef,
     useEffect,
-    forwardRef
+    forwardRef,
+    useCallback
 } from 'react';
+import ReactDOM from 'react-dom'; // Добавлен импорт для портала
 import Calendar from '../Calendar/Calendar';
 import styles from './DatePicker.module.css';
 
@@ -48,51 +50,72 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     ) => {
         const [isOpen, setIsOpen] = useState(false);
         const [inputValue, setInputValue] = useState('');
+        const [position, setPosition] = useState({top: 0, left: 0, width: 0});
         const datePickerRef = useRef<HTMLDivElement>(null);
+        const calendarRef = useRef<HTMLDivElement>(null);
 
-        // Преобразование даты в строку
-        const formatDate = (date: Date | null): string => {
+        const formatDate = useCallback((date: Date | null): string => {
             if (!date) return '';
-
             const day = date.getDate().toString().padStart(2, '0');
             const month = (date.getMonth() + 1).toString().padStart(2, '0');
             const year = date.getFullYear();
-
             return format
                 .replace('dd', day)
                 .replace('MM', month)
                 .replace('yyyy', year.toString());
-        };
+        }, [format]);
 
-        // Обновление поля ввода при изменении значения
         useEffect(() => {
             setInputValue(formatDate(value));
-        }, [value]);
+        }, [value, formatDate]);
 
-        // Обработчик выбора даты
         const handleDateChange = (date: Date | null) => {
-            if (onChange) {
-                onChange(date);
-            }
+            onChange?.(date);
             setIsOpen(false);
         };
 
-        // Закрытие календаря при клике вне компонента
-        useEffect(() => {
-            const handleClickOutside = (event: MouseEvent) => {
-                if (
-                    datePickerRef.current &&
-                    !datePickerRef.current.contains(event.target as Node)
-                ) {
-                    setIsOpen(false);
-                }
-            };
-
-            document.addEventListener('mousedown', handleClickOutside);
-            return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-            };
+        const calculatePosition = useCallback(() => {
+            if (datePickerRef.current) {
+                const rect = datePickerRef.current.getBoundingClientRect();
+                return {
+                    top: rect.bottom + window.scrollY,
+                    left: rect.left + window.scrollX,
+                    width: rect.width
+                };
+            }
+            return {top: 0, left: 0, width: 0};
         }, []);
+
+        useEffect(() => {
+            if (isOpen) {
+                setPosition(calculatePosition());
+
+                const handleClickOutside = (event: MouseEvent) => {
+                    if (
+                        datePickerRef.current &&
+                        !datePickerRef.current.contains(event.target as Node) &&
+                        calendarRef.current &&
+                        !calendarRef.current.contains(event.target as Node)
+                    ) {
+                        setIsOpen(false);
+                    }
+                };
+
+                const handleScrollOrResize = () => {
+                    setPosition(calculatePosition());
+                };
+
+                document.addEventListener('mousedown', handleClickOutside);
+                window.addEventListener('scroll', handleScrollOrResize, true);
+                window.addEventListener('resize', handleScrollOrResize);
+
+                return () => {
+                    document.removeEventListener('mousedown', handleClickOutside);
+                    window.removeEventListener('scroll', handleScrollOrResize, true);
+                    window.removeEventListener('resize', handleScrollOrResize);
+                };
+            }
+        }, [isOpen, calculatePosition]);
 
         return (
             <div
@@ -121,8 +144,18 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                     )}
                 </div>
 
-                {isOpen && (
-                    <div className={styles.calendarContainer}>
+                {isOpen && ReactDOM.createPortal(
+                    <div
+                        ref={calendarRef}
+                        className={styles.calendarContainer}
+                        style={{
+                            position: 'absolute',
+                            top: `${position.top + 8}px`,
+                            left: `${position.left}px`,
+                            width: `${position.width}px`,
+                            zIndex: 10000
+                        }}
+                    >
                         <Calendar
                             selectedDate={value}
                             onDateChange={handleDateChange}
@@ -132,7 +165,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                             weekStart={weekStart}
                             locale={locale}
                         />
-                    </div>
+                    </div>,
+                    document.body
                 )}
             </div>
         );
