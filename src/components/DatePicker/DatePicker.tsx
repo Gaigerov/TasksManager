@@ -6,9 +6,11 @@ import React, {
     forwardRef,
     useCallback
 } from 'react';
-import ReactDOM from 'react-dom'; // Добавлен импорт для портала
+import ReactDOM from 'react-dom';
 import Calendar from '../Calendar/Calendar';
 import styles from './DatePicker.module.css';
+
+import chevronDown from '../../images/ChevronDown.svg';
 
 interface DatePickerProps {
     id?: string;
@@ -50,6 +52,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
     ) => {
         const [isOpen, setIsOpen] = useState(false);
         const [inputValue, setInputValue] = useState('');
+        const [isFocused, setIsFocused] = useState(false);
         const [position, setPosition] = useState({top: 0, left: 0, width: 0});
         const datePickerRef = useRef<HTMLDivElement>(null);
         const calendarRef = useRef<HTMLDivElement>(null);
@@ -65,15 +68,87 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 .replace('yyyy', year.toString());
         }, [format]);
 
+        // Синхронизация значения из props
         useEffect(() => {
-            setInputValue(formatDate(value));
-        }, [value, formatDate]);
+            if (!isFocused) {
+                setInputValue(formatDate(value));
+            }
+        }, [value, isFocused, formatDate]);
 
         const handleDateChange = (date: Date | null) => {
             onChange?.(date);
             setIsOpen(false);
+            setInputValue(formatDate(date));
         };
 
+        // Парсинг ручного ввода даты
+        const parseInputDate = useCallback((value: string): Date | null => {
+            if (!value.trim()) return null;
+
+            // Поддержка разных разделителей
+            const parts = value.split(/[./-]/).map(p => p.trim());
+            if (parts.length !== 3) return null;
+
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10);
+            let year = parseInt(parts[2], 10);
+
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+
+            // Коррекция двухзначного года
+            if (year < 100) year += 2000;
+
+            // Проверка валидности даты
+            if (
+                day < 1 || day > 31 ||
+                month < 1 || month > 12 ||
+                year < 1000 || year > 9999
+            ) return null;
+
+            const dateObj = new Date(year, month - 1, day);
+            if (
+                dateObj.getDate() !== day ||
+                dateObj.getMonth() !== month - 1 ||
+                dateObj.getFullYear() !== year
+            ) return null;
+
+            return dateObj;
+        }, []);
+
+        // Обработчики ручного ввода
+        const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+            setInputValue(e.target.value);
+        };
+
+        const handleBlur = () => {
+            const date = parseInputDate(inputValue);
+            if (date) {
+                const formatted = formatDate(date);
+                setInputValue(formatted);
+                onChange?.(date);
+            } else {
+                if (inputValue.trim() === '') {
+                    onChange?.(null);
+                } else {
+                    // Восстановление предыдущего значения
+                    setInputValue(formatDate(value));
+                }
+            }
+            setIsFocused(false);
+        };
+
+        const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') {
+                (e.target as HTMLInputElement).blur();
+            }
+        };
+
+        const handleFocus = () => {
+            setIsFocused(true);
+            setIsOpen(true);
+        };
+
+        // Позиционирование календаря
         const calculatePosition = useCallback(() => {
             if (datePickerRef.current) {
                 const rect = datePickerRef.current.getBoundingClientRect();
@@ -127,10 +202,12 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                         id={id}
                         type="text"
                         value={inputValue}
-                        readOnly
                         placeholder={placeholder}
                         className={`${styles.input} ${inputClassName}`}
-                        onFocus={() => setIsOpen(true)}
+                        onChange={handleInputChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         {...props}
                     />
                     {showIcon && (

@@ -30,6 +30,10 @@ const ModalBody: React.FC<ModalBodyProps> = ({
             onChange(field, e.target.value);
         };
 
+    // Функции очистки полей
+    const handleClearTitle = () => onChange('title', '');
+    const handleClearDescription = () => onChange('description', '');
+
     // Конвертация строки в Date для DatePicker
     const parseDate = useCallback((dateStr: string): Date | null => {
         if (!dateStr) return null;
@@ -65,28 +69,50 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                     Заголовок
                     {titleError && <span className={styles.requiredStar}> *</span>}
                 </label>
-                <input
-                    id="title"
-                    type="text"
-                    className={`${styles.input} ${titleError ? styles.inputError : ''}`}
-                    value={task.title}
-                    onChange={handleInputChange('title')}
-                    placeholder="Введите заголовок задачи"
-                    required
-                />
+                <div className={styles.inputContainer}>
+                    <input
+                        id="title"
+                        type="text"
+                        className={`${styles.input} ${titleError ? styles.inputError : ''}`}
+                        value={task.title}
+                        onChange={handleInputChange('title')}
+                        placeholder="Введите заголовок задачи"
+                        required
+                    />
+                    {task.title && (
+                        <button
+                            type="button"
+                            className={styles.clearButton}
+                            onClick={handleClearTitle}
+                        >
+                            &times;
+                        </button>
+                    )}
+                </div>
                 {titleError && <div className={styles.errorText}>{titleError}</div>}
             </div>
 
             <div className={styles.formGroup}>
                 <label htmlFor="description" className={styles.label}>Описание</label>
-                <input
-                    id="description"
-                    type="text"
-                    className={styles.input}
-                    value={task.description}
-                    onChange={handleInputChange('description')}
-                    placeholder="Введите описание задачи"
-                />
+                <div className={styles.inputContainer}>
+                    <input
+                        id="description"
+                        type="text"
+                        className={styles.input}
+                        value={task.description}
+                        onChange={handleInputChange('description')}
+                        placeholder="Введите описание задачи"
+                    />
+                    {task.description && (
+                        <button
+                            type="button"
+                            className={styles.clearButton}
+                            onClick={handleClearDescription}
+                        >
+                            &times;
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div className={styles.formRow}>
@@ -114,7 +140,7 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                     <input
                         id="time"
                         type="time"
-                        className={`${styles.input} ${timeError ? styles.inputError : ''}`}
+                        className={`${styles.input} ${styles.timeInput} ${timeError ? styles.inputError : ''}`}
                         value={task.time}
                         onChange={handleInputChange('time')}
                     />
