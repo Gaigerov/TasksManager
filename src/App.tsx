@@ -1,13 +1,14 @@
-import {HashRouter} from 'react-router-dom';
 import MainPage from './components/MainPage/MainPage';
+import {BrowserRouter} from 'react-router-dom';
+import './App.css';
 
 function App() {
     return (
-        <HashRouter basename="/tasksmanager">
+        <BrowserRouter>
             <div className="App">
                 <MainPage />
             </div>
-        </HashRouter>
+        </BrowserRouter>
     );
 }
 
