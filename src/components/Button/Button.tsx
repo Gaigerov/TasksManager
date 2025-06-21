@@ -2,7 +2,7 @@ import React, {ElementType, forwardRef} from 'react';
 import styles from './Button.module.css';
 
 // Типы для вариантов кнопки
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'link' | 'header' | 'card';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'link' | 'header' | 'card';
 type ButtonSize = 'small' | 'medium' | 'large';
 
 // Пропсы компонента

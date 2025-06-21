@@ -1,3 +1,65 @@
+.card {
+    width: 100%;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 8px 16px;
+    box-sizing: border-box;
+    margin: 8px 0;
+    font-family: Arial, sans-serif;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 120px;
+}
+
+.contentWrapper {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.textContent {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Обновленные стили для заголовка с правильным троеточием */
+.title {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Обрезаем в одну строку */
+}
+
+/* Обновленные стили для описания с правильным троеточием */
+.description {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.4;
+    
+    /* Многострочное обрезание с троеточием */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Количество строк перед обрезанием */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 90%;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+}
+
 .iconWrapper {
     padding: 8px;
     cursor: pointer;
@@ -17,67 +79,30 @@
     height: 20px;
     display: block;
     transition: filter 0.2s ease;
-    filter: invert(50%); /* Серый цвет по умолчанию */
+    filter: invert(50%);
 }
 
-/* Стили при наведении */
 .iconWrapper:hover .icon {
-    filter: none; /* Оригинальный цвет */
+    filter: none;
 }
 
-/* Специфичные цвета для иконок при наведении */
-.iconWrapper:nth-child(1):hover .icon { /* Редактирование */
+.iconWrapper:nth-child(1):hover .icon {
     filter: invert(55%) sepia(83%) saturate(1017%) hue-rotate(13deg) brightness(109%) contrast(94%);
 }
 
-.iconWrapper:nth-child(2):hover .icon { /* Клонирование */
+.iconWrapper:nth-child(2):hover .icon {
     filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%);
 }
 
-.iconWrapper:nth-child(3):hover .icon { /* Удаление */
+.iconWrapper:nth-child(3):hover .icon {
     filter: invert(31%) sepia(24%) saturate(5892%) hue-rotate(333deg) brightness(83%) contrast(94%);
-}
-
-.card {
-    width: 100%;
-    border-radius: 12px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 8px 16px;
-    box-sizing: border-box;
-    margin: 8px 0;
-    font-family: Arial, sans-serif;
-    position: relative;
-}
-
-.title {
-    display: flex;
-    justify-content: flex-start;
-    margin: 0 0 8px 0;
-    font-size: 18px;
-    font-weight: bold;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.description {
-    display: flex;
-    justify-content: flex-start;
-    margin: 0 0 12px 0;
-    color: #555;
-    font-size: 14px;
-    line-height: 1.4;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: auto;
 }
 
 .datetime {
@@ -89,22 +114,13 @@
 
 .time {
     font-weight: bold;
+    font-style: italic
 }
 
 .date {
     font-style: italic;
 }
 
-/* Обновленные стили для кнопок действий */
-.actions {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Стили для статуса */
 .statusContainer {
     position: relative;
 }
@@ -119,6 +135,7 @@
     font-size: 12px;
     width: auto;
     transition: all 0.2s;
+    min-width: 80px;
 }
 
 .statusButton:hover {
@@ -141,18 +158,22 @@
     width: auto;
     overflow: hidden;
     gap: 6px;
+    min-width: 100px;
 }
 
 .statusOption {
     width: max-content;
     border-radius: 6px;
-    margin: 4px 8px;
+    margin: 2px 8px;
+    padding: 4px 8px;
     background: none;
     border: none;
     text-align: left;
     cursor: pointer;
     font-size: 12px;
     transition: all 0.2s;
+    min-width: 100%;
+    box-sizing: border-box;
 }
 
 .statusOption:hover {
@@ -160,21 +181,8 @@
     font-weight: bold;
 }
 
-/* Контейнеры контента */
-.contentWrapper {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 15px;
-}
-
-.textContent {
-    flex: 1;
-}
-
-@media (max-width: 480px) {
-    .contentWrapper {
-        flex-direction: column;
-        gap: 15px;
+@media (max-width: 480px) { 
+    .description {
+        -webkit-line-clamp: 2;
     }
 }

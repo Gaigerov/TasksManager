@@ -45,7 +45,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             locale = 'ru-RU',
             format = 'dd.MM.yyyy',
             showIcon = true,
-            icon = '📅',
+            icon = <img src={chevronDown} alt="Calendar" />,
             ...props
         },
         ref
@@ -207,7 +207,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                         onChange={handleInputChange}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
-                        onKeyPress={handleKeyPress}
+                        onKeyDown={handleKeyPress}
                         {...props}
                     />
                     {showIcon && (

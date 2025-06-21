@@ -4,7 +4,7 @@ interface SecondaryButton {
     label: string;
     onClick: () => void;
     disabled?: boolean;
-    variant?: 'primary' | 'secondary' | 'danger';
+    variant?: 'primary' | 'secondary' | 'danger' | 'warning';
 }
 
 interface ModalFooterProps {
@@ -18,43 +18,39 @@ interface ModalFooterProps {
 
 const ModalFooter: React.FC<ModalFooterProps> = ({
     submitLabel = 'Создать',
-    closeLabel = 'Закрыть',
+    closeLabel = 'Выйти',
     onClose,
     onSubmit,
     submitDisabled = false,
-    secondaryButton
 }) => {
+    // Определяем класс кнопки на основе submitLabel
+    const getSubmitButtonClass = () => {
+        if (submitLabel === 'Создать') {
+            return `${styles.button} ${styles.success}`;
+        } else if (submitLabel === 'Сохранить') {
+            return `${styles.button} ${styles.warning}`;
+        }
+        // Возвращаем primary по умолчанию
+        return `${styles.button} ${styles.primary}`;
+    };
 
     return (
         <div className={styles.footer}>
-            <div>
-                {secondaryButton && (
-                    <button
-                        type="button"
-                        className={`${styles.button} ${styles[secondaryButton.variant || 'secondary']}`}
-                        onClick={secondaryButton.onClick}
-                        disabled={secondaryButton.disabled}
-                    >
-                        {secondaryButton.label}
-                    </button>
-                )}
-            </div>
-
-            <div className={styles.rightGroup}>
+            <div className={styles.buttonGroup}>
+                <button
+                    type="button"
+                    className={getSubmitButtonClass()}
+                    onClick={onSubmit}
+                    disabled={submitDisabled}
+                >
+                    {submitLabel}
+                </button>
                 <button
                     type="button"
                     className={`${styles.button} ${styles.secondary}`}
                     onClick={onClose}
                 >
                     {closeLabel}
-                </button>
-                <button
-                    type="button"
-                    className={`${styles.button} ${styles.primary}`}
-                    onClick={onSubmit}
-                    disabled={submitDisabled}
-                >
-                    {submitLabel}
                 </button>
             </div>
         </div>

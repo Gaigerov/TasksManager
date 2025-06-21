@@ -7,11 +7,11 @@ export default class TaskStore {
     isModalOpen = false;
 
     constructor() {
-        makeAutoObservable(this);
+        makeAutoObservable(this, {}, {autoBind: true});
         this.loadTasks();
 
         reaction(
-            () => this.tasks.slice(),
+            () => this.tasks.slice(), // Создаем копию массива для отслеживания изменений
             tasks => localStorage.setItem("tasks", JSON.stringify(tasks))
         );
     }
@@ -34,7 +34,8 @@ export default class TaskStore {
     updateTask(updatedTask: TaskItem) {
         const index = this.tasks.findIndex(t => t.id === updatedTask.id);
         if (index !== -1) {
-            this.tasks[index] = updatedTask;
+            // Создаем новый объект задачи вместо изменения существующего
+            this.tasks[index] = {...this.tasks[index], ...updatedTask};
         }
     }
 
@@ -55,7 +56,8 @@ export default class TaskStore {
     changeTaskStatus(taskId: string, newStatus: TaskStatus) {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
-            task.status = newStatus;
+            // Используем updateTask для гарантированного сохранения изменений
+            this.updateTask({...task, status: newStatus});
         }
     }
 

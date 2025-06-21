@@ -5,7 +5,7 @@ import deleteIcon from '../../images/delete.svg';
 import editIcon from '../../images/edit.svg';
 import cloneIcon from '../../images/clone.svg';
 import {observer} from 'mobx-react-lite';
-import {useTaskStore} from '../../stores/storeContext'; // Используем кастомный хук
+import {useTaskStore} from '../../stores/storeContext';
 
 interface TaskProps {
     task: TaskItem;
@@ -29,11 +29,6 @@ const Task = observer(({task}: TaskProps) => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
-
-    const handleStatusChange = (newStatus: TaskStatus) => {
-        setIsStatusOpen(false);
-        taskStore.changeTaskStatus(id, newStatus);
-    };
 
     const statusColors = {
         'To Do': '#4a5568',
@@ -87,18 +82,21 @@ const Task = observer(({task}: TaskProps) => {
 
                     {isStatusOpen && (
                         <div ref={popupRef} className={styles.statusPopup}>
-                            {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((s) => (
+                            {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((stat) => (
                                 <button
-                                    key={s}
+                                    key={stat}
                                     className={styles.statusOption}
-                                    onClick={() => handleStatusChange(s)}
+                                    onClick={() => {
+                                        setIsStatusOpen(false);
+                                        taskStore.changeTaskStatus(id, stat);
+                                    }}
                                     style={{
-                                        backgroundColor: status === s ? statusColors[s] : '',
-                                        fontWeight: status === s ? 'bold' : 'normal',
-                                        color: status === s ? 'white' : 'inherit'
+                                        backgroundColor: status === stat ? statusColors[stat] : '',
+                                        fontWeight: status === stat ? 'bold' : 'normal',
+                                        color: status === stat ? 'white' : 'inherit'
                                     }}
                                 >
-                                    {s}
+                                    {stat}
                                 </button>
                             ))}
                         </div>

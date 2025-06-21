@@ -1,12 +1,17 @@
 .footer {
     display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+    justify-content: flex-start;
     padding: 16px 24px;
     border-top: 1px solid #e8e8e8;
     background-color: #fff;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 12px;
+    width: 100%;
 }
 
 .button {
@@ -19,36 +24,94 @@
     border: 1px solid transparent;
 }
 
-.submitButton {
+/* Primary - синий */
+.primary {
     background-color: #3b82f6;
     color: white;
 }
 
-.submitButton:hover {
+.primary:hover {
     background-color: #2563eb;
 }
 
-.submitButton:disabled {
+.primary:disabled {
     background-color: #bfdbfe;
     cursor: not-allowed;
 }
 
-.submitButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+/* Warning - оранжевый */
+.warning {
+    background-color: #f59e0b;
+    color: white;
 }
 
-.closeButton {
+.warning:hover {
+    background-color: #d97706;
+}
+
+.warning:disabled {
+    background-color: #fde68a;
+    cursor: not-allowed;
+}
+
+/* Link - голубая (прозрачная с текстом) */
+.link {
+    background-color: transparent;
+    color: #3b82f6;
+    border: none;
+    text-decoration: underline;
+    padding: 8px 8px; /* Меньший padding */
+}
+
+.link:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    text-decoration: none;
+}
+
+.link:disabled {
+    color: #93c5fd;
+    cursor: not-allowed;
+}
+
+/* Success - зеленая */
+.success {
+    background-color: #10b981;
+    color: white;
+}
+
+.success:hover {
+    background-color: #059669;
+}
+
+.success:disabled {
+    background-color: #a7f3d0;
+    cursor: not-allowed;
+}
+
+/* Secondary - серая */
+.secondary {
     background-color: #f9fafb;
     color: #4b5563;
     border-color: #e5e7eb;
 }
 
-.closeButton:hover {
+.secondary:hover {
     background-color: #f3f4f6;
 }
 
-.closeButton:focus {
+/* Общие стили для фокуса */
+.button:focus {
     outline: none;
+}
+
+.primary:focus, .warning:focus, .success:focus {
+    box-shadow: 0 0 0 3px currentColor;
+}
+
+.link:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.secondary:focus {
     box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.5);
 }
