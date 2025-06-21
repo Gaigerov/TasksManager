@@ -1,6 +1,5 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
-import TaskModal from '../TaskModal/TaskModal';
 import TasksList from '../TasksList/TasksList';
 import {useTaskStore} from '../../stores/storeContext';
 
@@ -18,8 +17,6 @@ const TaskManager: React.FC = observer(() => {
                     <p>Задачи не найдены</p>
                 </div>
             )}
-
-            <TaskModal />
         </div>
     );
 });

@@ -2,11 +2,12 @@ import React, {ChangeEvent, useCallback} from 'react';
 import styles from './ModalBody.module.css';
 import {TaskItem} from '../../../types/types';
 import DatePicker from '../../DatePicker/DatePicker';
+import {TaskValidationErrors} from '../../../utils/taskValidation';
 
 interface ModalBodyProps {
     task: TaskItem;
     onChange: (field: keyof TaskItem, value: string) => void;
-    errors: string[];
+    errors: TaskValidationErrors; // Изменили тип ошибок
 }
 
 const ModalBody: React.FC<ModalBodyProps> = ({
@@ -21,9 +22,11 @@ const ModalBody: React.FC<ModalBodyProps> = ({
     onChange,
     errors
 }) => {
-    const titleError = errors.find(e => e.includes('Название'));
-    const dateError = errors.find(e => e.includes('дату') || e.includes('Дату'));
-    const timeError = errors.find(e => e.includes('время') || e.includes('Время'));
+    // Получаем первую ошибку для каждого поля
+    const titleError = errors.title.length > 0 ? errors.title[0] : undefined;
+    const descriptionError = errors.description.length > 0 ? errors.description[0] : undefined;
+    const dateError = errors.date.length > 0 ? errors.date[0] : undefined;
+    const timeError = errors.time.length > 0 ? errors.time[0] : undefined;
 
     const handleInputChange = (field: keyof TaskItem) =>
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -56,13 +59,7 @@ const ModalBody: React.FC<ModalBodyProps> = ({
 
     return (
         <div className={styles.modalBody}>
-            {errors.length > 0 && !(titleError || dateError || timeError) && (
-                <div className={styles.errorContainer}>
-                    {errors.map((error, index) => (
-                        <div key={index} className={styles.error}>{error}</div>
-                    ))}
-                </div>
-            )}
+            {/* Убрали общий блок ошибок - теперь ошибки показываются под полями */}
 
             <div className={styles.formGroup}>
                 <label htmlFor="title" className={styles.label}>
@@ -93,12 +90,15 @@ const ModalBody: React.FC<ModalBodyProps> = ({
             </div>
 
             <div className={styles.formGroup}>
-                <label htmlFor="description" className={styles.label}>Описание</label>
+                <label htmlFor="description" className={styles.label}>
+                    Описание
+                    {descriptionError && <span className={styles.requiredStar}> *</span>}
+                </label>
                 <div className={styles.inputContainer}>
                     <input
                         id="description"
                         type="text"
-                        className={styles.input}
+                        className={`${styles.input} ${descriptionError ? styles.inputError : ''}`}
                         value={task.description}
                         onChange={handleInputChange('description')}
                         placeholder="Введите описание задачи"
@@ -113,6 +113,7 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                         </button>
                     )}
                 </div>
+                {descriptionError && <div className={styles.errorText}>{descriptionError}</div>}
             </div>
 
             <div className={styles.formRow}>

@@ -1,7 +1,7 @@
 .card {
     width: 100%;
     border-radius: 12px;
-    background-color: #ffffff;
+    background-color: var(--white);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 8px 16px;
     box-sizing: border-box;
@@ -11,6 +11,12 @@
     display: flex;
     flex-direction: column;
     min-height: 120px;
+    transition: background-color 0.3s ease; /* Добавляем плавный переход */
+}
+
+.card:hover {
+    background-color: #f0f0f0; /* Цвет при наведении */
+    cursor: pointer; /* Меняем курсор */
 }
 
 .contentWrapper {
@@ -42,7 +48,7 @@
     color: #555;
     font-size: 14px;
     line-height: 1.4;
-    
+
     /* Многострочное обрезание с троеточием */
     display: -webkit-box;
     -webkit-line-clamp: 2; /* Количество строк перед обрезанием */
@@ -56,7 +62,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
 }
 
@@ -70,16 +76,11 @@
     transition: background-color 0.2s ease;
 }
 
-.iconWrapper:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
 .icon {
     width: 20px;
     height: 20px;
     display: block;
     transition: filter 0.2s ease;
-    filter: invert(50%);
 }
 
 .iconWrapper:hover .icon {
@@ -114,7 +115,7 @@
 
 .time {
     font-weight: bold;
-    font-style: italic
+    font-style: italic;
 }
 
 .date {
@@ -135,7 +136,6 @@
     font-size: 12px;
     width: auto;
     transition: all 0.2s;
-    min-width: 80px;
 }
 
 .statusButton:hover {
@@ -172,16 +172,15 @@
     cursor: pointer;
     font-size: 12px;
     transition: all 0.2s;
-    min-width: 100%;
     box-sizing: border-box;
 }
 
 .statusOption:hover {
-    background-color: #f7fafc;
+    background-color: var(--light);
     font-weight: bold;
 }
 
-@media (max-width: 480px) { 
+@media (max-width: 480px) {
     .description {
         -webkit-line-clamp: 2;
     }

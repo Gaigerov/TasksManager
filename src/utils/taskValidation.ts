@@ -1,7 +1,7 @@
 import {TaskItem} from '../types/types';
 
 // Валидация даты в формате DD.MM.YYYY
-export const isValidDate = (date: string): boolean => {
+export const isValidDate = (date: string, minDate?: Date): boolean => {
     if (!date) return true; // Разрешаем пустую дату
 
     // Проверка формата с помощью регулярного выражения
@@ -18,12 +18,22 @@ export const isValidDate = (date: string): boolean => {
 
     // Проверка с помощью Date объекта
     const dateObj = new Date(year, month - 1, day);
-
-    return (
+    const isValid = (
         dateObj.getDate() === day &&
         dateObj.getMonth() === month - 1 &&
         dateObj.getFullYear() === year
     );
+
+    // Проверка минимальной даты
+    if (isValid && minDate) {
+        // Создаем minDate без времени для корректного сравнения
+        const minDateWithoutTime = new Date(minDate);
+        minDateWithoutTime.setHours(0, 0, 0, 0);
+
+        return dateObj >= minDateWithoutTime;
+    }
+
+    return isValid;
 };
 
 // Валидация времени в формате HH:MM
@@ -41,23 +51,60 @@ export const isValidTime = (time: string): boolean => {
     return hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59;
 };
 
-// Основная функция валидации задачи
-export const validateTask = (task: TaskItem): string[] => {
-    const errors: string[] = [];
+// Тип для ошибок валидации
+export type TaskValidationErrors = {
+    title: string[];
+    description: string[];
+    date: string[];
+    time: string[];
+};
 
-    // Проверка обязательных полей
+// Основная функция валидации задачи (исправленная)
+export const validateTask = (task: TaskItem): TaskValidationErrors => {
+    const errors: TaskValidationErrors = {
+        title: [],
+        description: [],
+        date: [],
+        time: [],
+    };
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Валидация названия
     if (!task.title.trim()) {
-        errors.push('Название задачи обязательно');
+        errors.title.push('Название задачи обязательно');
+    }
+
+    // Валидация описания
+    if (!task.description.trim()) {
+        errors.description.push('Описание задачи обязательно');
     }
 
     // Валидация даты
-    if (task.date && !isValidDate(task.date)) {
-        errors.push('Пожалуйста, введите корректную дату в формате DD.MM.YYYY');
+    if (!task.date.trim()) {
+        errors.date.push('Наличие даты обязательно');
+    } else {
+        if (!isValidDate(task.date, today)) {
+            if (!/^\d{2}\.\d{2}\.\d{4}$/.test(task.date)) {
+                errors.date.push('Пожалуйста, введите корректную дату в формате DD.MM.YYYY');
+            } else {
+                const [day, month, year] = task.date.split('.').map(Number);
+                const dateObj = new Date(year, month - 1, day);
+                if (dateObj < today) {
+                    errors.date.push('Дата не может быть раньше сегодняшнего дня');
+                } else {
+                    errors.date.push('Пожалуйста, введите корректную дату');
+                }
+            }
+        }
     }
 
     // Валидация времени
-    if (task.time && !isValidTime(task.time)) {
-        errors.push('Пожалуйста, введите корректное время в формате HH:MM');
+    if (!task.time.trim()) {
+        errors.time.push('Наличие времени обязательно');
+    } else if (!isValidTime(task.time)) {
+        errors.time.push('Пожалуйста, введите корректное время в формате HH:MM');
     }
 
     return errors;

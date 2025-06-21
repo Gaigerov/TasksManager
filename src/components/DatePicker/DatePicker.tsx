@@ -56,6 +56,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
         const [position, setPosition] = useState({top: 0, left: 0, width: 0});
         const datePickerRef = useRef<HTMLDivElement>(null);
         const calendarRef = useRef<HTMLDivElement>(null);
+        const inputRef = useRef<HTMLInputElement>(null);
 
         const formatDate = useCallback((date: Date | null): string => {
             if (!date) return '';
@@ -115,9 +116,31 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             return dateObj;
         }, []);
 
+        // Форматирование ввода с автоматической расстановкой точек
+        const formatInputValue = (value: string): string => {
+            // Удаляем все нецифровые символы
+            const digits = value.replace(/\D/g, '');
+
+            // Ограничиваем длину (день - 2, месяц - 2, год - 4)
+            const maxLength = 8;
+            const limited = digits.slice(0, maxLength);
+
+            // Расставляем точки в нужных позициях
+            let formatted = '';
+            for (let i = 0; i < limited.length; i++) {
+                if (i === 2 || i === 4) {
+                    formatted += '.';
+                }
+                formatted += limited[i];
+            }
+            return formatted;
+        };
+
         // Обработчики ручного ввода
         const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            setInputValue(e.target.value);
+            const rawValue = e.target.value;
+            const formatted = formatInputValue(rawValue);
+            setInputValue(formatted);
         };
 
         const handleBlur = () => {
@@ -200,6 +223,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 <div className={styles.inputContainer}>
                     <input
                         id={id}
+                        ref={inputRef}
                         type="text"
                         value={inputValue}
                         placeholder={placeholder}

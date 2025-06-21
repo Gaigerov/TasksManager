@@ -6,7 +6,7 @@ import ModalBody from './ModalBody/ModalBody';
 import ModalHeader from './ModalHeader/ModalHeader';
 import ModalFooter from './ModalFooter/ModalFooter';
 import {useTaskStore} from '../../stores/storeContext'; 
-import {validateTask} from '../../utils/taskValidation';
+import {validateTask, TaskValidationErrors} from '../../utils/taskValidation'; // Добавлен импорт типа
 
 // Создаем пустой объект задачи для инициализации
 const emptyTask: TaskItem = {
@@ -18,10 +18,18 @@ const emptyTask: TaskItem = {
     status: 'To Do' as TaskStatus,
 };
 
+// Начальное состояние для ошибок
+const initialErrors: TaskValidationErrors = {
+    title: [],
+    description: [],
+    date: [],
+    time: [],
+};
+
 const TaskModal: React.FC = observer(() => {
     const taskStore = useTaskStore();
     const [task, setTask] = useState<TaskItem>(emptyTask);
-    const [errors, setErrors] = useState<string[]>([]);
+    const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors); // Изменен тип ошибок
 
     const isOpen = taskStore.isModalOpen;
 
@@ -31,28 +39,32 @@ const TaskModal: React.FC = observer(() => {
         } else {
             setTask({...emptyTask});
         }
-        setErrors([]);
+        setErrors(initialErrors); // Сбрасываем ошибки при открытии модалки
     }, [taskStore.currentTask, taskStore.isModalOpen]);
 
     const handleChange = (field: keyof TaskItem, value: string) => {
         setTask(prev => ({...prev, [field]: value}));
-
-        if (errors.length > 0) {
-            setErrors(prev => prev.filter(error =>
-                !error.includes('Название') &&
-                !error.includes('дату') &&
-                !error.includes('время')
-            ));
-        }
+        
+        // Очищаем ошибку для изменяемого поля
+        setErrors(prev => ({
+            ...prev,
+            [field]: []
+        }));
     };
 
     const handleSubmit = () => {
         const validationErrors = validateTask(task);
-
-        if (validationErrors.length > 0) {
+        
+        // Проверяем наличие ошибок в любом из полей
+        const hasErrors = Object.values(validationErrors).some(
+            fieldErrors => fieldErrors.length > 0
+        );
+        
+        if (hasErrors) {
             setErrors(validationErrors);
             return;
         }
+        
         taskStore.submitTask(task);
     };
 
@@ -70,14 +82,13 @@ const TaskModal: React.FC = observer(() => {
 
                     <ModalBody
                         task={task}
-                        errors={errors}
+                        errors={errors} // Передаем объект ошибок
                         onChange={handleChange}
                     />
 
                     <ModalFooter
                         submitLabel={isNewTask ? "Создать" : "Сохранить"}
                         onSubmit={handleSubmit}
-                        onClose={() => taskStore.closeModal}
                     />
                 </div>
             </div>

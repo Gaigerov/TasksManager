@@ -1,3 +1,4 @@
+import {useTaskStore} from '../../../stores/storeContext';
 import styles from './ModalFooter.module.css';
 
 interface SecondaryButton {
@@ -8,7 +9,6 @@ interface SecondaryButton {
 }
 
 interface ModalFooterProps {
-    onClose: () => void;
     onSubmit: () => void;
     submitLabel?: string;
     closeLabel?: string;
@@ -19,10 +19,17 @@ interface ModalFooterProps {
 const ModalFooter: React.FC<ModalFooterProps> = ({
     submitLabel = 'Создать',
     closeLabel = 'Выйти',
-    onClose,
     onSubmit,
     submitDisabled = false,
 }) => {
+    const taskStore = useTaskStore();
+    
+    const handleClose = () => {
+        if (taskStore && typeof taskStore.closeModal === 'function') {
+            taskStore.closeModal();
+        }
+    };
+
     // Определяем класс кнопки на основе submitLabel
     const getSubmitButtonClass = () => {
         if (submitLabel === 'Создать') {
@@ -48,7 +55,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
                 <button
                     type="button"
                     className={`${styles.button} ${styles.secondary}`}
-                    onClick={onClose}
+                    onClick={handleClose}
                 >
                     {closeLabel}
                 </button>
