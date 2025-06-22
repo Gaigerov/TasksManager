@@ -12,7 +12,6 @@ const MainPage: React.FC = () => {
     return (
         <div className={styles.mainContainer}>
             <Header onOpenModal={() => taskStore.openModal()} />
-
             <main className={styles.content}>
                 <TaskManager />
             </main>

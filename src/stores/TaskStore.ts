@@ -74,6 +74,11 @@ export default class TaskStore {
         }
     }
 
+    // Устанавливаем текущую задачу для редактирования
+    setCurrentTask(task: TaskItem) {
+        this.currentTask = task;
+    }
+
     // Работа с модальным окном
     openModal(task?: TaskItem) {
         this.currentTask = task || null;

@@ -1,23 +1,24 @@
 .mainContainer {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
 }
 
 .content {
-    flex: 1;
-    padding: 30px 10px;
-    background-color: #f5f7fa;
-    overflow-y: auto;
-    box-sizing: border-box;
-    will-change: transform;
-    overscroll-behavior: contain;
+  flex: 1 1 auto;
+  padding: 0 10px;
+  background-color: #f5f7fa;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
-    .content {
-        padding: 15px;
-    }
+  .content {
+    padding: 15px;
+  }
 }

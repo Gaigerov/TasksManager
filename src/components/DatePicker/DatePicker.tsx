@@ -48,6 +48,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             icon = <img src={chevronDown} alt="Calendar" />,
             ...props
         },
+        ref
     ) => {
         const [isOpen, setIsOpen] = useState(false);
         const [inputValue, setInputValue] = useState('');
