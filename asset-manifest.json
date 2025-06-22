@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.acd909ad.css",
+    "main.css": "/TasksManager/static/css/main.5e7c3528.css",
     "main.js": "/TasksManager/static/js/main.82c58db3.js",
     "static/media/delete.svg": "/TasksManager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
     "static/media/ChevronDown.svg": "/TasksManager/static/media/ChevronDown.847d4f1c4be8401248ea8c256fe90339.svg",
     "static/media/clone.svg": "/TasksManager/static/media/clone.60e0badc80b9e16881f0f0b0a53e1e14.svg",
     "index.html": "/TasksManager/index.html",
     "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.acd909ad.css.map": "/TasksManager/static/css/main.acd909ad.css.map",
+    "main.5e7c3528.css.map": "/TasksManager/static/css/main.5e7c3528.css.map",
     "main.82c58db3.js.map": "/TasksManager/static/js/main.82c58db3.js.map"
   },
   "entrypoints": [
-    "static/css/main.acd909ad.css",
+    "static/css/main.5e7c3528.css",
     "static/js/main.82c58db3.js"
   ]
 }
