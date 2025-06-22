@@ -80,8 +80,7 @@ export default class TaskStore {
     }
 
     // Работа с модальным окном
-    openModal(task?: TaskItem) {
-        this.currentTask = task || null;
+    openModal() {
         this.isModalOpen = true;
     }
 

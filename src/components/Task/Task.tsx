@@ -18,7 +18,9 @@ const Task = observer(({task}: TaskProps) => {
     const popupRef = useRef<HTMLDivElement>(null);
     const taskStore = useTaskStore();
 
-    const handleClick = () => {
+    // Функция для открытия модального окна в режиме редактирования
+    const openEditModal = (e?: React.MouseEvent) => {
+        if (e) e.stopPropagation();
         taskStore.setCurrentTask(task);
         taskStore.openModal();
     };
@@ -42,7 +44,7 @@ const Task = observer(({task}: TaskProps) => {
     };
 
     return (
-        <div className={styles.card} onClick={handleClick}>
+        <div className={styles.card} onClick={openEditModal}>
             <div className={styles.contentWrapper}>
                 <div className={styles.textContent}>
                     <h3 className={styles.title}>{title}</h3>
@@ -50,21 +52,39 @@ const Task = observer(({task}: TaskProps) => {
                 </div>
 
                 <div className={styles.actions}>
-                    <div className={styles.iconWrapper} onClick={() => taskStore.openModal(task)}>
+                    <div
+                        className={styles.iconWrapper}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            openEditModal(e);
+                        }}
+                    >
                         <img
                             src={editIcon}
                             alt="Edit"
                             className={styles.icon}
                         />
                     </div>
-                    <div className={styles.iconWrapper} onClick={() => taskStore.cloneTask(id)}>
+                    <div
+                        className={styles.iconWrapper}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            taskStore.cloneTask(id);
+                        }}
+                    >
                         <img
                             src={cloneIcon}
                             alt="Clone"
                             className={styles.icon}
                         />
                     </div>
-                    <div className={styles.iconWrapper} onClick={() => taskStore.deleteTask(id)}>
+                    <div
+                        className={styles.iconWrapper}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            taskStore.deleteTask(id);
+                        }}
+                    >
                         <img
                             src={deleteIcon}
                             alt="Delete"
@@ -79,19 +99,27 @@ const Task = observer(({task}: TaskProps) => {
                     <button
                         ref={statusButtonRef}
                         className={styles.statusButton}
-                        onClick={() => setIsStatusOpen(!isStatusOpen)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsStatusOpen(!isStatusOpen);
+                        }}
                         style={{backgroundColor: statusColors[status], color: 'white'}}
                     >
                         {status}
                     </button>
 
                     {isStatusOpen && (
-                        <div ref={popupRef} className={styles.statusPopup}>
+                        <div
+                            ref={popupRef}
+                            className={styles.statusPopup}
+                            onClick={e => e.stopPropagation()}
+                        >
                             {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((stat) => (
                                 <button
                                     key={stat}
                                     className={styles.statusOption}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         setIsStatusOpen(false);
                                         taskStore.changeTaskStatus(id, stat);
                                     }}
