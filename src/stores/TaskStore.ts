@@ -1,4 +1,4 @@
-import {makeAutoObservable, reaction} from "mobx";
+import {makeAutoObservable, reaction, runInAction} from "mobx";
 import {TaskItem, TaskStatus} from '../types/types';
 
 export default class TaskStore {
@@ -12,7 +12,7 @@ export default class TaskStore {
         this.loadTasks();
 
         reaction(
-            () => this.tasks.slice(),
+            () => this.tasks.slice(), // Используем slice для создания нового массива
             tasks => localStorage.setItem("tasks", JSON.stringify(tasks))
         );
     }
@@ -33,7 +33,11 @@ export default class TaskStore {
 
     loadTasks() {
         const savedTasks = localStorage.getItem("tasks");
-        this.tasks = savedTasks ? JSON.parse(savedTasks) : [];
+        if (savedTasks) {
+            runInAction(() => {
+                this.tasks = JSON.parse(savedTasks);
+            });
+        }
     }
 
     // Действия
@@ -43,13 +47,17 @@ export default class TaskStore {
             id: Date.now().toString(),
             status: "To Do",
         };
-        this.tasks.push(newTask);
+        // Создаем новый массив вместо мутации
+        this.tasks = [...this.tasks, newTask];
     }
 
     updateTask(updatedTask: TaskItem) {
         const index = this.tasks.findIndex(t => t.id === updatedTask.id);
         if (index !== -1) {
-            this.tasks[index] = {...this.tasks[index], ...updatedTask};
+            // Создаем новый массив вместо мутации
+            const newTasks = [...this.tasks];
+            newTasks[index] = {...this.tasks[index], ...updatedTask};
+            this.tasks = newTasks;
         }
     }
 
