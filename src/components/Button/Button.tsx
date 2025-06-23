@@ -1,11 +1,11 @@
 import React, {ElementType, forwardRef} from 'react';
 import styles from './Button.module.css';
 
-type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'link' | 'header' | 'card';
+type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'link' | 'header' | 'card' | 'icon'; // Добавлен 'icon'
 type ButtonSize = 'small' | 'medium' | 'large';
 
 interface ButtonProps {
-    children: React.ReactNode;
+    children?: React.ReactNode; // Сделали children опциональным
     variant?: ButtonVariant;
     size?: ButtonSize;
     className?: string;
@@ -13,6 +13,8 @@ interface ButtonProps {
     disabled?: boolean;
     as?: ElementType;
     onClick?: () => void;
+    iconSrc?: string; // Новый проп для пути к иконке
+    alt?: string; // Альтернативный текст для иконки
 }
 
 const Button = forwardRef<HTMLElement, ButtonProps>((
@@ -24,6 +26,8 @@ const Button = forwardRef<HTMLElement, ButtonProps>((
         fullWidth = false,
         disabled = false,
         as: Component = 'button',
+        iconSrc, // Новый проп
+        alt = '', // Альтернативный текст
         ...props
     },
     ref
@@ -45,6 +49,15 @@ const Button = forwardRef<HTMLElement, ButtonProps>((
     const isButton = Component === 'button';
     const buttonProps = isButton ? {disabled} : {};
 
+    // Рендерим иконку если передан iconSrc
+    const renderIcon = iconSrc ? (
+        <img
+            src={iconSrc}
+            alt={alt}
+            className={styles.iconImage}
+        />
+    ) : null;
+
     return (
         <Component
             className={buttonClasses}
@@ -52,6 +65,7 @@ const Button = forwardRef<HTMLElement, ButtonProps>((
             {...buttonProps}
             {...props}
         >
+            {renderIcon}
             {children}
         </Component>
     );

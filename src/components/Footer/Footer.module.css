@@ -4,7 +4,7 @@
     width: 100%;
     justify-content: space-around;
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 0 50px 0;
     background-color: #f8f9fa;
     border-top: 1px solid #e9ecef;
 }
@@ -12,14 +12,15 @@
 .buttonGroup {
     display: flex;
     width: 100%;
+    gap: 80px;
     justify-content: center;
-    gap: 10px;
 }
 
 .footerButton {
+    display: flex;
+    flex-direction: column;
     padding: 5px 10px;
-    color: lightgray;
-    background-color: #303234;
+    color: black;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -31,6 +32,11 @@
 }
 
 .footerButton:hover {
-    background-color: #8f9193;
     transform: translateY(-2px);
+}
+
+@media (max-width: 480px) {
+    .buttonGroup {
+        gap: 20px;
+    }
 }

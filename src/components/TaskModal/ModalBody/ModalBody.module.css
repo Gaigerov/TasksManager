@@ -96,14 +96,8 @@
 }
 
 .timeInput {
-    appearance: none; /* Убираем браузерные стили */
-    -webkit-appearance: none; /* Для Safari */
+    appearance: none; 
+    -webkit-appearance: none;
     height: 36px; 
     padding: 8px 12px; 
-}
-
-@media (max-width: 480px) {
-    .formRow {
-        flex-direction: column;
-    }
 }
