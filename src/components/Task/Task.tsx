@@ -6,6 +6,7 @@ import editIcon from '../../images/edit.svg';
 import cloneIcon from '../../images/clone.svg';
 import {observer} from 'mobx-react-lite';
 import {useTaskStore} from '../../stores/storeContext';
+import {VALID_MODE} from '../../config/constant';
 
 interface TaskProps {
     task: TaskItem;
@@ -17,13 +18,6 @@ const Task = observer(({task}: TaskProps) => {
     const statusButtonRef = useRef<HTMLButtonElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
     const taskStore = useTaskStore();
-
-    // Функция для открытия модального окна в режиме редактирования
-    const openEditModal = (e?: React.MouseEvent) => {
-        if (e) e.stopPropagation();
-        taskStore.setCurrentTask(task);
-        taskStore.openModal();
-    };
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -41,6 +35,12 @@ const Task = observer(({task}: TaskProps) => {
         'To Do': '#4a5568',
         'In Progress': '#3182ce',
         'Done': '#38a169'
+    };
+
+    // Функция для открытия модального окна в режиме редактирования
+    const openEditModal = (e?: React.MouseEvent) => {
+        if (e) e.stopPropagation();
+        taskStore.openModal(VALID_MODE.EDIT, task);
     };
 
     return (

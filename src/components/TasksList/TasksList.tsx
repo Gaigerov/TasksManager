@@ -22,7 +22,7 @@ const TasksList = observer(() => {
   );
 
   return (
-    <div className="tasksContainer" style={{ height: '820px', padding: '0' }}>
+    <div className="tasksContainer" style={{ height: '800px', padding: '0' }}>
       <AutoSizer>
         {({ width, height }) => (
           <List
@@ -34,7 +34,7 @@ const TasksList = observer(() => {
             overscanRowCount={5}
             style={{
               paddingTop: 20, 
-              paddingBottom: 90,
+              paddingBottom: 30,
               boxSizing: 'border-box',
             }}
           />

@@ -1,10 +1,12 @@
 import {makeAutoObservable, reaction, runInAction} from "mobx";
 import {TaskItem, TaskStatus} from '../types/types';
+import {VALID_MODE} from '../config/constant'
 
 export default class TaskStore {
     tasks: TaskItem[] = [];
     currentTask: TaskItem | null = null;
     isModalOpen = false;
+    navigate: ((path: string) => void) | null = null;
     searchQuery = "";
 
     constructor() {
@@ -12,9 +14,13 @@ export default class TaskStore {
         this.loadTasks();
 
         reaction(
-            () => this.tasks.slice(), // Используем slice для создания нового массива
+            () => this.tasks.slice(),
             tasks => localStorage.setItem("tasks", JSON.stringify(tasks))
         );
+    }
+
+    setNavigate(navigate: (path: string) => void) {
+        this.navigate = navigate;
     }
 
     setSearchQuery = (query: string) => {
@@ -47,14 +53,13 @@ export default class TaskStore {
             id: Date.now().toString(),
             status: "To Do",
         };
-        // Создаем новый массив вместо мутации
+
         this.tasks = [...this.tasks, newTask];
     }
 
     updateTask(updatedTask: TaskItem) {
         const index = this.tasks.findIndex(t => t.id === updatedTask.id);
         if (index !== -1) {
-            // Создаем новый массив вместо мутации
             const newTasks = [...this.tasks];
             newTasks[index] = {...this.tasks[index], ...updatedTask};
             this.tasks = newTasks;
@@ -82,19 +87,26 @@ export default class TaskStore {
         }
     }
 
-    // Устанавливаем текущую задачу для редактирования
-    setCurrentTask(task: TaskItem) {
+
+    setCurrentTask(task: TaskItem | null) {
         this.currentTask = task;
     }
 
     // Работа с модальным окном
-    openModal() {
-        this.isModalOpen = true;
+    openModal(mode: typeof VALID_MODE.CREATE | typeof VALID_MODE.EDIT, task?: TaskItem) {
+        if (this.navigate) {
+            if (mode === VALID_MODE.EDIT && task) {
+                this.navigate(`/${VALID_MODE.EDIT}?id=${task.id}`);
+            } else {
+                this.navigate(`/${VALID_MODE.CREATE}`);
+            }
+        }
     }
 
     closeModal() {
-        this.isModalOpen = false;
-        this.currentTask = null;
+        if (this.navigate) {
+            this.navigate("/");
+        }
     }
 
     submitTask(task: TaskItem) {

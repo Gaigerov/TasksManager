@@ -1,12 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {observer} from 'mobx-react-lite';
-import {TaskItem, TaskStatus} from '../../types/types';
+import React, { useState, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { TaskItem } from '../../types/types';
 import styles from './TaskModal.module.css';
 import ModalBody from './ModalBody/ModalBody';
 import ModalHeader from './ModalHeader/ModalHeader';
 import ModalFooter from './ModalFooter/ModalFooter';
-import {useTaskStore} from '../../stores/storeContext'; 
-import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
+import { useTaskStore } from '../../stores/storeContext';
+import { validateTask, TaskValidationErrors } from '../../utils/taskValidation';
+import { useLocation } from 'react-router-dom';
+import { VALID_MODE } from '../../config/constant';
 
 const emptyTask: TaskItem = {
     id: '',
@@ -14,7 +16,7 @@ const emptyTask: TaskItem = {
     description: '',
     time: '',
     date: '',
-    status: 'To Do' as TaskStatus,
+    status: 'To Do',
 };
 
 const initialErrors: TaskValidationErrors = {
@@ -26,22 +28,26 @@ const initialErrors: TaskValidationErrors = {
 
 const TaskModal: React.FC = observer(() => {
     const taskStore = useTaskStore();
+    const location = useLocation();
     const [task, setTask] = useState<TaskItem>(emptyTask);
-    const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors); 
-    const isOpen = taskStore.isModalOpen;
+    const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors);
+    
+    const mode = location.pathname.substring(1);
+    const isOpen = mode === VALID_MODE.CREATE || mode === VALID_MODE.EDIT;
 
     useEffect(() => {
-        if (taskStore.currentTask) {
-            setTask(taskStore.currentTask);
-        } else {
-            setTask({...emptyTask});
+        if (isOpen) {
+            if (taskStore.currentTask) {
+                setTask(taskStore.currentTask);
+            } else {
+                setTask({...emptyTask});
+            }
+            setErrors(initialErrors);
         }
-        setErrors(initialErrors);
-    }, [taskStore.currentTask, taskStore.isModalOpen]);
+    }, [isOpen, taskStore.currentTask]);
 
     const handleChange = (field: keyof TaskItem, value: string) => {
         setTask(prev => ({...prev, [field]: value}));
-        
         setErrors(prev => ({
             ...prev,
             [field]: []
@@ -50,7 +56,6 @@ const TaskModal: React.FC = observer(() => {
 
     const handleSubmit = () => {
         const validationErrors = validateTask(task);
-        
         const hasErrors = Object.values(validationErrors).some(
             fieldErrors => fieldErrors.length > 0
         );
@@ -61,6 +66,7 @@ const TaskModal: React.FC = observer(() => {
         }
         
         taskStore.submitTask(task);
+        taskStore.closeModal();
     };
 
     const isNewTask = !task.id;
@@ -72,7 +78,7 @@ const TaskModal: React.FC = observer(() => {
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalContent}>
                     <ModalHeader
-                        title={isNewTask ? "Создать задачу" : "Редактировать задачу"}
+                        title={isNewTask ? "Создать задачу" : `Редактировать: ${task.title}`}
                     />
 
                     <ModalBody

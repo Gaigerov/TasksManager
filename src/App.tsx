@@ -1,14 +1,22 @@
+import {createHashRouter, RouterProvider} from 'react-router-dom';
 import MainPage from './components/MainPage/MainPage';
-import {BrowserRouter} from 'react-router-dom';
 import './index.css';
+import {TaskStoreProvider} from './stores/storeContext';
+
+const router = createHashRouter([
+    {
+        path: "/*",
+        element: <MainPage />,
+    },
+]);
 
 function App() {
     return (
-        <BrowserRouter>
+        <TaskStoreProvider>
             <div className="App">
-                <MainPage />
+                <RouterProvider router={router} />
             </div>
-        </BrowserRouter>
+        </TaskStoreProvider>
     );
 }
 
