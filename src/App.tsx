@@ -3,6 +3,9 @@ import MainPage from './components/MainPage/MainPage';
 import './index.css';
 import {TaskStoreProvider} from './stores/storeContext';
 
+/* eslint-disable no-console */
+console.warn = () => {};
+
 const router = createHashRouter([
     {
         path: "/*",

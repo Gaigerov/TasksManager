@@ -5,18 +5,44 @@
     padding: 20px;
 }
 
-.taskInfo {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
 .statusContainer {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 12px;
     border-radius: 6px;
+}
+
+.statusPopup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    overflow: hidden;
+    gap: 6px;
+    min-width: 100px;
+}
+
+.statusOption {
+    width: max-content;
+    border-radius: 6px;
+    margin: 2px 8px;
+    padding: 4px 8px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    box-sizing: border-box;
 }
 
 .statusLabel {
@@ -70,22 +96,11 @@
 .modalFooter {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
     padding-top: 15px;
     border-top: 1px solid #e2e8f0;
 }
 
 .footerButton {
     width: max-content;
-}
-
-@media (max-width: 768px) {
-    .datetimeContainer {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .modalFooter {
-        flex-direction: column;
-    }
 }

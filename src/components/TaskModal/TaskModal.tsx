@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {observer} from 'mobx-react-lite';
 import {TaskItem} from '../../types/types';
 import styles from './TaskModal.module.css';
@@ -102,7 +102,7 @@ const TaskModal: React.FC = observer(() => {
 
                     {isViewMode ? (
                         <TaskViewModalBody
-                            task={task}
+                            taskId={task.id}
                             onClose={handleClose}
                         />
                     ) : (

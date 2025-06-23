@@ -21,9 +21,7 @@ const MainPage: React.FC = () => {
         taskStore.setNavigate(navigate);
     }, [navigate, taskStore]);
 
-    useEffect(() => {
-        console.log("Current mode:", mode, "taskId:", taskId);
-        
+    useEffect(() => {      
         if (mode === VALID_MODE.EDIT && taskId) {
             const task = taskStore.tasks.find(t => t.id === taskId);
             if (task) {

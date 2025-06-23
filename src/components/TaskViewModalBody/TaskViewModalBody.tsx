@@ -1,17 +1,41 @@
-import React from 'react';
-import {TaskItem} from '../../types/types';
+import {observer} from 'mobx-react-lite';
+import {useEffect, useRef, useState} from 'react';
+import {TaskStatus} from '../../types/types';
 import styles from './TaskViewModalBody.module.css';
 import Button from '../Button/Button';
 import {useTaskStore} from '../../stores/storeContext';
 import {VALID_MODE} from '../../config/constant';
 
 interface TaskViewModalBodyProps {
-    task: TaskItem;
+    taskId: string;
     onClose: () => void;
 }
 
-const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = ({task, onClose}) => {
+const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, onClose}) => {
     const taskStore = useTaskStore();
+    const [isStatusOpen, setIsStatusOpen] = useState(false);
+    const statusButtonRef = useRef<HTMLButtonElement>(null);
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    const task = taskStore.tasks.find(t => t.id === taskId);
+
+    useEffect(() => {
+        if (!task) return;
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node) &&
+                statusButtonRef.current && !statusButtonRef.current.contains(event.target as Node)) {
+                setIsStatusOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [task]);
+
+    if (!task) return null;
+
+    const {id, status, description, time, date} = task;
 
     const handleEdit = () => {
         taskStore.openModal(VALID_MODE.EDIT, task);
@@ -27,26 +51,67 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = ({task, onClose}) =>
         onClose();
     };
 
+    const statusColors = {
+        'To Do': '#4a5568',
+        'In Progress': '#3182ce',
+        'Done': '#38a169'
+    };
+
     return (
         <div className={styles.modalBody}>
-            <div className={styles.taskInfo}>
+            <div>
                 <div className={styles.statusContainer}>
-                    <span className={styles.statusLabel}>Статус:</span>
-                    <span className={styles.statusValue}>{task.status}</span>
+                    <button
+                        ref={statusButtonRef}
+                        className={styles.statusButton}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsStatusOpen(!isStatusOpen);
+                        }}
+                        style={{backgroundColor: statusColors[status], color: 'white'}}
+                    >
+                        {status}
+                    </button>
+
+                    {isStatusOpen && (
+                        <div
+                            ref={popupRef}
+                            className={styles.statusPopup}
+                            onClick={e => e.stopPropagation()}
+                        >
+                            {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((stat) => (
+                                <button
+                                    key={stat}
+                                    className={styles.statusOption}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsStatusOpen(false);
+                                        taskStore.changeTaskStatus(id, stat);
+                                    }}
+                                    style={{
+                                        backgroundColor: status === stat ? statusColors[stat] : '',
+                                        fontWeight: status === stat ? 'bold' : 'normal',
+                                        color: status === stat ? 'white' : 'inherit'
+                                    }}
+                                >
+                                    {stat}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div className={styles.descriptionContainer}>
-                    <h4 className={styles.sectionTitle}>Описание:</h4>
-                    <p className={styles.taskDescription}>{task.description}</p>
+                    <p className={styles.taskDescription}>{description}</p>
                 </div>
 
                 <div className={styles.datetimeContainer}>
                     <div className={styles.timeContainer}>
-                        <p className={styles.taskTime}>{task.time}</p>
+                        <p className={styles.taskTime}>{time}</p>
                     </div>
 
                     <div className={styles.dateContainer}>
-                        <p className={styles.taskDate}>{task.date}</p>
+                        <p className={styles.taskDate}>{date}</p>
                     </div>
                 </div>
             </div>
@@ -67,6 +132,6 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = ({task, onClose}) =>
             </div>
         </div>
     );
-};
+});
 
 export default TaskViewModalBody;
