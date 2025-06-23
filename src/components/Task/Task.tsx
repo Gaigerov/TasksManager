@@ -37,14 +37,21 @@ const Task = observer(({task}: TaskProps) => {
         'Done': '#38a169'
     };
 
-    // Функция для открытия модального окна в режиме редактирования
     const openEditModal = (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         taskStore.openModal(VALID_MODE.EDIT, task);
     };
 
+    const openViewModal = (e?: React.MouseEvent) => {
+        if (e) e.stopPropagation();
+        taskStore.openModal(VALID_MODE.VIEW, task);
+    };
+
     return (
-        <div className={styles.card} onClick={openEditModal}>
+        <div className={styles.card} onClick={(e) => {
+            e.stopPropagation();
+            openViewModal(e)
+        }}>
             <div className={styles.contentWrapper}>
                 <div className={styles.textContent}>
                     <h3 className={styles.title}>{title}</h3>

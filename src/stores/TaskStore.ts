@@ -47,13 +47,11 @@ export default class TaskStore {
     }
 
     // Действия
-    createTask(task: Omit<TaskItem, "id" | "status">) {
+    createTask(task: Omit<TaskItem, "id">) {
         const newTask: TaskItem = {
             ...task,
             id: Date.now().toString(),
-            status: "To Do",
         };
-
         this.tasks = [...this.tasks, newTask];
     }
 
@@ -75,7 +73,7 @@ export default class TaskStore {
         if (taskToClone) {
             this.createTask({
                 ...taskToClone,
-                title: `${taskToClone.title} (копия)`
+                title: `${taskToClone.title} (копия)`,
             });
         }
     }
@@ -93,9 +91,12 @@ export default class TaskStore {
     }
 
     // Работа с модальным окном
-    openModal(mode: typeof VALID_MODE.CREATE | typeof VALID_MODE.EDIT, task?: TaskItem) {
+    openModal(mode: typeof VALID_MODE.VIEW | typeof VALID_MODE.CREATE | typeof VALID_MODE.EDIT, task?: TaskItem) {
+        this.setCurrentTask(task || null);
         if (this.navigate) {
-            if (mode === VALID_MODE.EDIT && task) {
+            if (mode === VALID_MODE.VIEW && task) {
+                this.navigate(`/${VALID_MODE.VIEW}?id=${task.id}`);
+            } else if (mode === VALID_MODE.EDIT && task) {
                 this.navigate(`/${VALID_MODE.EDIT}?id=${task.id}`);
             } else {
                 this.navigate(`/${VALID_MODE.CREATE}`);
@@ -104,6 +105,7 @@ export default class TaskStore {
     }
 
     closeModal() {
+        this.setCurrentTask(null);
         if (this.navigate) {
             this.navigate("/");
         }
@@ -113,7 +115,8 @@ export default class TaskStore {
         if (task.id) {
             this.updateTask(task);
         } else {
-            const {id, status, ...rest} = task;
+            // Передаём все поля кроме id
+            const {id, ...rest} = task;
             this.createTask(rest);
         }
         this.closeModal();

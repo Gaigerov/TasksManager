@@ -59,6 +59,21 @@
     background-color: #bd2130;
 }
 
+/* Warning - оранжевый */
+.warning {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.warning:hover {
+    background-color: #d97706;
+}
+
+.warning:disabled {
+    background-color: #fde68a;
+    cursor: not-allowed;
+}
+
 .success {
     background-color: #28a745;
     color: white;
