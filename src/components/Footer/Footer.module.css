@@ -1,13 +1,12 @@
 .footer {
     display: flex;
-    flex-shrink: 0; /* Запрещаем сжатие */
+    flex-shrink: 0;
     width: 100%;
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
     background-color: #f8f9fa;
     border-top: 1px solid #e9ecef;
-    margin-top: auto; /* Прижимаем к низу */
 }
 
 .buttonGroup {

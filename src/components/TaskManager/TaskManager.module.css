@@ -1,21 +1,12 @@
 .taskManager {
-    max-width: 800px;
+    width: 100%;
     width: 100%;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 10px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     min-height: 0;
-    overflow: hidden; 
-}
-
-.emptyState {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: #f9fafb;
-    border-radius: 8px;
-    border: 1px dashed #d1d5db;
-    flex: 1;
+    overflow: hidden;
 }

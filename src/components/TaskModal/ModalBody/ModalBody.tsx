@@ -32,7 +32,6 @@ const ModalBody: React.FC<ModalBodyProps> = ({
             onChange(field, e.target.value);
         };
 
-    // Функции очистки полей
     const handleClearTitle = () => onChange('title', '');
     const handleClearDescription = () => onChange('description', '');
 

@@ -68,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({onOpenModal}) => {
                 className={styles.createButton}
                 onClick={() => onOpenModal && onOpenModal()}
             >
-                Create
+                Создать
             </Button>
         </header>
     );

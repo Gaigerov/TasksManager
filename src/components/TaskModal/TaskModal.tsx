@@ -78,7 +78,7 @@ const TaskModal: React.FC = observer(() => {
             <div className={styles.modal} onClick={e => e.stopPropagation()}>
                 <div className={styles.modalContent}>
                     <ModalHeader
-                        title={isNewTask ? "Создать задачу" : `Редактировать: ${task.title}`}
+                        title={isNewTask ? "Создать задачу" :  "Редактировать задачу"}
                     />
 
                     <ModalBody
