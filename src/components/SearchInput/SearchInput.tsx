@@ -45,7 +45,7 @@ const SearchInput = observer(() => {
             placeholder="Search..."
             className={styles.searchInput}
             variant="headerInput"
-            inputSize="large"
+            inputSize="medium"
             fullWidth
             endIcon={taskStore.searchQuery ? <CloseIcon /> : undefined}
             onEndIconClick={handleClear}
