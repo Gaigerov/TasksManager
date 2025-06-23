@@ -1,17 +1,20 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.1e206ee8.css",
-    "main.js": "/TasksManager/static/js/main.c6d5204f.js",
+    "main.css": "/TasksManager/static/css/main.57d87b6d.css",
+    "main.js": "/TasksManager/static/js/main.3d59b200.js",
+    "static/media/calendar-todo-line.svg": "/TasksManager/static/media/calendar-todo-line.6979106f9768d69a01837492f9641323.svg",
     "static/media/delete.svg": "/TasksManager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
+    "static/media/list-check-2.svg": "/TasksManager/static/media/list-check-2.85e9501b0911214a16fef9b5e7cea9cc.svg",
     "static/media/ChevronDown.svg": "/TasksManager/static/media/ChevronDown.847d4f1c4be8401248ea8c256fe90339.svg",
     "static/media/clone.svg": "/TasksManager/static/media/clone.60e0badc80b9e16881f0f0b0a53e1e14.svg",
+    "static/media/web-board.svg": "/TasksManager/static/media/web-board.bce1051357a2ee4ec08fd9d311da4ea8.svg",
     "index.html": "/TasksManager/index.html",
     "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.1e206ee8.css.map": "/TasksManager/static/css/main.1e206ee8.css.map",
-    "main.c6d5204f.js.map": "/TasksManager/static/js/main.c6d5204f.js.map"
+    "main.57d87b6d.css.map": "/TasksManager/static/css/main.57d87b6d.css.map",
+    "main.3d59b200.js.map": "/TasksManager/static/js/main.3d59b200.js.map"
   },
   "entrypoints": [
-    "static/css/main.1e206ee8.css",
-    "static/js/main.c6d5204f.js"
+    "static/css/main.57d87b6d.css",
+    "static/js/main.3d59b200.js"
   ]
 }
