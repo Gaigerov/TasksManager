@@ -19,6 +19,8 @@ const Task = observer(({task}: TaskProps) => {
     const popupRef = useRef<HTMLDivElement>(null);
     const taskStore = useTaskStore();
 
+    const isActive = taskStore.currentTask?.id === id;
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (popupRef.current && !popupRef.current.contains(event.target as Node) &&
@@ -48,10 +50,13 @@ const Task = observer(({task}: TaskProps) => {
     };
 
     return (
-        <div className={styles.card} onClick={(e) => {
-            e.stopPropagation();
-            openViewModal(e)
-        }}>
+        <div
+            className={`${styles.card} ${isActive ? styles.active : ''}`}
+            onClick={(e) => {
+                e.stopPropagation();
+                openViewModal(e)
+            }}
+        >
             <div className={styles.contentWrapper}>
                 <div className={styles.textContent}>
                     <h3 className={styles.title}>{title}</h3>

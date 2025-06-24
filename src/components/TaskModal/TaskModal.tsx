@@ -1,15 +1,15 @@
-import {useState, useEffect} from 'react';
-import {observer} from 'mobx-react-lite';
-import {TaskItem} from '../../types/types';
+import { useState, useEffect, useCallback } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { TaskItem } from '../../types/types';
 import styles from './TaskModal.module.css';
 import ModalHeader from './ModalHeader/ModalHeader';
 import ModalBody from './ModalBody/ModalBody';
 import TaskViewModalBody from '../TaskViewModalBody/TaskViewModalBody';
 import ModalFooter from './ModalFooter/ModalFooter';
-import {useTaskStore} from '../../stores/storeContext';
-import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
-import {useLocation} from 'react-router-dom';
-import {VALID_MODE} from '../../config/constant';
+import { useTaskStore } from '../../stores/storeContext';
+import { validateTask, TaskValidationErrors } from '../../utils/taskValidation';
+import { VALID_MODE } from '../../config/constant';
 
 const emptyTask: TaskItem = {
     id: '',
@@ -28,19 +28,17 @@ const initialErrors: TaskValidationErrors = {
 };
 
 const TaskModal: React.FC = observer(() => {
-    const taskStore = useTaskStore();
+    const navigate = useNavigate();
     const location = useLocation();
+    const taskStore = useTaskStore();
     const searchParams = new URLSearchParams(location.search);
     const [task, setTask] = useState<TaskItem>(emptyTask);
     const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors);
     const taskId = searchParams.get('id');
 
-    // Получаем режим из пути
     const mode = location.pathname.substring(1);
     const isOpen = mode === VALID_MODE.CREATE || mode === VALID_MODE.EDIT || mode === VALID_MODE.VIEW;
     const isViewMode = mode === VALID_MODE.VIEW;
-    // const isEditMode = mode === VALID_MODE.EDIT;
-    // const isCreateMode = mode === VALID_MODE.CREATE;
 
     useEffect(() => {
         if (isOpen) {
@@ -82,9 +80,52 @@ const TaskModal: React.FC = observer(() => {
 
     const isNewTask = !task.id;
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         taskStore.closeModal();
-    };
+    }, [taskStore]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                handleClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('keydown', handleKeyDown);
+        }
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, handleClose]);
+
+    // Обработчики для кнопок в режиме просмотра
+    const handleEdit = useCallback(() => {
+        navigate(`/edit?id=${task.id}`);
+    }, [task.id, navigate]);
+
+    const handleClone = useCallback(() => {
+        // Создаем копию задачи без ID
+        const { id, ...clonedTask } = task;
+        taskStore.setCurrentTask(clonedTask as TaskItem);
+        navigate('/create');
+    }, [task, taskStore, navigate]);
+
+    const handleDelete = useCallback(() => {
+        if (task.id) {
+            taskStore.deleteTask(task.id);
+            taskStore.closeModal();
+        }
+    }, [task.id, taskStore]);
+
+    // Конфигурация кнопок для режима просмотра
+    const viewModeButtons = [
+        { label: 'Edit', variant: 'warning' as const, onClick: handleEdit },
+        { label: 'Copy', variant: 'primary' as const, onClick: handleClone },
+        { label: 'Del', variant: 'danger' as const, onClick: handleDelete },
+        { label: 'Cancel', variant: 'secondary' as const, onClick: handleClose }
+    ];
 
     if (!isOpen) return null;
 
@@ -96,15 +137,21 @@ const TaskModal: React.FC = observer(() => {
                         title={
                             isViewMode ? task.title :
                                 isNewTask ? "Создать задачу" :
-                                    "Редактировать задачу:"
+                                    "Редактировать задачу"
                         }
                     />
 
                     {isViewMode ? (
-                        <TaskViewModalBody
-                            taskId={task.id}
-                            onClose={handleClose}
-                        />
+                        <>
+                            <TaskViewModalBody
+                                taskId={task.id}
+                                onClose={handleClose}
+                            />
+                            <ModalFooter
+                                isViewMode={true}
+                                viewModeButtons={viewModeButtons}
+                            />
+                        </>
                     ) : (
                         <>
                             <ModalBody
@@ -115,6 +162,7 @@ const TaskModal: React.FC = observer(() => {
                             <ModalFooter
                                 submitLabel={isNewTask ? "Создать" : "Сохранить"}
                                 onSubmit={handleSubmit}
+                                submitDisabled={Object.values(errors).some(err => err.length > 0)}
                             />
                         </>
                     )}

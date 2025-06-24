@@ -77,7 +77,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
 
         const handleDateChange = (date: Date | null) => {
             onChange?.(date);
-            setIsOpen(false);
             setInputValue(formatDate(date));
         };
 
@@ -146,7 +145,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 if (inputValue.trim() === '') {
                     onChange?.(null);
                 } else {
-                    // Восстановление предыдущего значения
                     setInputValue(formatDate(value));
                 }
             }

@@ -1,19 +1,21 @@
-import {useTaskStore} from '../../../stores/storeContext';
+import { useTaskStore } from '../../../stores/storeContext';
+import Button from '../../Button/Button';
 import styles from './ModalFooter.module.css';
 
-interface SecondaryButton {
+interface ButtonConfig {
     label: string;
     onClick: () => void;
     disabled?: boolean;
-    variant?: 'primary' | 'secondary' | 'danger' | 'warning';
+    variant?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success' | 'link';
 }
 
 interface ModalFooterProps {
-    onSubmit: () => void;
+    onSubmit?: () => void;
     submitLabel?: string;
     closeLabel?: string;
     submitDisabled?: boolean;
-    secondaryButton?: SecondaryButton;
+    isViewMode?: boolean;
+    viewModeButtons?: ButtonConfig[];
 }
 
 const ModalFooter: React.FC<ModalFooterProps> = ({
@@ -21,43 +23,60 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
     closeLabel = 'Выйти',
     onSubmit,
     submitDisabled = false,
+    isViewMode = false,
+    viewModeButtons = [],
 }) => {
     const taskStore = useTaskStore();
     
     const handleClose = () => {
-        if (taskStore && typeof taskStore.closeModal === 'function') {
-            taskStore.closeModal();
-        }
+        taskStore?.closeModal?.();
     };
 
-    const getSubmitButtonClass = () => {
-        if (submitLabel === 'Создать') {
-            return `${styles.button} ${styles.success}`;
-        } else if (submitLabel === 'Сохранить') {
-            return `${styles.button} ${styles.warning}`;
-        }
+    if (isViewMode) {
+        return (
+            <div className={styles.footer}>
+                <div className={styles.buttonGroup}>
+                    {viewModeButtons.map((btn, index) => (
+                        <Button
+                            key={index}
+                            variant={btn.variant || 'secondary'}
+                            onClick={btn.onClick}
+                            disabled={btn.disabled}
+                            size="medium"
+                        >
+                            {btn.label}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
-        return `${styles.button} ${styles.primary}`;
+    // Стандартный режим (создание/редактирование)
+    const getSubmitVariant = () => {
+        if (submitLabel === 'Создать') return 'success';
+        if (submitLabel === 'Сохранить') return 'warning';
+        return 'primary';
     };
 
     return (
         <div className={styles.footer}>
             <div className={styles.buttonGroup}>
-                <button
-                    type="button"
-                    className={getSubmitButtonClass()}
+                <Button
+                    variant={getSubmitVariant()}
                     onClick={onSubmit}
                     disabled={submitDisabled}
+                    size="medium"
                 >
                     {submitLabel}
-                </button>
-                <button
-                    type="button"
-                    className={`${styles.button} ${styles.secondary}`}
+                </Button>
+                <Button 
+                    variant="secondary" 
                     onClick={handleClose}
+                    size="medium"
                 >
                     {closeLabel}
-                </button>
+                </Button>
             </div>
         </div>
     );

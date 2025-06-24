@@ -5,7 +5,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'warning' 
 type ButtonSize = 'small' | 'medium' | 'large';
 
 interface ButtonProps {
-    children?: React.ReactNode; // Сделали children опциональным
+    children?: React.ReactNode;
     variant?: ButtonVariant;
     size?: ButtonSize;
     className?: string;
@@ -13,8 +13,8 @@ interface ButtonProps {
     disabled?: boolean;
     as?: ElementType;
     onClick?: () => void;
-    iconSrc?: string; // Новый проп для пути к иконке
-    alt?: string; // Альтернативный текст для иконки
+    iconSrc?: string;
+    alt?: string;
 }
 
 const Button = forwardRef<HTMLElement, ButtonProps>((
@@ -26,8 +26,8 @@ const Button = forwardRef<HTMLElement, ButtonProps>((
         fullWidth = false,
         disabled = false,
         as: Component = 'button',
-        iconSrc, // Новый проп
-        alt = '', // Альтернативный текст
+        iconSrc, 
+        alt = '', 
         ...props
     },
     ref

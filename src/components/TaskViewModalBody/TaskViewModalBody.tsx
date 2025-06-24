@@ -2,9 +2,7 @@ import {observer} from 'mobx-react-lite';
 import {useEffect, useRef, useState} from 'react';
 import {TaskStatus} from '../../types/types';
 import styles from './TaskViewModalBody.module.css';
-import Button from '../Button/Button';
 import {useTaskStore} from '../../stores/storeContext';
-import {VALID_MODE} from '../../config/constant';
 
 interface TaskViewModalBodyProps {
     taskId: string;
@@ -36,20 +34,6 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
     if (!task) return null;
 
     const {id, status, description, time, date} = task;
-
-    const handleEdit = () => {
-        taskStore.openModal(VALID_MODE.EDIT, task);
-    };
-
-    const handleClone = () => {
-        taskStore.cloneTask(task.id);
-        onClose();
-    };
-
-    const handleDelete = () => {
-        taskStore.deleteTask(task.id);
-        onClose();
-    };
 
     const statusColors = {
         'To Do': '#4a5568',
@@ -114,21 +98,6 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
                         <p className={styles.taskDate}>{date}</p>
                     </div>
                 </div>
-            </div>
-
-            <div className={styles.modalFooter}>
-                <Button variant="warning" onClick={handleEdit} className={styles.footerButton}>
-                    Edit
-                </Button>
-                <Button variant="primary" onClick={handleClone} className={styles.footerButton}>
-                    Copy
-                </Button>
-                <Button variant="danger" onClick={handleDelete} className={styles.footerButton}>
-                    Del
-                </Button>
-                <Button variant="secondary" onClick={onClose} className={styles.footerButton}>
-                    Cancel
-                </Button>
             </div>
         </div>
     );
