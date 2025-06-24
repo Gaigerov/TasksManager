@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.3466b8c8.css",
-    "main.js": "/TasksManager/static/js/main.ae28861c.js",
+    "main.css": "/TasksManager/static/css/main.4d8a4c71.css",
+    "main.js": "/TasksManager/static/js/main.cb488177.js",
     "static/media/calendar-todo-line.svg": "/TasksManager/static/media/calendar-todo-line.6979106f9768d69a01837492f9641323.svg",
     "static/media/delete.svg": "/TasksManager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
     "static/media/list-check-2.svg": "/TasksManager/static/media/list-check-2.85e9501b0911214a16fef9b5e7cea9cc.svg",
@@ -10,11 +10,11 @@
     "static/media/web-board.svg": "/TasksManager/static/media/web-board.bce1051357a2ee4ec08fd9d311da4ea8.svg",
     "index.html": "/TasksManager/index.html",
     "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.3466b8c8.css.map": "/TasksManager/static/css/main.3466b8c8.css.map",
-    "main.ae28861c.js.map": "/TasksManager/static/js/main.ae28861c.js.map"
+    "main.4d8a4c71.css.map": "/TasksManager/static/css/main.4d8a4c71.css.map",
+    "main.cb488177.js.map": "/TasksManager/static/js/main.cb488177.js.map"
   },
   "entrypoints": [
-    "static/css/main.3466b8c8.css",
-    "static/js/main.ae28861c.js"
+    "static/css/main.4d8a4c71.css",
+    "static/js/main.cb488177.js"
   ]
 }
