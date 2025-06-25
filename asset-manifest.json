@@ -1,7 +1,11 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.bfa722ea.css",
+    "main.css": "/TasksManager/static/css/main.7246a734.css",
     "main.js": "/TasksManager/static/js/main.6886afca.js",
+    "static/media/Montserrat-Regular.ttf": "/TasksManager/static/media/Montserrat-Regular.2a2d37bf7680d86811db.ttf",
+    "static/media/Montserrat-SemiBold.ttf": "/TasksManager/static/media/Montserrat-SemiBold.2f7a846126c7d5ee9163.ttf",
+    "static/media/Montserrat-Medium.ttf": "/TasksManager/static/media/Montserrat-Medium.647f0e61af3a76a138c3.ttf",
+    "static/media/Montserrat-Thin.ttf": "/TasksManager/static/media/Montserrat-Thin.53139ad3e8e638609181.ttf",
     "static/media/calendar-todo-line.svg": "/TasksManager/static/media/calendar-todo-line.6979106f9768d69a01837492f9641323.svg",
     "static/media/delete.svg": "/TasksManager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
     "static/media/list-check-2.svg": "/TasksManager/static/media/list-check-2.85e9501b0911214a16fef9b5e7cea9cc.svg",
@@ -10,11 +14,11 @@
     "static/media/web-board.svg": "/TasksManager/static/media/web-board.bce1051357a2ee4ec08fd9d311da4ea8.svg",
     "index.html": "/TasksManager/index.html",
     "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.bfa722ea.css.map": "/TasksManager/static/css/main.bfa722ea.css.map",
+    "main.7246a734.css.map": "/TasksManager/static/css/main.7246a734.css.map",
     "main.6886afca.js.map": "/TasksManager/static/js/main.6886afca.js.map"
   },
   "entrypoints": [
-    "static/css/main.bfa722ea.css",
+    "static/css/main.7246a734.css",
     "static/js/main.6886afca.js"
   ]
 }
