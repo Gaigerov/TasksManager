@@ -20,8 +20,8 @@
 }
 
 .card.active {
-    background-color: #e0e0e0; 
-    box-shadow: 0 0 0 2px var(--primary-color); 
+    background-color: #e0e0e0;
+    box-shadow: 0 0 0 2px var(--primary-color);
 }
 
 .contentWrapper {
@@ -149,6 +149,7 @@
 .statusPopup {
     position: absolute;
     top: 100%;
+    bottom: auto;
     left: 0;
     z-index: 10;
     background: white;
@@ -162,6 +163,13 @@
     overflow: hidden;
     gap: 6px;
     min-width: 100px;
+}
+
+.statusPopupTop {
+    top: auto !important;
+    bottom: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: 4px !important;
 }
 
 .statusOption {

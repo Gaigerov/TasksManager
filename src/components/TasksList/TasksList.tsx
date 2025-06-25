@@ -10,17 +10,18 @@ const TasksList = observer(() => {
     const taskStore = useTaskStore();
     const {filteredTasks} = taskStore;
 
-    const rowRenderer: ListRowRenderer = useCallback(
-        ({index, key, style}) => {
-            const task = filteredTasks[index];
-            return (
-                <div key={key} style={style}>
-                    <Task task={task} />
-                </div>
-            );
-        },
-        [filteredTasks]
-    );
+const rowRenderer: ListRowRenderer = useCallback(
+    ({index, key, style}) => {
+        const task = filteredTasks[index];
+        const isLast = index === filteredTasks.length - 1; // Определяем последнюю задачу
+        return (
+            <div key={key} style={style}>
+                <Task task={task} isLastTask={isLast} /> {/* Передаем флаг */}
+            </div>
+        );
+    },
+    [filteredTasks]
+);
 
     return (
         <div className={styles.tasksContainer}>

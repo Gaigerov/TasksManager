@@ -10,9 +10,10 @@ import {VALID_MODE} from '../../config/constant';
 
 interface TaskProps {
     task: TaskItem;
+    isLastTask?: boolean;
 }
 
-const Task = observer(({task}: TaskProps) => {
+const Task = observer(({task, isLastTask = false}: TaskProps) => {
     const {id, title, description, time, date, status} = task;
     const [isStatusOpen, setIsStatusOpen] = useState(false);
     const statusButtonRef = useRef<HTMLButtonElement>(null);
@@ -123,7 +124,7 @@ const Task = observer(({task}: TaskProps) => {
                     {isStatusOpen && (
                         <div
                             ref={popupRef}
-                            className={styles.statusPopup}
+                            className={`${styles.statusPopup} ${isLastTask ? styles.statusPopupTop : ''}`}
                             onClick={e => e.stopPropagation()}
                         >
                             {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((stat) => (
