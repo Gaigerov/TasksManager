@@ -13,10 +13,10 @@ const TasksList = observer(() => {
 const rowRenderer: ListRowRenderer = useCallback(
     ({index, key, style}) => {
         const task = filteredTasks[index];
-        const isLast = index === filteredTasks.length - 1; // Определяем последнюю задачу
+        const isLast = index === filteredTasks.length - 1;
         return (
             <div key={key} style={style}>
-                <Task task={task} isLastTask={isLast} /> {/* Передаем флаг */}
+                <Task task={task} isLastTask={isLast} />
             </div>
         );
     },

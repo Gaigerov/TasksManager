@@ -1,4 +1,4 @@
-import { useTaskStore } from '../../../stores/storeContext';
+import {useTaskStore} from '../../../stores/storeContext';
 import Button from '../../Button/Button';
 import styles from './ModalFooter.module.css';
 
@@ -15,19 +15,23 @@ interface ModalFooterProps {
     closeLabel?: string;
     submitDisabled?: boolean;
     isViewMode?: boolean;
+    isFilterMode?: boolean;
     viewModeButtons?: ButtonConfig[];
+    filterModeButtons?: ButtonConfig[];
 }
 
 const ModalFooter: React.FC<ModalFooterProps> = ({
-    submitLabel = 'Создать',
-    closeLabel = 'Выйти',
+    submitLabel = 'Create',
+    closeLabel = 'Cancel',
     onSubmit,
     submitDisabled = false,
     isViewMode = false,
+    isFilterMode = false,
     viewModeButtons = [],
+    filterModeButtons = [],
 }) => {
     const taskStore = useTaskStore();
-    
+
     const handleClose = () => {
         taskStore?.closeModal?.();
     };
@@ -52,10 +56,30 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
         );
     }
 
+    if (isFilterMode) {
+        return (
+            <div className={styles.footer}>
+                <div className={styles.buttonGroup}>
+                    {filterModeButtons.map((btn, index) => (
+                        <Button
+                            key={index}
+                            variant={btn.variant || 'secondary'}
+                            onClick={btn.onClick}
+                            disabled={btn.disabled}
+                            size="medium"
+                        >
+                            {btn.label}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+
     // Стандартный режим (создание/редактирование)
     const getSubmitVariant = () => {
-        if (submitLabel === 'Создать') return 'success';
-        if (submitLabel === 'Сохранить') return 'warning';
+        if (submitLabel === 'Create') return 'success';
+        if (submitLabel === 'Save') return 'warning';
         return 'primary';
     };
 
@@ -70,8 +94,8 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
                 >
                     {submitLabel}
                 </Button>
-                <Button 
-                    variant="secondary" 
+                <Button
+                    variant="secondary"
                     onClick={handleClose}
                     size="medium"
                 >

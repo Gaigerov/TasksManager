@@ -8,15 +8,37 @@ export default class TaskStore {
     isModalOpen = false;
     navigate: ((path: string) => void) | null = null;
     searchQuery = "";
+    filters = {
+        status: '',
+        date: ''
+    };
 
     constructor() {
         makeAutoObservable(this, {}, {autoBind: true});
         this.loadTasks();
+        this.loadFilters();
 
         reaction(
             () => this.tasks.slice(),
             tasks => localStorage.setItem("tasks", JSON.stringify(tasks))
         );
+        reaction(
+            () => [this.filters.status, this.filters.date],
+            () => this.saveFilters()
+        );
+    }
+
+    private saveFilters() {
+        localStorage.setItem("taskFilters", JSON.stringify(this.filters));
+    }
+
+    private loadFilters() {
+        const savedFilters = localStorage.getItem("taskFilters");
+        if (savedFilters) {
+            runInAction(() => {
+                this.filters = JSON.parse(savedFilters);
+            });
+        }
     }
 
     setNavigate(navigate: (path: string) => void) {
@@ -26,16 +48,6 @@ export default class TaskStore {
     setSearchQuery = (query: string) => {
         this.searchQuery = query;
     };
-
-    get filteredTasks() {
-        const query = this.searchQuery.toLowerCase();
-        if (!query.trim()) return this.tasks;
-
-        return this.tasks.filter(task =>
-            task.title.toLowerCase().includes(query) ||
-            (task.description && task.description.toLowerCase().includes(query))
-        );
-    }
 
     loadTasks() {
         const savedTasks = localStorage.getItem("tasks");
@@ -91,13 +103,21 @@ export default class TaskStore {
     }
 
     // Работа с модальным окном
-    openModal(mode: typeof VALID_MODE.VIEW | typeof VALID_MODE.CREATE | typeof VALID_MODE.EDIT, task?: TaskItem) {
+    openModal(
+        mode: typeof VALID_MODE.VIEW |
+            typeof VALID_MODE.CREATE |
+            typeof VALID_MODE.EDIT |
+            typeof VALID_MODE.FILTER,
+        task?: TaskItem
+    ) {
         this.setCurrentTask(task || null);
         if (this.navigate) {
             if (mode === VALID_MODE.VIEW && task) {
                 this.navigate(`/${VALID_MODE.VIEW}?id=${task.id}`);
             } else if (mode === VALID_MODE.EDIT && task) {
                 this.navigate(`/${VALID_MODE.EDIT}?id=${task.id}`);
+            } else if (mode === VALID_MODE.FILTER) {
+                this.navigate(`/${VALID_MODE.FILTER}`);
             } else {
                 this.navigate(`/${VALID_MODE.CREATE}`);
             }
@@ -111,11 +131,39 @@ export default class TaskStore {
         }
     }
 
+    setFilters(filters: {status: string; date: string}) {
+        this.filters = filters;
+    }
+
+    resetFilters() {
+        this.filters = {status: '', date: ''};
+    }
+
+    get filteredTasks() {
+        const query = this.searchQuery.toLowerCase().trim();
+        const statusFilter = this.filters.status;
+        const dateFilter = this.filters.date;
+
+        return this.tasks.filter(task => {
+            const matchesSearch = query
+                ? task.title.toLowerCase().includes(query) ||
+                (task.description?.toLowerCase().includes(query) ?? false)
+                : true;
+            const matchesStatus = statusFilter
+                ? task.status === statusFilter
+                : true;
+            const matchesDate = dateFilter
+                ? task.date === dateFilter
+                : true;
+
+            return matchesSearch && matchesStatus && matchesDate;
+        });
+    }
+
     submitTask(task: TaskItem) {
         if (task.id) {
             this.updateTask(task);
         } else {
-            // Передаём все поля кроме id
             const {id, ...rest} = task;
             this.createTask(rest);
         }

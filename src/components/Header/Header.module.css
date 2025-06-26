@@ -30,7 +30,8 @@
     overflow: hidden;
 }
 
-.searchIconContainer {
+.searchIconContainer,
+.filterIconContainer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,24 +46,48 @@
     overflow: hidden;
 }
 
-.searchIconContainer:hover {
+.searchIconContainer:hover,
+.filterIconContainer:hover {
     background-color: rgba(0, 0, 0, 0.04);
 }
 
-.searchInput {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    max-width: 100%;
-    overflow: hidden;
+.filterIconContainer {
+    position: relative;
+    margin-left: 8px;
+    overflow: visible;
 }
 
-.createButton {
-    flex-shrink: 0;
-    padding: 8px 16px;
-    box-sizing: border-box;
-    white-space: nowrap;
-    overflow: hidden;
+.filterIconContainer .icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.filterIconContainer .icon-wrapper svg {
+    display: block;
+    margin: auto;
+}
+
+.filterIconContainer .MuiBadge-badge {
+    top: 0;
+    right: 0;
+    transform: translate(25%, -25%);
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    z-index: 101;
+}
+
+.filterIconContainer .MuiSvgIcon-root {
+    z-index: 99;
+    position: relative;
+    font-size: 24px;
 }
 
 @media (max-width: 480px) {
@@ -77,13 +102,24 @@
         overflow: hidden;
     }
 
-    .searchIconContainer {
+    .searchIconContainer,
+    .filterIconContainer {
         width: 36px;
         height: 36px;
     }
 
-    .createButton {
-        padding: 8px 12px;
+    .filterIconContainer .MuiSvgIcon-root {
+        font-size: 16px;
+    }
+
+    .filterIconContainer .MuiBadge-badge {
+        min-width: 14px;
+        height: 14px;
+        font-size: 0.5rem;
+        transform: translate(15%, -15%);
+    }
+
+    .filterIconContainer .MuiSvgIcon-root {
         font-size: 14px;
     }
 }

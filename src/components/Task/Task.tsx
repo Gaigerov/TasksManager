@@ -35,9 +35,9 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
     }, []);
 
     const statusColors = {
-        'To Do': '#4a5568',
-        'In Progress': '#3182ce',
-        'Done': '#38a169'
+        'To Do': '#6C757D',
+        'In Progress': '#0F5BCC',
+        'Done': '#198754'
     };
 
     const openEditModal = (e?: React.MouseEvent) => {
@@ -60,8 +60,12 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
         >
             <div className={styles.contentWrapper}>
                 <div className={styles.textContent}>
-                    <h3 className={styles.title}>{title}</h3>
-                    <p className={styles.description}>{description}</p>
+                    <h3 className={styles.title}>
+                        {title}
+                    </h3>
+                    <p className={styles.description}>
+                        {description}
+                    </p>
                 </div>
 
                 <div className={styles.actions}>

@@ -1,15 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
-import { observer } from 'mobx-react-lite';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { TaskItem } from '../../types/types';
+import {useState, useEffect, useCallback} from 'react';
+import {observer} from 'mobx-react-lite';
+import {useNavigate, useLocation} from 'react-router-dom';
+import {TaskItem} from '../../types/types';
 import styles from './TaskModal.module.css';
 import ModalHeader from './ModalHeader/ModalHeader';
 import ModalBody from './ModalBody/ModalBody';
 import TaskViewModalBody from '../TaskViewModalBody/TaskViewModalBody';
 import ModalFooter from './ModalFooter/ModalFooter';
-import { useTaskStore } from '../../stores/storeContext';
-import { validateTask, TaskValidationErrors } from '../../utils/taskValidation';
-import { VALID_MODE } from '../../config/constant';
+import {useTaskStore} from '../../stores/storeContext';
+import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
+import {VALID_MODE} from '../../config/constant';
+import TaskFilterModalBody from '../TaskFilterModalBody/TaskFilterModalBody';
 
 const emptyTask: TaskItem = {
     id: '',
@@ -35,10 +36,31 @@ const TaskModal: React.FC = observer(() => {
     const [task, setTask] = useState<TaskItem>(emptyTask);
     const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors);
     const taskId = searchParams.get('id');
+    const [filterStatus, setFilterStatus] = useState(taskStore.filters.status);
+    const [filterDate, setFilterDate] = useState(taskStore.filters.date);
 
     const mode = location.pathname.substring(1);
-    const isOpen = mode === VALID_MODE.CREATE || mode === VALID_MODE.EDIT || mode === VALID_MODE.VIEW;
+    const isOpen = mode === VALID_MODE.CREATE || mode === VALID_MODE.EDIT || mode === VALID_MODE.VIEW || mode === VALID_MODE.FILTER;
     const isViewMode = mode === VALID_MODE.VIEW;
+    const isFilterMode = mode === VALID_MODE.FILTER;
+
+    const handleStatusChange = (status: string) => setFilterStatus(status);
+    const handleDateChange = (date: string) => setFilterDate(date);
+
+    // Обработчики кнопок фильтрации
+    const handleApplyFilters = () => {
+        taskStore.setFilters({
+            status: filterStatus,
+            date: filterDate
+        });
+        taskStore.closeModal();
+    };
+
+    const handleResetFilters = () => {
+        setFilterStatus('');
+        setFilterDate('');
+        taskStore.resetFilters();
+    };
 
     useEffect(() => {
         if (isOpen) {
@@ -105,12 +127,25 @@ const TaskModal: React.FC = observer(() => {
         navigate(`/edit?id=${task.id}`);
     }, [task.id, navigate]);
 
-    const handleClone = useCallback(() => {
-        // Создаем копию задачи без ID
-        const { id, ...clonedTask } = task;
-        taskStore.setCurrentTask(clonedTask as TaskItem);
-        navigate('/create');
-    }, [task, taskStore, navigate]);
+const handleClone = useCallback(() => {
+    const {id, ...clonedTask} = task;
+    
+    const newTask: TaskItem = {
+        ...clonedTask,
+        id: Date.now().toString(),
+        title: `${task.title} (copy)`
+    };
+    
+    taskStore.createTask({
+        title: newTask.title,
+        description: newTask.description,
+        time: newTask.time,
+        date: newTask.date,
+        status: newTask.status
+    });
+    
+    taskStore.closeModal();
+}, [task, taskStore]);
 
     const handleDelete = useCallback(() => {
         if (task.id) {
@@ -121,10 +156,16 @@ const TaskModal: React.FC = observer(() => {
 
     // Конфигурация кнопок для режима просмотра
     const viewModeButtons = [
-        { label: 'Edit', variant: 'warning' as const, onClick: handleEdit },
-        { label: 'Copy', variant: 'primary' as const, onClick: handleClone },
-        { label: 'Del', variant: 'danger' as const, onClick: handleDelete },
-        { label: 'Cancel', variant: 'secondary' as const, onClick: handleClose }
+        {label: 'Edit', variant: 'warning' as const, onClick: handleEdit},
+        {label: 'Copy', variant: 'primary' as const, onClick: handleClone},
+        {label: 'Del', variant: 'danger' as const, onClick: handleDelete},
+        {label: 'Cancel', variant: 'secondary' as const, onClick: handleClose}
+    ];
+    // Конфигурация кнопок для режима фильтрации
+    const filterModeButtons = [
+        {label: 'Filter', variant: 'warning' as const, onClick: handleApplyFilters},
+        {label: 'Reset', variant: 'danger' as const, onClick: handleResetFilters},
+        {label: 'Cancel', variant: 'secondary' as const, onClick: handleClose}
     ];
 
     if (!isOpen) return null;
@@ -136,11 +177,11 @@ const TaskModal: React.FC = observer(() => {
                     <ModalHeader
                         title={
                             isViewMode ? task.title :
-                                isNewTask ? "Создать задачу" :
-                                    "Редактировать задачу"
+                                isFilterMode ? "Фильтр задач" :
+                                    isNewTask ? "Создать задачу" :
+                                        "Редактировать задачу"
                         }
                     />
-
                     {isViewMode ? (
                         <>
                             <TaskViewModalBody
@@ -152,20 +193,36 @@ const TaskModal: React.FC = observer(() => {
                                 viewModeButtons={viewModeButtons}
                             />
                         </>
-                    ) : (
-                        <>
-                            <ModalBody
-                                task={task}
-                                errors={errors}
-                                onChange={handleChange}
-                            />
-                            <ModalFooter
-                                submitLabel={isNewTask ? "Создать" : "Сохранить"}
-                                onSubmit={handleSubmit}
-                                submitDisabled={Object.values(errors).some(err => err.length > 0)}
-                            />
-                        </>
-                    )}
+                    ) :
+                        isFilterMode ? (
+                            <>
+                                <TaskFilterModalBody
+                                    selectedStatus={filterStatus}
+                                    selectedDate={filterDate}
+                                    onStatusChange={handleStatusChange}
+                                    onDateChange={handleDateChange}
+                                    onClearAll={handleResetFilters}
+                                />
+                                <ModalFooter
+                                    isFilterMode={true}
+                                    filterModeButtons={filterModeButtons}
+                                />
+                            </>
+                        ) :
+                            (
+                                <>
+                                    <ModalBody
+                                        task={task}
+                                        errors={errors}
+                                        onChange={handleChange}
+                                    />
+                                    <ModalFooter
+                                        submitLabel={isNewTask ? "Create" : "Save"}
+                                        onSubmit={handleSubmit}
+                                        submitDisabled={Object.values(errors).some(err => err.length > 0)}
+                                    />
+                                </>
+                            )}
                 </div>
             </div>
         </div>
