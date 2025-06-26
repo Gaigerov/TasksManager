@@ -124,6 +124,11 @@
     font-style: italic;
 }
 
+.overdue {
+    color: #dc3545 !important;
+    font-weight: bold;
+}
+
 .statusContainer {
     position: relative;
 }

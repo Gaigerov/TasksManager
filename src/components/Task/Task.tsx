@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect} from 'react';
+import {useState, useRef, useEffect, useMemo} from 'react';
 import styles from './Task.module.css';
 import {TaskItem, TaskStatus} from '../../types/types';
 import deleteIcon from '../../images/delete.svg';
@@ -21,6 +21,19 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
     const taskStore = useTaskStore();
 
     const isActive = taskStore.currentTask?.id === id;
+    const isOverdue = useMemo(() => {
+        if (!date) return false;
+        
+        try {
+            const [day, month, year] = date.split('.').map(Number);
+            const taskDate = new Date(year, month - 1, day);
+            const today = new Date();
+            const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            return taskDate < todayDateOnly && status !== 'Done';
+        } catch {
+            return false;
+        }
+    }, [date, status]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -153,7 +166,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                     )}
                 </div>
 
-                <div className={styles.datetime}>
+                <div className={`${styles.datetime} ${isOverdue ? styles.overdue : ''}`}>
                     <span className={styles.time}>{time}</span>
                     <span className={styles.date}>{date}</span>
                 </div>
