@@ -1,6 +1,7 @@
 import {makeAutoObservable, reaction, runInAction} from "mobx";
 import {TaskItem, TaskStatus} from '../types/types';
 import {VALID_MODE} from '../config/constant'
+import {useNotification} from '../components/Notification/NotificationContext';
 
 export default class TaskStore {
     tasks: TaskItem[] = [];
@@ -12,6 +13,8 @@ export default class TaskStore {
         status: '',
         date: ''
     };
+
+    showNotification = useNotification();
 
     constructor() {
         makeAutoObservable(this, {}, {autoBind: true});
@@ -65,6 +68,7 @@ export default class TaskStore {
             id: Date.now().toString(),
         };
         this.tasks = [...this.tasks, newTask];
+        // this.showNotification('Задача создана', 'success');
     }
 
     updateTask(updatedTask: TaskItem) {
@@ -73,11 +77,13 @@ export default class TaskStore {
             const newTasks = [...this.tasks];
             newTasks[index] = {...this.tasks[index], ...updatedTask};
             this.tasks = newTasks;
+            this.showNotification(`Задача успешно отредактирована`, 'success');
         }
     }
 
     deleteTask(id: string) {
         this.tasks = this.tasks.filter(task => task.id !== id);
+        this.showNotification(`Задача с ID:${id} удалена`, 'success');
     }
 
     cloneTask(id: string) {
@@ -87,6 +93,7 @@ export default class TaskStore {
                 ...taskToClone,
                 title: `${taskToClone.title} (копия)`,
             });
+            this.showNotification(`Задача с ID:${id} успешно скопирована`, 'success');
         }
     }
 

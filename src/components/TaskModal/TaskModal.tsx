@@ -11,6 +11,7 @@ import {useTaskStore} from '../../stores/storeContext';
 import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
 import {VALID_MODE} from '../../config/constant';
 import TaskFilterModalBody from '../TaskFilterModalBody/TaskFilterModalBody';
+import {useNotification} from '../Notification/NotificationContext';
 
 const emptyTask: TaskItem = {
     id: '',
@@ -32,6 +33,7 @@ const TaskModal: React.FC = observer(() => {
     const navigate = useNavigate();
     const location = useLocation();
     const taskStore = useTaskStore();
+    const showNotification = useNotification();
     const searchParams = new URLSearchParams(location.search);
     const [task, setTask] = useState<TaskItem>(emptyTask);
     const [errors, setErrors] = useState<TaskValidationErrors>(initialErrors);
@@ -60,6 +62,7 @@ const TaskModal: React.FC = observer(() => {
         setFilterStatus('');
         setFilterDate('');
         taskStore.resetFilters();
+        showNotification('Фильтры сброшены', 'info');
     };
 
     useEffect(() => {
@@ -127,25 +130,25 @@ const TaskModal: React.FC = observer(() => {
         navigate(`/edit?id=${task.id}`);
     }, [task.id, navigate]);
 
-const handleClone = useCallback(() => {
-    const {id, ...clonedTask} = task;
-    
-    const newTask: TaskItem = {
-        ...clonedTask,
-        id: Date.now().toString(),
-        title: `${task.title} (copy)`
-    };
-    
-    taskStore.createTask({
-        title: newTask.title,
-        description: newTask.description,
-        time: newTask.time,
-        date: newTask.date,
-        status: newTask.status
-    });
-    
-    taskStore.closeModal();
-}, [task, taskStore]);
+    const handleClone = useCallback(() => {
+        const {id, ...clonedTask} = task;
+
+        const newTask: TaskItem = {
+            ...clonedTask,
+            id: Date.now().toString(),
+            title: `${task.title} (copy)`
+        };
+
+        taskStore.createTask({
+            title: newTask.title,
+            description: newTask.description,
+            time: newTask.time,
+            date: newTask.date,
+            status: newTask.status
+        });
+
+        taskStore.closeModal();
+    }, [task, taskStore]);
 
     const handleDelete = useCallback(() => {
         if (task.id) {
