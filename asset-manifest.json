@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/TasksManager/static/css/main.7246a734.css",
-    "main.js": "/TasksManager/static/js/main.6886afca.js",
+    "main.css": "/TasksManager/static/css/main.ccbf0a14.css",
+    "main.js": "/TasksManager/static/js/main.9babf34d.js",
     "static/media/Montserrat-Regular.ttf": "/TasksManager/static/media/Montserrat-Regular.2a2d37bf7680d86811db.ttf",
     "static/media/Montserrat-SemiBold.ttf": "/TasksManager/static/media/Montserrat-SemiBold.2f7a846126c7d5ee9163.ttf",
     "static/media/Montserrat-Medium.ttf": "/TasksManager/static/media/Montserrat-Medium.647f0e61af3a76a138c3.ttf",
@@ -14,11 +14,11 @@
     "static/media/web-board.svg": "/TasksManager/static/media/web-board.bce1051357a2ee4ec08fd9d311da4ea8.svg",
     "index.html": "/TasksManager/index.html",
     "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
-    "main.7246a734.css.map": "/TasksManager/static/css/main.7246a734.css.map",
-    "main.6886afca.js.map": "/TasksManager/static/js/main.6886afca.js.map"
+    "main.ccbf0a14.css.map": "/TasksManager/static/css/main.ccbf0a14.css.map",
+    "main.9babf34d.js.map": "/TasksManager/static/js/main.9babf34d.js.map"
   },
   "entrypoints": [
-    "static/css/main.7246a734.css",
-    "static/js/main.6886afca.js"
+    "static/css/main.ccbf0a14.css",
+    "static/js/main.9babf34d.js"
   ]
 }
