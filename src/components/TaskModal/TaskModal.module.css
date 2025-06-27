@@ -13,21 +13,16 @@
     animation: fadeIn 0.3s forwards;
 }
 
-.modal {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 20px;
-}
-
 .modalContent {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     overflow: hidden;
 }
 
 @keyframes fadeIn {
-    to { opacity: 1; }
+    to {
+        opacity: 1;
+    }
 }
 
 .modal {
@@ -39,5 +34,45 @@
 }
 
 @keyframes scaleIn {
-    to { transform: scale(1); }
+    to {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 480px) {
+    .modal {
+        margin: 0;
+        width: 100%;
+        margin: 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 8px 8px 0 0;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 1199px) {
+    .modal {
+        border-radius: 8px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal {
+        width: 300px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: 0;
+        border-radius: 0px;
+    }
+
+    .modalContent {
+        background: white;
+        border-radius: 0;
+        height: 100vh;
+        overflow: hidden;
+    }
 }
