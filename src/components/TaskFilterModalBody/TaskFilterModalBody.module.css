@@ -1,19 +1,17 @@
 .modalBody {
-    padding: 20px;
     overflow: auto;
+    padding: 8px 12px;
 }
 
 .formGroup {
-    margin-bottom: 20px;
+    margin-bottom: 8px;
 }
 
 .label {
     display: block;
-    margin-bottom: 8px;
     font-weight: 500;
     text-align: left;
-    font-size: 14px;
-    color: #333;
+    font-size: 12px;
 }
 
 .customFilterSelector {

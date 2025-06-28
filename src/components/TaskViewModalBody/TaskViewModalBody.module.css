@@ -91,7 +91,7 @@
     margin: 0;
     font-size: 12px;
     font-weight: 500;
-    color: #2d3748;
+    color: var(--secondary);
 }
 
 .modalFooter {
