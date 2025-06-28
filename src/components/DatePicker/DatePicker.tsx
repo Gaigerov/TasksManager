@@ -233,8 +233,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 return {
                     ...baseStyles,
                     position: 'fixed',
-                    top: '63%',
-                    left: '20PX',
+                    bottom: '120px',
+                    left: '20px',
                     width: '90%',
                     maxWidth: '205px',
                 };
