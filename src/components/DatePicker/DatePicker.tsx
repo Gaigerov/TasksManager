@@ -54,9 +54,19 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
         const [inputValue, setInputValue] = useState('');
         const [isFocused, setIsFocused] = useState(false);
         const [position, setPosition] = useState({top: 0, left: 0, width: 0});
+        const [isMobile, setIsMobile] = useState(false);
         const datePickerRef = useRef<HTMLDivElement>(null);
         const calendarRef = useRef<HTMLDivElement>(null);
         const inputRef = useRef<HTMLInputElement>(null);
+        const buttonRef = useRef<HTMLButtonElement>(null);
+
+        // Определение мобильного режима
+        useEffect(() => {
+            const checkMobile = () => setIsMobile(window.innerWidth <= 480);
+            checkMobile();
+            window.addEventListener('resize', checkMobile);
+            return () => window.removeEventListener('resize', checkMobile);
+        }, []);
 
         const formatDate = useCallback((date: Date | null): string => {
             if (!date) return '';
@@ -191,6 +201,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
 
                 const handleScrollOrResize = () => {
                     setPosition(calculatePosition());
+                    setIsMobile(window.innerWidth <= 480);
                 };
 
                 document.addEventListener('mousedown', handleClickOutside);
@@ -204,6 +215,41 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 };
             }
         }, [isOpen, calculatePosition]);
+
+        // Получаем стили для позиционирования календаря
+        const getCalendarStyles = (): React.CSSProperties => {
+            const baseStyles: React.CSSProperties = {
+                zIndex: 5000,
+                borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                backgroundColor: '#fff',
+                border: '1px solid #e0e0e0',
+                maxHeight: '80vh',
+                overflow: 'auto'
+            };
+
+            if (isMobile) {
+                // Для мобильных: фиксированное позиционирование по центру
+                return {
+                    ...baseStyles,
+                    position: 'fixed',
+                    top: '63%',
+                    left: '20PX',
+                    width: '90%',
+                    maxWidth: '205px',
+                };
+            }
+            
+            // Для десктопа: под полем ввода с фиксированной шириной
+            return {
+                ...baseStyles,
+                position: 'absolute',
+                top: `${position.top}px`,
+                left: `${position.left}px`,
+                width: '340px', // Фиксированная ширина для календаря
+                maxWidth: '205px' // Минимальная ширина
+            };
+        };
 
         return (
             <div
@@ -226,6 +272,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                     />
                     {showIcon && (
                         <button
+                            ref={buttonRef}
                             className={styles.iconButton}
                             onClick={() => setIsOpen(!isOpen)}
                             aria-label="Open calendar"
@@ -239,13 +286,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                     <div
                         ref={calendarRef}
                         className={styles.calendarContainer}
-                        style={{
-                            position: 'absolute',
-                            top: `${position.top + 8}px`,
-                            left: `${position.left}px`,
-                            width: `${position.width}px`,
-                            zIndex: 10000
-                        }}
+                        style={getCalendarStyles()}
                     >
                         <Calendar
                             selectedDate={value}
