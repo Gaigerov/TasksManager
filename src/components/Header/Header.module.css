@@ -3,7 +3,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background-color: #fff;
+    background-color: var(--white);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 100;
@@ -36,7 +36,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #5f6368;
+    color: var(--dark);
     width: 40px;
     height: 40px;
     border-radius: 50%;

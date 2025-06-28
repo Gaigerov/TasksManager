@@ -68,11 +68,11 @@
 
 .inputError {
     border-color: #e53e3e;
-    background-color: #fff5f5;
+    background-color: var(--var(--white))5f5;
 }
 
 .errorContainer {
-    background-color: #fff5f5;
+    background-color: var(--var(--white))5f5;
     border: 1px solid #fc8181;
     border-radius: 4px;
     padding: 10px;
@@ -96,8 +96,9 @@
 }
 
 .timeInput {
-    appearance: none; 
+    appearance: none;
     -webkit-appearance: none;
-    height: 36px; 
-    padding: 8px 12px; 
+    height: 36px;
+    padding: 8px 12px;
+    color: var(--light);
 }

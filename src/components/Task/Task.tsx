@@ -48,7 +48,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
     }, []);
 
     const statusColors = {
-        'To Do': '#6C757D',
+        'To Do': 'var(--secondary)',
         'In Progress': '#0F5BCC',
         'Done': '#198754'
     };
@@ -133,7 +133,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                             e.stopPropagation();
                             setIsStatusOpen(!isStatusOpen);
                         }}
-                        style={{backgroundColor: statusColors[status], color: 'white'}}
+                        style={{backgroundColor: statusColors[status], color: 'var(--white)'}}
                     >
                         {status}
                     </button>
@@ -156,7 +156,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                                     style={{
                                         backgroundColor: status === stat ? statusColors[stat] : '',
                                         fontWeight: status === stat ? 'bold' : 'normal',
-                                        color: status === stat ? 'white' : 'inherit'
+                                        color: status === stat ? 'var(--white)' : 'inherit'
                                     }}
                                 >
                                     {stat}

@@ -57,7 +57,7 @@ const ModalBody: React.FC<ModalBodyProps> = ({
         <div className={styles.modalBody}>
             <div className={styles.formGroup}>
                 <label htmlFor="title" className={styles.label}>
-                    Заголовок
+                    Title
                     {titleError && <span className={styles.requiredStar}> *</span>}
                 </label>
                 <div className={styles.inputContainer}>
@@ -85,7 +85,7 @@ const ModalBody: React.FC<ModalBodyProps> = ({
 
             <div className={styles.formGroup}>
                 <label htmlFor="description" className={styles.label}>
-                    Описание
+                    Description
                     {descriptionError && <span className={styles.requiredStar}> *</span>}
                 </label>
                 <div className={styles.inputContainer}>
@@ -112,8 +112,22 @@ const ModalBody: React.FC<ModalBodyProps> = ({
 
             <div className={styles.formRow}>
                 <div className={styles.formGroup}>
+                    <label htmlFor="time" className={styles.label}>
+                        Time
+                        {timeError && <span className={styles.requiredStar}> *</span>}
+                    </label>
+                    <input
+                        id="time"
+                        type="time"
+                        className={`${styles.input} ${styles.timeInput} ${timeError ? styles.inputError : ''}`}
+                        value={task.time}
+                        onChange={handleInputChange('time')}
+                    />
+                    {timeError && <div className={styles.errorText}>{timeError}</div>}
+                </div>
+                <div className={styles.formGroup}>
                     <label htmlFor="date" className={styles.label}>
-                        Дата
+                        Date
                         {dateError && <span className={styles.requiredStar}> *</span>}
                     </label>
                     <DatePicker
@@ -125,21 +139,6 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                         showIcon={true}
                     />
                     {dateError && <div className={styles.errorText}>{dateError}</div>}
-                </div>
-
-                <div className={styles.formGroup}>
-                    <label htmlFor="time" className={styles.label}>
-                        Время
-                        {timeError && <span className={styles.requiredStar}> *</span>}
-                    </label>
-                    <input
-                        id="time"
-                        type="time"
-                        className={`${styles.input} ${styles.timeInput} ${timeError ? styles.inputError : ''}`}
-                        value={task.time}
-                        onChange={handleInputChange('time')}
-                    />
-                    {timeError && <div className={styles.errorText}>{timeError}</div>}
                 </div>
             </div>
         </div>

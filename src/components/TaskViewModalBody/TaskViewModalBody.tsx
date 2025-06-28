@@ -36,9 +36,9 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
     const {id, status, description, time, date} = task;
 
     const statusColors = {
-        'To Do': '#4a5568',
-        'In Progress': '#3182ce',
-        'Done': '#38a169'
+        'To Do': 'var(--secondary)',
+        'In Progress': 'var(--primary)',
+        'Done': 'var(--success)'
     };
 
     return (
@@ -52,7 +52,7 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
                             e.stopPropagation();
                             setIsStatusOpen(!isStatusOpen);
                         }}
-                        style={{backgroundColor: statusColors[status], color: 'white'}}
+                        style={{backgroundColor: statusColors[status], color: 'var(--white)'}}
                     >
                         {status}
                     </button>
@@ -75,7 +75,7 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
                                     style={{
                                         backgroundColor: status === stat ? statusColors[stat] : '',
                                         fontWeight: status === stat ? 'bold' : 'normal',
-                                        color: status === stat ? 'white' : 'inherit'
+                                        color: status === stat ? 'var(--white)' : 'inherit'
                                     }}
                                 >
                                     {stat}

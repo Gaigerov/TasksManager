@@ -1,13 +1,13 @@
 .calendar {
-    width: 200px;
+    width: 100%;
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 8px;
     font-size: 12px;
-    --primary-color: #1976d2;
-    --hover-color: #f0f0f0;
-    --disabled-color: #ccc;
+    --primary-color: var(--primary);
+    --hover-color: var(--secondary-light);
+    --disabled-color: var(--light);
 }
 
 .header {

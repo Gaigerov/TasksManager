@@ -53,14 +53,18 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
         const [isOpen, setIsOpen] = useState(false);
         const [inputValue, setInputValue] = useState('');
         const [isFocused, setIsFocused] = useState(false);
-        const [position, setPosition] = useState({top: 0, left: 0, width: 0});
+        const [position, setPosition] = useState({
+            top: 0,
+            right: 0,
+            buttonTop: 0,
+            width: 0
+        });
         const [isMobile, setIsMobile] = useState(false);
         const datePickerRef = useRef<HTMLDivElement>(null);
         const calendarRef = useRef<HTMLDivElement>(null);
         const inputRef = useRef<HTMLInputElement>(null);
         const buttonRef = useRef<HTMLButtonElement>(null);
 
-        // Определение мобильного режима
         useEffect(() => {
             const checkMobile = () => setIsMobile(window.innerWidth <= 480);
             checkMobile();
@@ -102,10 +106,8 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
 
             if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
 
-            // Коррекция двухзначного года
             if (year < 100) year += 2000;
 
-            // Проверка валидности даты
             if (
                 day < 1 || day > 31 ||
                 month < 1 || month > 12 ||
@@ -125,7 +127,6 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
         const formatInputValue = (value: string): string => {
             const digits = value.replace(/\D/g, '');
 
-            // Ограничиваем длину (день - 2, месяц - 2, год - 4)
             const maxLength = 8;
             const limited = digits.slice(0, maxLength);
 
@@ -173,15 +174,16 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
         };
 
         const calculatePosition = useCallback(() => {
-            if (datePickerRef.current) {
-                const rect = datePickerRef.current.getBoundingClientRect();
+            if (inputRef.current) {
+                const rect = inputRef.current.getBoundingClientRect();
                 return {
                     top: rect.bottom + window.scrollY,
-                    left: rect.left + window.scrollX,
+                    right: window.innerWidth - rect.right,
+                    buttonTop: rect.top + window.scrollY,
                     width: rect.width
                 };
             }
-            return {top: 0, left: 0, width: 0};
+            return { top: 0, right: 0, buttonTop: 0, width: 0 }; 
         }, []);
 
         useEffect(() => {
@@ -216,38 +218,33 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             }
         }, [isOpen, calculatePosition]);
 
-        // Получаем стили для позиционирования календаря
         const getCalendarStyles = (): React.CSSProperties => {
             const baseStyles: React.CSSProperties = {
                 zIndex: 5000,
                 borderRadius: '8px',
                 boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                backgroundColor: '#fff',
+                backgroundColor: 'var(--var(--white))',
                 border: '1px solid #e0e0e0',
                 maxHeight: '80vh',
                 overflow: 'auto'
             };
 
             if (isMobile) {
-                // Для мобильных: фиксированное позиционирование по центру
                 return {
                     ...baseStyles,
                     position: 'fixed',
-                    bottom: '120px',
-                    left: '20px',
-                    width: '90%',
-                    maxWidth: '205px',
+                    top: `${position.buttonTop - 215}px`,
+                    right: `${position.right}px`,
+                    maxWidth: '100%',
                 };
             }
             
-            // Для десктопа: под полем ввода с фиксированной шириной
             return {
                 ...baseStyles,
                 position: 'absolute',
-                top: `${position.top}px`,
-                left: `${position.left}px`,
-                width: '340px', // Фиксированная ширина для календаря
-                maxWidth: '205px' // Минимальная ширина
+                top: `${position.top + 5}px`,
+                right: `${position.right}px`,
+                maxWidth: '205px'
             };
         };
 

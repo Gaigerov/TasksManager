@@ -3,5 +3,5 @@
 			Created with Pixso.
 	</desc>
 	<defs/>
-	<path id="矢量 355" d="M0 10L16 10L16 8L0 8L0 10ZM0 14L16 14L16 12L0 12L0 14ZM0 6L16 6L16 4L0 4L0 6ZM0 0L0 2L16 2L16 0L0 0Z" fill="#6C757D" fill-opacity="1.000000" fill-rule="evenodd"/>
+	<path id="矢量 355" d="M0 10L16 10L16 8L0 8L0 10ZM0 14L16 14L16 12L0 12L0 14ZM0 6L16 6L16 4L0 4L0 6ZM0 0L0 2L16 2L16 0L0 0Z" fill="var(--secondary)" fill-opacity="1.000000" fill-rule="evenodd"/>
 </svg>

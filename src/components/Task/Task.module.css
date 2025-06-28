@@ -112,20 +112,11 @@
     display: flex;
     gap: 10px;
     font-size: 14px;
-    color: #777;
-}
-
-.time {
-    font-weight: bold;
-    font-style: italic;
-}
-
-.date {
-    font-style: italic;
+    color: var(--secondary);
 }
 
 .overdue {
-    color: #dc3545 !important;
+    color: var(--danger) !important;
     font-weight: bold;
 }
 

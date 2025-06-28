@@ -32,40 +32,40 @@
 }
 
 .primary {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
 }
 
 .primary:hover:not(.disabled) {
-    background-color: #0056b3;
+    background-color: var(--primary-light);
 }
 
 .secondary {
-    background-color: #6c757d;
-    color: white;
+    background-color: var(--secondary);
+    color: var(--white);
 }
 
 .secondary:hover:not(.disabled) {
-    background-color: #5a6268;
+    background-color: var(--secondary-light);
 }
 
 .danger {
-    background-color: #dc3545;
-    color: white;
+    background-color: var(--danger);
+    color: var(--white);
 }
 
 .danger:hover:not(.disabled) {
-    background-color: #bd2130;
+    background-color: var(--danger-light);
 }
 
 /* Warning - оранжевый */
 .warning {
-    background-color: #f59e0b;
-    color: white;
+    background-color: var(--warning);
+    color: var(--white);
 }
 
 .warning:hover {
-    background-color: #d97706;
+    background-color: var(--warning-light);
 }
 
 .warning:disabled {
@@ -74,29 +74,29 @@
 }
 
 .success {
-    background-color: #28a745;
-    color: white;
+    background-color: var(--success);
+    color: var(--white);
 }
 
 .success:hover:not(.disabled) {
-    background-color: #218838;
+    background-color: var(--success-light);
 }
 
 .link {
     background: none;
-    color: #007bff;
+    color: var(--info);
     text-decoration: underline;
     padding: 0;
     border-radius: 0;
 }
 
 .link:hover:not(.disabled) {
-    color: #0056b3;
+    color: var(--info-light);
     text-decoration: none;
 }
 
 .header {
-    background-color: #f0f0f0;
+    background-color: var(--light);
     color: #333;
     border: 1px solid #ddd;
 }
@@ -106,7 +106,7 @@
 }
 
 .card {
-    background-color: white;
+    background-color: var(--white);
     color: #333;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
