@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useRef } from "react";
+import { createContext, useContext, ReactNode, useRef, useEffect } from "react";
 import TaskStore from "./TaskStore";
 import { useNotification } from "../components/Notification/NotificationContext";
 
@@ -17,6 +17,19 @@ export function TaskStoreProvider({ children }: TaskStoreProviderProps) {
     if (!storeRef.current) {
         storeRef.current = new TaskStore(showNotification);
     }
+
+    useEffect(() => {
+
+        const initialize = async () => {
+            try {
+                await storeRef.current?.initializeTasks();
+            } catch (error) {
+                console.error("Error initializing task store:", error);
+            }
+        };
+        
+        initialize();
+    }, []);
 
     return (
         <StoreContext.Provider value={storeRef.current}>

@@ -23,6 +23,7 @@
         "react-scripts": "5.0.1",
         "react-virtualized": "9.22.6",
         "typescript": "4.9.5",
+        "uuid": "^11.1.0",
         "web-vitals": "2.1.4"
     },
     "homepage": "https://gaigerov.github.io/TasksManager/",
@@ -57,6 +58,7 @@
         "@types/react": "18.2.45",
         "@types/react-dom": "18.2.18",
         "@types/react-virtualized": "9.22.2",
+        "@types/uuid": "^10.0.0",
         "cssnano": "^7.0.7",
         "gh-pages": "6.3.0",
         "js-cookie": "3.0.5",

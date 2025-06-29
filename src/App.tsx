@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {createHashRouter, RouterProvider} from 'react-router-dom';
 import './index.css';
 import {TaskStoreProvider} from './stores/storeContext';
