@@ -8,7 +8,7 @@ import {VALID_MODE} from '../../config/constant';
 import {useTaskStore} from '../../stores/storeContext';
 import Badge from '@mui/material/Badge';
 import {styled} from '@mui/material';
-
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const RedBadge = styled(Badge)(({theme}) => ({
     '& .MuiBadge-badge': {
@@ -27,9 +27,10 @@ const RedBadge = styled(Badge)(({theme}) => ({
 
 interface HeaderProps {
     onOpenModal?: () => void;
+    onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({onOpenModal}) => {
+const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -110,6 +111,13 @@ const Header: React.FC<HeaderProps> = ({onOpenModal}) => {
             >
                 Create
             </Button>
+            <button
+                className={styles.logoutButton}
+                onClick={onLogout}
+                title="Выйти"
+            >
+                <ExitToAppIcon />
+            </button>
         </header>
     );
 };

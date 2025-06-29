@@ -1,118 +1,293 @@
-import {makeAutoObservable, reaction} from 'mobx';
-import {TaskItem, TaskStatus} from '../types/types';
-import {
-    loadTasks,
-    saveTasks,
-    loadFilters,
-    saveFilters
-} from '../services/localStorageService';
-import {createNewTask, getModalPath} from '../utils/taskUtils';
-import {filterTasks} from '../utils/taskFilters';
-import {ValidMode} from '../config/constant';
+import { makeAutoObservable, runInAction } from "mobx";
+import { TaskItem, TaskStatus } from '../types/types';
+import { VALID_MODE } from '../config/constant';
+import Cookies from 'js-cookie';
+import { NotificationContextType } from '../components/Notification/NotificationContext';
+
+interface StorageData {
+  data: {
+    tasks: TaskItem[];
+  };
+  storageName: string;
+  id: string;
+}
 
 export default class TaskStore {
-    tasks: TaskItem[] = [];
-    currentTask: TaskItem | null = null;
-    navigate: ((path: string) => void) | null = null;
-    searchQuery = '';
-    filters = {status: '', date: ''};
+  tasks: TaskItem[] = [];
+  storageId: string | null = null;
+  currentTask: TaskItem | null = null;
+  isModalOpen = false;
+  navigate: ((path: string) => void) | null = null;
+  searchQuery = "";
+  filters = {
+    status: '',
+    date: ''
+  };
+  isLoading = false;
+  showNotification: NotificationContextType;
 
-    constructor() {
-        makeAutoObservable(this, {}, {autoBind: true});
-        this.initStore();
+  constructor(showNotification: NotificationContextType) {
+    this.showNotification = showNotification;
+    makeAutoObservable(this, {}, { autoBind: true });
+    this.loadFilters();
+  }
+
+  private saveFilters() {
+    localStorage.setItem("taskFilters", JSON.stringify(this.filters));
+  }
+
+  private loadFilters() {
+    const savedFilters = localStorage.getItem("taskFilters");
+    if (savedFilters) {
+      runInAction(() => {
+        this.filters = JSON.parse(savedFilters);
+      });
+    }
+  }
+
+  setNavigate(navigate: (path: string) => void) {
+    this.navigate = navigate;
+  }
+
+  setSearchQuery = (query: string) => {
+    this.searchQuery = query;
+  };
+
+  async initializeTasks() {
+    try {
+      runInAction(() => {
+        this.isLoading = true;
+      });
+      
+      const authToken = this.getAuthToken();
+      const storage = await this.findOrCreateStorage(authToken);
+      
+      runInAction(() => {
+        this.storageId = storage.id;
+        this.tasks = storage.data.tasks || [];
+        this.isLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.isLoading = false;
+      });
+      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      this.showNotification(`Ошибка загрузки задач: ${message}`, 'error');
+    }
+  }
+
+  private async findOrCreateStorage(authToken: string): Promise<StorageData> {
+    const response = await fetch('https://simple-storage.vigdorov.ru/storages', {
+      method: 'GET',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': authToken 
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Ошибка получения хранилищ: ' + response.statusText);
     }
 
-    private initStore() {
-        this.tasks = loadTasks();
-        this.filters = loadFilters();
+    const storages: StorageData[] = await response.json();
+    const tasksStorage = storages.find(s => s.storageName === 'tasks');
 
-        reaction(
-            () => this.tasks.slice(),
-            tasks => saveTasks(tasks)
-        );
+    if (tasksStorage) return tasksStorage;
 
-        reaction(
-            () => [this.filters.status, this.filters.date],
-            () => saveFilters(this.filters)
-        );
+    const createResponse = await fetch('https://simple-storage.vigdorov.ru/storages', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': authToken 
+      },
+      body: JSON.stringify({
+        storageName: 'tasks',
+        data: { tasks: [] }
+      })
+    });
+
+    if (!createResponse.ok) {
+      throw new Error('Ошибка создания хранилища: ' + createResponse.statusText);
     }
 
-    createTask(task: Omit<TaskItem, 'id'>) {
-        this.tasks = [...this.tasks, createNewTask(task)];
-    }
+    return await createResponse.json();
+  }
 
-    updateTask(updatedTask: TaskItem) {
-        this.tasks = this.tasks.map(task =>
-            task.id === updatedTask.id ? {...task, ...updatedTask} : task
-        );
-    }
+  private async saveTasksToServer() {
+    if (!this.storageId) throw new Error("Storage ID not found");
+    
+    const authToken = this.getAuthToken();
+    const response = await fetch(`https://simple-storage.vigdorov.ru/storages/${this.storageId}`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': authToken 
+      },
+      body: JSON.stringify({
+        data: { tasks: this.tasks },
+        storageName: 'tasks',
+        id: this.storageId
+      })
+    });
 
-    deleteTask(id: string) {
-        this.tasks = this.tasks.filter(task => task.id !== id);
+    if (!response.ok) {
+      throw new Error(`Ошибка сохранения: ${response.statusText}`);
     }
+  }
 
-    cloneTask(id: string) {
-        const taskToClone = this.tasks.find(t => t.id === id);
-        if (taskToClone) {
-            this.createTask({
-                ...taskToClone,
-                title: `${taskToClone.title} (копия)`
-            });
-        }
-    }
+  private getAuthToken(): string {
+    const token = Cookies.get('authToken');
+    if (!token) throw new Error("Необходима авторизация");
+    return token;
+  }
 
-    get filteredTasks() {
-        return filterTasks(
-            this.tasks,
-            this.searchQuery,
-            this.filters.status,
-            this.filters.date
-        );
-    }
-
-    setSearchQuery = (query: string) => {
-        this.searchQuery = query;
+  async createTask(task: Omit<TaskItem, "id">) {
+    const newTask: TaskItem = {
+      ...task,
+      id: Date.now().toString(),
     };
-
-    setNavigate(navigate: (path: string) => void) {
-        this.navigate = navigate;
+    const originalTasks = [...this.tasks];
+    try {
+      runInAction(() => {
+        this.tasks = [...this.tasks, newTask];
+      });
+      await this.saveTasksToServer();
+      this.showNotification(`Задача "${newTask.title}" создана`, 'success');
+    } catch (error) {
+      runInAction(() => {
+        this.tasks = originalTasks;
+      });
+      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      this.showNotification(`Ошибка создания задачи: ${message}`, 'error');
     }
+  }
 
-    setCurrentTask(task: TaskItem | null) {
-        this.currentTask = task;
+  async updateTask(updatedTask: TaskItem) {
+    const originalTasks = [...this.tasks];
+    try {
+      runInAction(() => {
+        this.tasks = this.tasks.map(task => 
+          task.id === updatedTask.id ? updatedTask : task
+        );
+      });
+      await this.saveTasksToServer();
+      this.showNotification(`Задача "${updatedTask.title}" обновлена`, 'success');
+    } catch (error) {
+      runInAction(() => {
+        this.tasks = originalTasks;
+      });
+      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      this.showNotification(`Ошибка обновления задачи: ${message}`, 'error');
     }
+  }
 
-    setFilters(filters: {status: string; date: string}) {
-        this.filters = filters;
+  async deleteTask(id: string) {
+    const task = this.tasks.find(t => t.id === id);
+    const originalTasks = [...this.tasks];
+    try {
+      runInAction(() => {
+        this.tasks = this.tasks.filter(task => task.id !== id);
+      });
+      await this.saveTasksToServer();
+      if (task) {
+        this.showNotification(`Задача "${task.title}" удалена`, 'success');
+      }
+    } catch (error) {
+      runInAction(() => {
+        this.tasks = originalTasks;
+      });
+      const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      this.showNotification(`Ошибка удаления задачи: ${message}`, 'error');
     }
+  }
 
-    resetFilters() {
-        this.filters = {status: '', date: ''};
+  async cloneTask(id: string) {
+    const taskToClone = this.tasks.find(t => t.id === id);
+    if (taskToClone) {
+      await this.createTask({
+        ...taskToClone,
+        title: `${taskToClone.title} (копия)`,
+      });
     }
+  }
 
-    openModal(
-        mode: ValidMode,
-        task?: TaskItem
-    ) {
-        this.setCurrentTask(task || null);
-        const path = getModalPath(mode, task);
-        if (path && this.navigate) this.navigate(path);
+  changeTaskStatus(taskId: string, newStatus: TaskStatus) {
+    const task = this.tasks.find(t => t.id === taskId);
+    if (task) {
+      this.updateTask({...task, status: newStatus});
     }
+  }
 
-    closeModal() {
-        this.setCurrentTask(null);
-        if (this.navigate) this.navigate('/');
-    }
+  setCurrentTask(task: TaskItem | null) {
+    this.currentTask = task;
+  }
 
-    submitTask(task: TaskItem) {
-        task.id ? this.updateTask(task) : this.createTask(task);
-        this.closeModal();
+  openModal(
+    mode: typeof VALID_MODE.VIEW |
+      typeof VALID_MODE.CREATE |
+      typeof VALID_MODE.EDIT |
+      typeof VALID_MODE.FILTER,
+    task?: TaskItem
+  ) {
+    this.setCurrentTask(task || null);
+    if (this.navigate) {
+      if (mode === VALID_MODE.VIEW && task) {
+        this.navigate(`/${VALID_MODE.VIEW}?id=${task.id}`);
+      } else if (mode === VALID_MODE.EDIT && task) {
+        this.navigate(`/${VALID_MODE.EDIT}?id=${task.id}`);
+      } else if (mode === VALID_MODE.FILTER) {
+        this.navigate(`/${VALID_MODE.FILTER}`);
+      } else {
+        this.navigate(`/${VALID_MODE.CREATE}`);
+      }
     }
+  }
 
-    changeTaskStatus(taskId: string, newStatus: TaskStatus) {
-        this.updateTask({
-            ...this.tasks.find(t => t.id === taskId)!,
-            status: newStatus
-        });
+  closeModal() {
+    this.setCurrentTask(null);
+    if (this.navigate) {
+      this.navigate("/");
     }
+  }
+
+  setFilters(filters: {status: string; date: string}) {
+    this.filters = filters;
+    this.saveFilters();
+  }
+
+  resetFilters() {
+    this.filters = {status: '', date: ''};
+    this.saveFilters();
+  }
+
+  get filteredTasks() {
+    const query = this.searchQuery.toLowerCase().trim();
+    const statusFilter = this.filters.status;
+    const dateFilter = this.filters.date;
+
+    return this.tasks.filter(task => {
+      const matchesSearch = query
+        ? task.title.toLowerCase().includes(query) ||
+          (task.description?.toLowerCase().includes(query) ?? false)
+        : true;
+      const matchesStatus = statusFilter
+        ? task.status === statusFilter
+        : true;
+      const matchesDate = dateFilter
+        ? task.date === dateFilter
+        : true;
+
+      return matchesSearch && matchesStatus && matchesDate;
+    });
+  }
+
+  submitTask(task: TaskItem) {
+    if (task.id) {
+      this.updateTask(task);
+    } else {
+      const {id, ...rest} = task;
+      this.createTask(rest);
+    }
+    this.closeModal();
+  }
 }

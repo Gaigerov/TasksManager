@@ -30,6 +30,19 @@
     overflow: hidden;
 }
 
+.logoutButton {
+    color: var(--white);
+    background-color: var(--danger);
+    border: 0;
+    border-radius: 8px;
+    padding: 2px 8px;
+}
+
+.logoutButton:hover {
+    cursor: pointer;
+    background-color: var(--danger-light);
+}
+
 .searchIconContainer,
 .filterIconContainer {
     display: flex;

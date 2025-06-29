@@ -1,5 +1,6 @@
-import {createContext, useContext, ReactNode, useRef} from "react";
+import { createContext, useContext, ReactNode, useRef } from "react";
 import TaskStore from "./TaskStore";
+import { useNotification } from "../components/Notification/NotificationContext";
 
 type TaskStoreContextType = TaskStore | null;
 
@@ -9,11 +10,12 @@ interface TaskStoreProviderProps {
     children: ReactNode;
 }
 
-export function TaskStoreProvider({children}: TaskStoreProviderProps) {
+export function TaskStoreProvider({ children }: TaskStoreProviderProps) {
+    const showNotification = useNotification();
     const storeRef = useRef<TaskStore | null>(null);
 
     if (!storeRef.current) {
-        storeRef.current = new TaskStore();
+        storeRef.current = new TaskStore(showNotification);
     }
 
     return (
