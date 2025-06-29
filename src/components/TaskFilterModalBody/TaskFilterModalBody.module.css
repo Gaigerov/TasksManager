@@ -1,4 +1,5 @@
 .modalBody {
+    position: relative;
     overflow: auto;
     padding: 8px 12px;
 }
@@ -19,7 +20,7 @@
     display: flex;
     align-items: center;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px;
     background-color: var(--white);
     height: 36px;
     cursor: pointer;
@@ -64,13 +65,15 @@
 }
 
 .statusesFilter {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    position: fixed;
+    top: 118px;
+    left: unset;
+    right: unset;
+    width: 90%;
+    transform: translateY(5px);
     background: var(--white);
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px;
     z-index: 100;
     margin-top: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -92,7 +95,7 @@
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: 14px;
     box-sizing: border-box;
     height: 36px;

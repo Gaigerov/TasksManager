@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import Header from '../Header/Header';
 import TaskManager from '../TaskManager/TaskManager';
 import Footer from '../Footer/Footer';
 import styles from './MainPage.module.css';
-import { useTaskStore } from '../../stores/storeContext';
+import {useTaskStore} from '../../stores/storeContext';
 import TaskModal from '../TaskModal/TaskModal';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { VALID_MODE } from '../../config/constant';
+import {useNavigate, useLocation} from 'react-router-dom';
+import {VALID_MODE} from '../../config/constant';
 
 const MainPage: React.FC = () => {
     const taskStore = useTaskStore();
     const navigate = useNavigate();
     const location = useLocation();
-    
+
     const params = new URLSearchParams(location.search);
     const taskId = params.get('id');
     const mode = location.pathname.substring(1);
@@ -21,7 +21,7 @@ const MainPage: React.FC = () => {
         taskStore.setNavigate(navigate);
     }, [navigate, taskStore]);
 
-    useEffect(() => {      
+    useEffect(() => {
         if (mode === VALID_MODE.EDIT && taskId) {
             const task = taskStore.tasks.find(t => t.id === taskId);
             if (task) {
@@ -42,7 +42,7 @@ const MainPage: React.FC = () => {
                 <TaskManager />
             </main>
             <Footer />
-            
+
             <TaskModal />
         </div>
     );

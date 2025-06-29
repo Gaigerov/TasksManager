@@ -10,7 +10,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .statusPopup {
@@ -20,7 +20,7 @@
     z-index: 10;
     background: var(--white);
     border: 1px solid #e2e8f0;
-    border-radius: 6px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 4px;
     display: flex;
@@ -33,7 +33,7 @@
 
 .statusOption {
     width: max-content;
-    border-radius: 6px;
+    border-radius: 8px;
     margin: 2px 8px;
     padding: 4px 8px;
     background: none;
@@ -57,7 +57,7 @@
 
 .descriptionContainer {
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .sectionTitle {
@@ -83,7 +83,7 @@
 .timeContainer,
 .dateContainer {
     padding: 0;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .taskTime,

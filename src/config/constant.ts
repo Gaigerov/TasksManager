@@ -6,6 +6,8 @@ export const VALID_MODE = {
     FILTER: 'filter',
 };
 
+export type ValidMode = typeof VALID_MODE[keyof typeof VALID_MODE];
+
 export const VALID_MODES = [
     VALID_MODE.CREATE,
     VALID_MODE.EDIT,
