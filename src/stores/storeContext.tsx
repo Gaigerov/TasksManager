@@ -1,6 +1,6 @@
-import { createContext, useContext, ReactNode, useRef, useEffect } from "react";
+import {createContext, useContext, ReactNode, useRef, useEffect} from "react";
 import TaskStore from "./TaskStore";
-import { useNotification } from "../components/Notification/NotificationContext";
+import {useNotification} from "../components/Notification/NotificationContext";
 import Cookies from "js-cookie";
 
 type TaskStoreContextType = TaskStore | null;
@@ -11,10 +11,10 @@ interface TaskStoreProviderProps {
     children: ReactNode;
 }
 
-export function TaskStoreProvider({ children }: TaskStoreProviderProps) {
+export function TaskStoreProvider({children}: TaskStoreProviderProps) {
     const showNotification = useNotification();
     const storeRef = useRef<TaskStore | null>(null);
-    
+
     if (!storeRef.current) {
         storeRef.current = new TaskStore(showNotification);
     }
@@ -30,10 +30,9 @@ export function TaskStoreProvider({ children }: TaskStoreProviderProps) {
                 console.error("Error initializing task store:", error);
             }
         };
-        
+
         initializeTasks();
-        
-        // Очистка при размонтировании
+
         return () => {
             if (storeRef.current) {
                 storeRef.current.clearAllData();

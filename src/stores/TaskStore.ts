@@ -1,9 +1,9 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { TaskItem, TaskStatus } from '../types/types';
-import { VALID_MODE } from '../config/constant';
+import {makeAutoObservable, runInAction} from "mobx";
+import {TaskItem, TaskStatus} from '../types/types';
+import {VALID_MODE} from '../config/constant';
 import Cookies from 'js-cookie';
-import { NotificationContextType } from '../components/Notification/NotificationContext';
-import { v4 as uuidv4 } from 'uuid';
+import {NotificationContextType} from '../components/Notification/NotificationContext';
+import {v4 as uuidv4} from 'uuid';
 
 interface StorageData {
     data: {
@@ -13,7 +13,6 @@ interface StorageData {
     id: string;
 }
 
-// Ключ для хранения storageId в localStorage
 const STORAGE_ID_KEY = "taskStorageId";
 
 export default class TaskStore {
@@ -28,23 +27,21 @@ export default class TaskStore {
     };
     isLoading = false;
     showNotification: NotificationContextType;
-    storageId: string | null = null; // Добавляем поле для хранения ID хранилища
+    storageId: string | null = null;
 
     constructor(showNotification: NotificationContextType) {
         this.showNotification = showNotification;
-        makeAutoObservable(this, {}, { autoBind: true });
+        makeAutoObservable(this, {}, {autoBind: true});
         this.loadFilters();
-        this.loadStorageId(); // Загружаем storageId при инициализации
+        this.loadStorageId();
     }
 
-    // Сохраняем ID хранилища в localStorage
     private saveStorageId() {
         if (this.storageId) {
             localStorage.setItem(STORAGE_ID_KEY, this.storageId);
         }
     }
 
-    // Загружаем ID хранилища из localStorage
     private loadStorageId() {
         const savedStorageId = localStorage.getItem(STORAGE_ID_KEY);
         if (savedStorageId) {
@@ -52,7 +49,6 @@ export default class TaskStore {
         }
     }
 
-    // Очищаем ID хранилища
     private clearStorageId() {
         localStorage.removeItem(STORAGE_ID_KEY);
         this.storageId = null;
@@ -71,7 +67,6 @@ export default class TaskStore {
         }
     }
 
-    // Очищаем все данные при выходе
     clearAllData() {
         this.tasks = [];
         this.currentTask = null;
@@ -95,12 +90,10 @@ export default class TaskStore {
 
             const authToken = this.getAuthToken();
             let storage: StorageData;
-            
-            // Если у нас есть сохраненный storageId, пробуем загрузить по нему
+
             if (this.storageId) {
                 try {
                     storage = await this.getStorageById(authToken, this.storageId);
-                    // Проверяем, что хранилище принадлежит текущему пользователю
                     if (storage.storageName !== `tasks_${user}`) {
                         throw new Error("Storage does not belong to current user");
                     }
@@ -112,7 +105,6 @@ export default class TaskStore {
                     this.saveStorageId();
                 }
             } else {
-                // Если storageId нет, создаем новое хранилище
                 storage = await this.findOrCreateUserStorage(authToken, user);
                 this.storageId = storage.id;
                 this.saveStorageId();
@@ -152,8 +144,7 @@ export default class TaskStore {
 
     private async findOrCreateUserStorage(authToken: string, user: string): Promise<StorageData> {
         const storageName = `tasks_${user}`;
-        
-        // Проверяем существование хранилища
+
         const response = await fetch('https://simple-storage.vigdorov.ru/storages', {
             method: 'GET',
             headers: {
@@ -172,7 +163,6 @@ export default class TaskStore {
 
         if (userStorage) return userStorage;
 
-        // Создаем новое хранилище если не найдено
         const createResponse = await fetch('https://simple-storage.vigdorov.ru/storages', {
             method: 'POST',
             headers: {
@@ -181,7 +171,7 @@ export default class TaskStore {
             },
             body: JSON.stringify({
                 storageName: storageName,
-                data: { tasks: [] }
+                data: {tasks: []}
             })
         });
 

@@ -50,8 +50,8 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
 
     const statusColors = {
         'To Do': 'var(--secondary)',
-        'In Progress': '#0F5BCC',
-        'Done': '#198754'
+        'In Progress': 'var(--primary)',
+        'Done': 'var(--success)'
     };
 
     const openEditModal = (e?: React.MouseEvent) => {

@@ -5,6 +5,7 @@ import Task from '../Task/Task';
 import {useTaskStore} from '../../stores/storeContext';
 import {useCallback} from 'react';
 import styles from './TasksList.module.css';
+import {Loader} from '../Loader/Loader';
 
 const TasksList = observer(() => {
     const taskStore = useTaskStore();
@@ -24,7 +25,7 @@ const TasksList = observer(() => {
     );
 
     if (taskStore.isLoading) {
-        return <div>Загрузка задач...</div>;
+        return <Loader open={taskStore.isLoading} />;
     }
 
     return (

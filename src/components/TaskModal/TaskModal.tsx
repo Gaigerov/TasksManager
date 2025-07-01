@@ -12,7 +12,7 @@ import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
 import {VALID_MODE} from '../../config/constant';
 import TaskFilterModalBody from '../TaskFilterModalBody/TaskFilterModalBody';
 import {useNotification} from '../Notification/NotificationContext';
-import Cookies from 'js-cookie'; // Добавлен импорт Cookies
+import Cookies from 'js-cookie';
 
 const emptyTask: TaskItem = {
     id: '',
@@ -41,7 +41,7 @@ const TaskModal: React.FC = observer(() => {
     const taskId = searchParams.get('id');
     const [filterStatus, setFilterStatus] = useState(taskStore.filters.status);
     const [filterDate, setFilterDate] = useState(taskStore.filters.date);
-    const user = Cookies.get('user') || ''; // Получаем текущего пользователя
+    const user = Cookies.get('user') || '';
 
     const mode = location.pathname.substring(1);
     const isOpen = mode === VALID_MODE.CREATE || mode === VALID_MODE.EDIT || mode === VALID_MODE.VIEW || mode === VALID_MODE.FILTER;
@@ -51,7 +51,6 @@ const TaskModal: React.FC = observer(() => {
     const handleStatusChange = (status: string) => setFilterStatus(status);
     const handleDateChange = (date: string) => setFilterDate(date);
 
-    // Обработчики кнопок фильтрации
     const handleApplyFilters = () => {
         taskStore.setFilters({
             status: filterStatus,
@@ -101,7 +100,6 @@ const TaskModal: React.FC = observer(() => {
             return;
         }
 
-        // Передаем пользователя в submitTask
         taskStore.submitTask(task, user);
         taskStore.closeModal();
     };
@@ -128,7 +126,6 @@ const TaskModal: React.FC = observer(() => {
         };
     }, [isOpen, handleClose]);
 
-    // Обработчики для кнопок в режиме просмотра
     const handleEdit = useCallback(() => {
         navigate(`/edit?id=${task.id}`);
     }, [task.id, navigate]);
@@ -142,7 +139,6 @@ const TaskModal: React.FC = observer(() => {
             title: `${task.title} (copy)`
         };
 
-        // Передаем пользователя в createTask
         taskStore.createTask({
             title: newTask.title,
             description: newTask.description,
@@ -156,20 +152,18 @@ const TaskModal: React.FC = observer(() => {
 
     const handleDelete = useCallback(() => {
         if (task.id) {
-            // Передаем пользователя в deleteTask
             taskStore.deleteTask(task.id, user);
             taskStore.closeModal();
         }
     }, [task.id, taskStore, user]);
 
-    // Конфигурация кнопок для режима просмотра
     const viewModeButtons = [
         {label: 'Edit', variant: 'warning' as const, onClick: handleEdit},
         {label: 'Copy', variant: 'primary' as const, onClick: handleClone},
         {label: 'Del', variant: 'danger' as const, onClick: handleDelete},
         {label: 'Cancel', variant: 'secondary' as const, onClick: handleClose}
     ];
-    // Конфигурация кнопок для режима фильтрации
+
     const filterModeButtons = [
         {label: 'Filter', variant: 'warning' as const, onClick: handleApplyFilters},
         {label: 'Reset', variant: 'danger' as const, onClick: handleResetFilters},

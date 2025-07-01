@@ -7,7 +7,7 @@ import {useTaskStore} from '../../stores/storeContext';
 import TaskModal from '../TaskModal/TaskModal';
 import {useNavigate, useLocation} from 'react-router-dom';
 import {VALID_MODE} from '../../config/constant';
-import Cookies from 'js-cookie'; // Добавлен импорт Cookies
+import Cookies from 'js-cookie';
 
 interface MainPageProps {
     onLogout: () => void;
@@ -21,13 +21,13 @@ export const MainPage: React.FC<MainPageProps> = ({onLogout}) => {
     const params = new URLSearchParams(location.search);
     const taskId = params.get('id');
     const mode = location.pathname.substring(1);
-    const user = Cookies.get('user') || ''; // Получаем текущего пользователя
+    const user = Cookies.get('user') || '';
 
     useEffect(() => {
         if (taskStore.tasks.length === 0 && !taskStore.isLoading) {
-            taskStore.initializeTasks(user); // Передаем пользователя
+            taskStore.initializeTasks(user);
         }
-    }, [taskStore, user]); // Добавлена зависимость от user
+    }, [taskStore, user]);
 
     useEffect(() => {
         taskStore.setNavigate(navigate);

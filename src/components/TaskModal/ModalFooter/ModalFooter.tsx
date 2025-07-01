@@ -76,7 +76,6 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
         );
     }
 
-    // Стандартный режим (создание/редактирование)
     const getSubmitVariant = () => {
         if (submitLabel === 'Create') return 'success';
         if (submitLabel === 'Save') return 'warning';

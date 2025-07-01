@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Cookies from 'js-cookie';
-import { useTaskStore } from '../../stores/storeContext';
-import { useNotification } from '../Notification/NotificationContext';
-import { Loader } from '../Loader/Loader';
+import {useTaskStore} from '../../stores/storeContext';
+import {useNotification} from '../Notification/NotificationContext';
+import {Loader} from '../Loader/Loader';
 import styles from './AuthPage.module.css';
 
 interface AuthPageProps {
     onAuthSuccess: () => void;
 }
 
-export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
+export const AuthPage: React.FC<AuthPageProps> = ({onAuthSuccess}) => {
     const taskStore = useTaskStore();
     const showNotification = useNotification();
     const [user, setUser] = useState<string>('');
@@ -69,7 +69,6 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                 throw new Error('Токен не получен от сервера');
             }
 
-            // Сохраняем токен и пользователя в куки
             Cookies.set('authToken', token, {
                 expires: 3,
                 sameSite: 'Lax',
@@ -82,10 +81,8 @@ export const AuthPage: React.FC<AuthPageProps> = ({ onAuthSuccess }) => {
                 secure: process.env.NODE_ENV === 'production'
             });
 
-            // Ключевое изменение: очищаем данные предыдущего пользователя
             taskStore.clearAllData();
-            
-            // Инициализируем задачи для нового пользователя
+
             await taskStore.initializeTasks(user.trim());
 
             onAuthSuccess();

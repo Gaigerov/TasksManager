@@ -1,0 +1,171 @@
+.row {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    background-color: var(--white);
+    width: 100%;
+    position: relative;
+}
+
+.row:hover {
+    background-color: #f9f9f9;
+}
+
+.row.statusPopupOpen {
+    z-index: 1001;
+}
+
+.timedate {
+    gap: 10px;
+    font-size: 12px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.column {
+    padding: 0px 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    font-size: 16px;
+}
+
+.pastDue {
+    background-color: #fff8f8;
+    color: #d32f2f;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.iconWrapper {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.iconWrapper:hover {
+    background-color: #f0f0f0;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+.statusContainer {
+    position: relative;
+}
+
+.statusButton {
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 12px;
+    width: auto;
+    transition: all 0.2s;
+}
+
+.statusButton:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.statusPopup {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000; /* Увеличиваем z-index */
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    overflow: hidden;
+    gap: 6px;
+    min-width: 100px;
+}
+
+.statusPopupTop {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.statusOption {
+    width: max-content;
+    border-radius: 6px;
+    margin: 2px 8px;
+    padding: 4px 8px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.statusOption:hover {
+    background-color: var(--light);
+    font-weight: bold;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    transition: filter 0.2s ease;
+}
+
+.iconWrapper {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.iconWrapper:hover .icon {
+    filter: none;
+}
+
+.iconWrapper:nth-child(1):hover .icon {
+    filter: invert(55%) sepia(83%) saturate(1017%) hue-rotate(13deg) brightness(109%) contrast(94%);
+}
+
+.iconWrapper:nth-child(2):hover .icon {
+    filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%);
+}
+
+.iconWrapper:nth-child(3):hover .icon {
+    filter: invert(31%) sepia(24%) saturate(5892%) hue-rotate(333deg) brightness(83%) contrast(94%);
+}

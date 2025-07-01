@@ -1,0 +1,53 @@
+.DesktopMenu {
+    display: flex;
+    position: absolute;
+    width: 129px;
+    top: calc(100% + 5px);
+    left: 5px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 4px;
+    z-index: 10;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 
+                0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    background: var(--light);
+
+    &__buttonContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        flex-direction: row;
+
+        &:hover {
+            cursor: pointer;
+            filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%);
+        }
+
+        &.active {
+            filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%);
+        }
+    }
+
+    &__buttonImage {
+        position: static;
+        width: 24px;
+        height: 24px;
+    }
+
+    &__buttonTitle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 15px;
+        letter-spacing: 0%;
+        margin: 0;
+    }
+}

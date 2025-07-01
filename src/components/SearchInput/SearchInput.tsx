@@ -1,7 +1,7 @@
-import { observer } from 'mobx-react-lite';
+import {observer} from 'mobx-react-lite';
 import CloseIcon from '@mui/icons-material/Close';
 import Input from '../Input/Input';
-import { useTaskStore } from '../../stores/storeContext';
+import {useTaskStore} from '../../stores/storeContext';
 import styles from '../Header/Header.module.css';
 
 const SearchInput = observer(() => {
