@@ -13,12 +13,11 @@ interface StorageData {
     id: string;
 }
 
-// Ключ для сохранения storageId в localStorage
+// Ключ для хранения storageId в localStorage
 const STORAGE_ID_KEY = "taskStorageId";
 
 export default class TaskStore {
     tasks: TaskItem[] = [];
-    storageId: string | null = null;
     currentTask: TaskItem | null = null;
     isModalOpen = false;
     navigate: ((path: string) => void) | null = null;
@@ -29,25 +28,34 @@ export default class TaskStore {
     };
     isLoading = false;
     showNotification: NotificationContextType;
+    storageId: string | null = null; // Добавляем поле для хранения ID хранилища
 
     constructor(showNotification: NotificationContextType) {
         this.showNotification = showNotification;
-        makeAutoObservable(this, {}, {autoBind: true});
-        this.loadStorageId();
+        makeAutoObservable(this, {}, { autoBind: true });
         this.loadFilters();
+        this.loadStorageId(); // Загружаем storageId при инициализации
     }
 
+    // Сохраняем ID хранилища в localStorage
     private saveStorageId() {
         if (this.storageId) {
             localStorage.setItem(STORAGE_ID_KEY, this.storageId);
         }
     }
 
+    // Загружаем ID хранилища из localStorage
     private loadStorageId() {
         const savedStorageId = localStorage.getItem(STORAGE_ID_KEY);
         if (savedStorageId) {
             this.storageId = savedStorageId;
         }
+    }
+
+    // Очищаем ID хранилища
+    private clearStorageId() {
+        localStorage.removeItem(STORAGE_ID_KEY);
+        this.storageId = null;
     }
 
     private saveFilters() {
@@ -63,6 +71,14 @@ export default class TaskStore {
         }
     }
 
+    // Очищаем все данные при выходе
+    clearAllData() {
+        this.tasks = [];
+        this.currentTask = null;
+        this.clearStorageId();
+        this.resetFilters();
+    }
+
     setNavigate(navigate: (path: string) => void) {
         this.navigate = navigate;
     }
@@ -71,34 +87,41 @@ export default class TaskStore {
         this.searchQuery = query;
     };
 
-    async initializeTasks() {
+    async initializeTasks(user: string) {
         try {
             runInAction(() => {
                 this.isLoading = true;
             });
 
             const authToken = this.getAuthToken();
+            let storage: StorageData;
             
-            // Если storageId уже есть, загружаем задачи напрямую
+            // Если у нас есть сохраненный storageId, пробуем загрузить по нему
             if (this.storageId) {
-                const storage = await this.getStorageById(authToken, this.storageId);
-                runInAction(() => {
-                    this.tasks = storage.data?.tasks || [];
-                    this.isLoading = false;
-                    console.log('Tasks loaded by storageId:', this.tasks);
-                });
-            } 
-            // Иначе ищем или создаем хранилище
-            else {
-                const storage = await this.findOrCreateStorage(authToken);
-                runInAction(() => {
+                try {
+                    storage = await this.getStorageById(authToken, this.storageId);
+                    // Проверяем, что хранилище принадлежит текущему пользователю
+                    if (storage.storageName !== `tasks_${user}`) {
+                        throw new Error("Storage does not belong to current user");
+                    }
+                } catch (error) {
+                    console.warn("Failed to load storage by ID, creating new", error);
+                    this.clearStorageId();
+                    storage = await this.findOrCreateUserStorage(authToken, user);
                     this.storageId = storage.id;
-                    this.tasks = storage.data?.tasks || [];
-                    this.isLoading = false;
-                    this.saveStorageId(); // Сохраняем ID после получения
-                    console.log('Tasks loaded from new storage:', this.tasks);
-                });
+                    this.saveStorageId();
+                }
+            } else {
+                // Если storageId нет, создаем новое хранилище
+                storage = await this.findOrCreateUserStorage(authToken, user);
+                this.storageId = storage.id;
+                this.saveStorageId();
             }
+
+            runInAction(() => {
+                this.tasks = storage.data?.tasks || [];
+                this.isLoading = false;
+            });
 
         } catch (error) {
             runInAction(() => {
@@ -127,7 +150,10 @@ export default class TaskStore {
         return await response.json();
     }
 
-    private async findOrCreateStorage(authToken: string): Promise<StorageData> {
+    private async findOrCreateUserStorage(authToken: string, user: string): Promise<StorageData> {
+        const storageName = `tasks_${user}`;
+        
+        // Проверяем существование хранилища
         const response = await fetch('https://simple-storage.vigdorov.ru/storages', {
             method: 'GET',
             headers: {
@@ -142,10 +168,11 @@ export default class TaskStore {
         }
 
         const storages: StorageData[] = await response.json();
-        const tasksStorage = storages.find(s => s.storageName === 'tasks');
+        const userStorage = storages.find(s => s.storageName === storageName);
 
-        if (tasksStorage) return tasksStorage;
+        if (userStorage) return userStorage;
 
+        // Создаем новое хранилище если не найдено
         const createResponse = await fetch('https://simple-storage.vigdorov.ru/storages', {
             method: 'POST',
             headers: {
@@ -153,7 +180,7 @@ export default class TaskStore {
                 'Authorization': authToken
             },
             body: JSON.stringify({
-                storageName: 'tasks',
+                storageName: storageName,
                 data: { tasks: [] }
             })
         });
@@ -166,21 +193,20 @@ export default class TaskStore {
         return await createResponse.json();
     }
 
-    private async saveTasksToServer() {
+    private async saveTasksToServer(user: string) {
         if (!this.storageId) throw new Error("Storage ID not found");
-        
+
         const authToken = this.getAuthToken();
-        
+        const storageName = `tasks_${user}`;
+
         const requestData = {
             data: {
                 tasks: this.tasks
             },
-            storageName: 'tasks',
+            storageName: storageName,
             id: this.storageId
         };
 
-        console.log('Saving tasks to server:', requestData);
-        
         const response = await fetch(`https://simple-storage.vigdorov.ru/storages/${this.storageId}`, {
             method: 'PUT',
             headers: {
@@ -194,9 +220,6 @@ export default class TaskStore {
             const errorText = await response.text();
             throw new Error(`Ошибка сохранения: ${response.statusText} - ${errorText}`);
         }
-        
-        const responseData = await response.json();
-        console.log('Tasks saved successfully:', responseData);
     }
 
     private getAuthToken(): string {
@@ -205,7 +228,7 @@ export default class TaskStore {
         return token;
     }
 
-    async createTask(task: Omit<TaskItem, "id">) {
+    async createTask(task: Omit<TaskItem, "id">, user: string) {
         const newTask: TaskItem = {
             ...task,
             id: uuidv4(),
@@ -215,7 +238,7 @@ export default class TaskStore {
             runInAction(() => {
                 this.tasks = [...this.tasks, newTask];
             });
-            await this.saveTasksToServer();
+            await this.saveTasksToServer(user);
             this.showNotification(`Задача "${newTask.title}" создана`, 'success');
         } catch (error) {
             runInAction(() => {
@@ -226,7 +249,7 @@ export default class TaskStore {
         }
     }
 
-    async updateTask(updatedTask: TaskItem) {
+    async updateTask(updatedTask: TaskItem, user: string) {
         const originalTasks = [...this.tasks];
         try {
             runInAction(() => {
@@ -234,7 +257,7 @@ export default class TaskStore {
                     task.id === updatedTask.id ? updatedTask : task
                 );
             });
-            await this.saveTasksToServer();
+            await this.saveTasksToServer(user);
             this.showNotification(`Задача "${updatedTask.title}" обновлена`, 'success');
         } catch (error) {
             runInAction(() => {
@@ -245,14 +268,14 @@ export default class TaskStore {
         }
     }
 
-    async deleteTask(id: string) {
+    async deleteTask(id: string, user: string) {
         const task = this.tasks.find(t => t.id === id);
         const originalTasks = [...this.tasks];
         try {
             runInAction(() => {
                 this.tasks = this.tasks.filter(task => task.id !== id);
             });
-            await this.saveTasksToServer();
+            await this.saveTasksToServer(user);
             if (task) {
                 this.showNotification(`Задача "${task.title}" удалена`, 'success');
             }
@@ -265,20 +288,20 @@ export default class TaskStore {
         }
     }
 
-    async cloneTask(id: string) {
+    async cloneTask(id: string, user: string) {
         const taskToClone = this.tasks.find(t => t.id === id);
         if (taskToClone) {
             await this.createTask({
                 ...taskToClone,
                 title: `${taskToClone.title} (копия)`,
-            });
+            }, user);
         }
     }
 
-    changeTaskStatus(taskId: string, newStatus: TaskStatus) {
+    changeTaskStatus(taskId: string, newStatus: TaskStatus, user: string) {
         const task = this.tasks.find(t => t.id === taskId);
         if (task) {
-            this.updateTask({...task, status: newStatus});
+            this.updateTask({...task, status: newStatus}, user);
         }
     }
 
@@ -345,12 +368,12 @@ export default class TaskStore {
         });
     }
 
-    submitTask(task: TaskItem) {
+    submitTask(task: TaskItem, user: string) {
         if (task.id) {
-            this.updateTask(task);
+            this.updateTask(task, user);
         } else {
             const {id, ...rest} = task;
-            this.createTask(rest);
+            this.createTask(rest, user);
         }
         this.closeModal();
     }

@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {createHashRouter, RouterProvider} from 'react-router-dom';
 import './index.css';
-import {TaskStoreProvider} from './stores/storeContext';
+import {TaskStoreProvider, useTaskStore} from './stores/storeContext';
 import {NotificationProvider} from './components/Notification/NotificationContext';
 import {AppLifecycleProvider} from './components/AppLifeCycleContext/AppLifeCycleContext';
 import {AuthPage} from './components/AuthPage/AuthPage';
@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 const AppRouter = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-
+    const taskStore = useTaskStore();
     useEffect(() => {
         const authToken = Cookies.get('authToken');
         const user = Cookies.get('user');
@@ -30,6 +30,7 @@ const AppRouter = () => {
     };
 
     const handleLogout = () => {
+        taskStore.clearAllData();
         Cookies.remove('authToken');
         Cookies.remove('user');
         setIsAuthenticated(false);

@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from 'react';
 import {TaskStatus} from '../../types/types';
 import styles from './TaskViewModalBody.module.css';
 import {useTaskStore} from '../../stores/storeContext';
+import Cookies from 'js-cookie'; // Добавлен импорт Cookies
 
 interface TaskViewModalBodyProps {
     taskId: string;
@@ -14,6 +15,7 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
     const [isStatusOpen, setIsStatusOpen] = useState(false);
     const statusButtonRef = useRef<HTMLButtonElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
+    const user = Cookies.get('user') || ''; // Получаем текущего пользователя
 
     const task = taskStore.tasks.find(t => t.id === taskId);
 
@@ -70,7 +72,8 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setIsStatusOpen(false);
-                                        taskStore.changeTaskStatus(id, stat);
+                                        // Передаем пользователя в changeTaskStatus
+                                        taskStore.changeTaskStatus(id, stat, user);
                                     }}
                                     style={{
                                         backgroundColor: status === stat ? statusColors[stat] : '',

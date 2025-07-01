@@ -12,6 +12,7 @@ import {validateTask, TaskValidationErrors} from '../../utils/taskValidation';
 import {VALID_MODE} from '../../config/constant';
 import TaskFilterModalBody from '../TaskFilterModalBody/TaskFilterModalBody';
 import {useNotification} from '../Notification/NotificationContext';
+import Cookies from 'js-cookie'; // Добавлен импорт Cookies
 
 const emptyTask: TaskItem = {
     id: '',
@@ -40,6 +41,7 @@ const TaskModal: React.FC = observer(() => {
     const taskId = searchParams.get('id');
     const [filterStatus, setFilterStatus] = useState(taskStore.filters.status);
     const [filterDate, setFilterDate] = useState(taskStore.filters.date);
+    const user = Cookies.get('user') || ''; // Получаем текущего пользователя
 
     const mode = location.pathname.substring(1);
     const isOpen = mode === VALID_MODE.CREATE || mode === VALID_MODE.EDIT || mode === VALID_MODE.VIEW || mode === VALID_MODE.FILTER;
@@ -99,7 +101,8 @@ const TaskModal: React.FC = observer(() => {
             return;
         }
 
-        taskStore.submitTask(task);
+        // Передаем пользователя в submitTask
+        taskStore.submitTask(task, user);
         taskStore.closeModal();
     };
 
@@ -139,23 +142,25 @@ const TaskModal: React.FC = observer(() => {
             title: `${task.title} (copy)`
         };
 
+        // Передаем пользователя в createTask
         taskStore.createTask({
             title: newTask.title,
             description: newTask.description,
             time: newTask.time,
             date: newTask.date,
             status: newTask.status
-        });
+        }, user);
 
         taskStore.closeModal();
-    }, [task, taskStore]);
+    }, [task, taskStore, user]);
 
     const handleDelete = useCallback(() => {
         if (task.id) {
-            taskStore.deleteTask(task.id);
+            // Передаем пользователя в deleteTask
+            taskStore.deleteTask(task.id, user);
             taskStore.closeModal();
         }
-    }, [task.id, taskStore]);
+    }, [task.id, taskStore, user]);
 
     // Конфигурация кнопок для режима просмотра
     const viewModeButtons = [

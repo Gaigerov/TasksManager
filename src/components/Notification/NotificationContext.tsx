@@ -1,5 +1,6 @@
 import {createContext, ReactNode, useContext, useState, FC} from 'react';
 import {Notification} from './Notification';
+import styled from './Notification.module.css'
 
 interface NotificationType {
     id: number;
@@ -36,7 +37,7 @@ export const NotificationProvider: FC<Props> = ({children}) => {
     return (
         <NotificationContext.Provider value={showNotification}>
             {children}
-            <div className="notificationList">
+            <div className={styled.notificationList}>
                 {notifications.length > 0 && (
                     notifications.map((notification) => (
                         <Notification

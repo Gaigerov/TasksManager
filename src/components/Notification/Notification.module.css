@@ -10,7 +10,7 @@
 }
 
 .notificationList {
-    position: fixed;
+    position: absolute;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;

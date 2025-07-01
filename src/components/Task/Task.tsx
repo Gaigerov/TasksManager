@@ -7,6 +7,7 @@ import cloneIcon from '../../images/clone.svg';
 import {observer} from 'mobx-react-lite';
 import {useTaskStore} from '../../stores/storeContext';
 import {VALID_MODE} from '../../config/constant';
+import Cookies from 'js-cookie';
 
 interface TaskProps {
     task: TaskItem;
@@ -19,11 +20,11 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
     const statusButtonRef = useRef<HTMLButtonElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
     const taskStore = useTaskStore();
-
+    const user = Cookies.get('user') || '';
     const isActive = taskStore.currentTask?.id === id;
     const isOverdue = useMemo(() => {
         if (!date) return false;
-        
+
         try {
             const [day, month, year] = date.split('.').map(Number);
             const taskDate = new Date(year, month - 1, day);
@@ -99,7 +100,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                         className={styles.iconWrapper}
                         onClick={(e) => {
                             e.stopPropagation();
-                            taskStore.cloneTask(id);
+                            taskStore.cloneTask(id, user);
                         }}
                     >
                         <img
@@ -112,7 +113,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                         className={styles.iconWrapper}
                         onClick={(e) => {
                             e.stopPropagation();
-                            taskStore.deleteTask(id);
+                            taskStore.deleteTask(id, user);
                         }}
                     >
                         <img
@@ -151,7 +152,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setIsStatusOpen(false);
-                                        taskStore.changeTaskStatus(id, stat);
+                                        taskStore.changeTaskStatus(id, stat, user);
                                     }}
                                     style={{
                                         backgroundColor: status === stat ? statusColors[stat] : '',
