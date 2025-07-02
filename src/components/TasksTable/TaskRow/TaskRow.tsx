@@ -18,13 +18,11 @@ interface TaskRowProps {
         time: string;
     };
     isPastDue: boolean;
-    isLastTask?: boolean;
 }
 
 const TaskRow: React.FC<TaskRowProps> = ({
     task,
     isPastDue,
-    isLastTask = false,
 }) => {
     const taskStore = useTaskStore();
     const user = Cookies.get('user') || '';
@@ -65,7 +63,8 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
     return (
         <div className={rowClassName} onClick={openViewModal}>
-            <div className={styles.column} style={{width: '110px'}}>
+            {/* Status Column */}
+            <div className={`${styles.column} ${styles.statusColumn}`} style={{width: '110px'}}>
                 <div className={styles.statusContainer}>
                     <button
                         ref={statusButtonRef}
@@ -85,7 +84,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     {isStatusOpen && (
                         <div
                             ref={popupRef}
-                            className={`${styles.statusPopup} ${isLastTask ? styles.statusPopupTop : ''}`}
+                            className={styles.statusPopup}
                             onClick={e => e.stopPropagation()}
                         >
                             {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((stat) => (
@@ -110,16 +109,28 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     )}
                 </div>
             </div>
-            <div className={styles.column} style={{width: '200px'}}>
-                {task.title}
+            
+            {/* Title Column */}
+            <div className={styles.column} style={{width: '200px'}} title={task.title}>
+                <div className={styles.textContainer}>
+                    {task.title}
+                </div>
             </div>
-            <div className={styles.column} style={{width: 'auto', flex: 1}}>
-                {task.description}
+            
+            {/* Description Column */}
+            <div className={styles.column} style={{flex: 1}} title={task.description}>
+                <div className={styles.textContainer}>
+                    {task.description}
+                </div>
             </div>
+            
+            {/* Date/Time Column */}
             <div className={styles.timedate} style={{width: '120px'}}>
                 <div>{task.time}</div>
                 <div>{task.date}</div>
             </div>
+            
+            {/* Actions Column */}
             <div className={styles.column} style={{width: '140px'}}>
                 <div className={styles.actions}>
                     <div

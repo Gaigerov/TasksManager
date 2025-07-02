@@ -1,54 +1,61 @@
-// import {useState, useEffect, useRef, FC} from 'react';
-// import chevronDown from "../../image/ChevronDown.svg";
-// import {tasksActions} from '../../redux/tasksStore';
-// import {useAppDispatch} from '../../hooks';
+import {useState, useEffect, useRef, FC} from 'react';
+import chevronDown from "../../../images/ChevronDown.svg";
+import styles from './CustomSelect.module.css';
 
-// type Props = {
-//     options: number[];
-//     value: number;
-// }
+interface CustomSelectProps {
+    options: number[];
+    value: number;
+    onChange: (value: number) => void;
+}
 
-// export const CustomSelect: FC<Props> = ({options, value}) => {
-//     const dispatch = useAppDispatch();
-//     const [isOpen, setIsOpen] = useState<boolean>(false);
-//     const selectRef = useRef<HTMLDivElement | null>(null);
+export const CustomSelect: FC<CustomSelectProps> = ({options, value, onChange}) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const selectRef = useRef<HTMLDivElement>(null);
 
-//     const handleOptionClick = (option: number) => {
-//         dispatch(tasksActions.setTasksPerPage(option));
-//         setIsOpen(false);
-//     };
+    const handleOptionClick = (option: number) => {
+        onChange(option);
+        setIsOpen(false);
+    };
 
-//     const handleClickOutside = (event: MouseEvent) => {
-//         if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
-//             setIsOpen(false);
-//         }
-//     };
+    const handleClickOutside = (event: MouseEvent) => {
+        if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+            setIsOpen(false);
+        }
+    };
 
-//     useEffect(() => {
-//         document.addEventListener('mousedown', handleClickOutside);
-//         return () => {
-//             document.removeEventListener('mousedown', handleClickOutside);
-//         };
-//     }, []);
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
-//     return (
-//         <div className="customSelect" ref={selectRef}>
-//             <div className="customSelect__trigger" onClick={() => setIsOpen(!isOpen)}>
-//                 {value}
-//                 <img src={chevronDown} alt="chevronDown" />
-//             </div>
-//             {isOpen && (
-//                 <ul className="customSelect__customOptions">
-//                     {options.map((option) => (
-//                         <li
-//                             key={option}
-//                             onClick={() => handleOptionClick(option)}
-//                         >
-//                             {option}
-//                         </li>
-//                     ))}
-//                 </ul>
-//             )}
-//         </div>
-//     );
-// };
+    return (
+        <div className={styles.customSelect} ref={selectRef}>
+            <div
+                className={styles.trigger}
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                {value}
+                <img
+                    src={chevronDown}
+                    alt="chevronDown"
+                    className={`${styles.chevron} ${isOpen ? styles.rotate : ''}`}
+                />
+            </div>
+            {isOpen && (
+                <ul className={styles.options}>
+                    {options.map((option) => (
+                        <li
+                            key={option}
+                            className={`${styles.option} ${value === option ? styles.selected : ''}`}
+                            onClick={() => handleOptionClick(option)}
+                        >
+                            {option}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
+};

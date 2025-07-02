@@ -1,13 +1,15 @@
 import React from 'react';
 import styles from './TasksTable.module.css';
 import TaskRow from './TaskRow/TaskRow';
-import {useTaskStore} from '../../stores/storeContext';
+import {TaskItem} from '../../types/types';
 
-const TasksTable: React.FC = () => {
+interface TasksTableProps {
+    tasks: TaskItem[],
+}
+
+const TasksTable: React.FC<TasksTableProps> = ({tasks}) => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
-    const taskStore = useTaskStore();
-    const {filteredTasks} = taskStore;
 
     const parseDDMMYYYY = (dateString: string) => {
         const [day, month, year] = dateString.split('.');
@@ -25,7 +27,7 @@ const TasksTable: React.FC = () => {
             </div>
 
             <div className={styles.tableBody}>
-                {filteredTasks.map((task) => {
+                {tasks.map((task) => {
                     const taskDate = parseDDMMYYYY(task.date);
                     const isPastDue = taskDate < currentDate;
                     return (

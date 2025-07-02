@@ -1,115 +1,183 @@
-import {useState, FC, ChangeEvent} from 'react';
-import chevronRight from "../../image/ChevronRight.svg";
-import chevronLeft from "../../image/ChevronLeft.svg";
-import chevronsRight from "../../image/ChevronsRight.svg";
-import chevronsLeft from "../../image/ChevronsLeft.svg";
-// import {CustomSelect} from '../CustomSelect/CustomSelect';
-import {TaskItem} from '../../types/types';
+import {useState, FC, ChangeEvent, useEffect} from 'react';
+import chevronRight from "../../images/ChevronRight.svg";
+import chevronLeft from "../../images/ChevronLeft.svg";
+import chevronsRight from "../../images/ChevronsRight.svg";
+import chevronsLeft from "../../images/ChevronsLeft.svg";
+import {CustomSelect} from '../Pagination/CustomSelect/CustomSelect';
+import styles from './Pagination.module.css';
 
-
-interface Props {
-    searchedTasks: TaskItem[];
-    tasksPerPage: number;
+interface PaginationProps {
     currentPage: number;
-    setCurrentPage: (currentPage: number) => void;
+    tasksPerPage: number;
+    totalTasks: number;
+    onPageChange: (page: number) => void;
+    onTasksPerPageChange: (value: number) => void;
 }
 
-export const Pagination: FC<Props> = ({searchedTasks, tasksPerPage, currentPage, setCurrentPage}) => {
+export const Pagination: FC<PaginationProps> = ({
+    currentPage,
+    tasksPerPage,
+    totalTasks,
+    onPageChange,
+    onTasksPerPageChange
+}) => {
     const [pageInput, setPageInput] = useState<string>('');
-    const totalPages = Math.ceil(searchedTasks.length / tasksPerPage);
+    const totalPages = Math.ceil(totalTasks / tasksPerPage);
+
+    useEffect(() => {
+        setPageInput('');
+    }, [currentPage]);
 
     if (totalPages === 0) {
-        return <div>Tasks not found</div>;
+        return <div className={styles.notFound}>Tasks not found</div>;
     }
-
 
     const handleNextPage = () => {
         if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
+            onPageChange(currentPage + 1);
         }
     };
 
     const handlePrevPage = () => {
         if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
+            onPageChange(currentPage - 1);
         }
     };
 
     const handlePageClick = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
-    };
-
-    const handleFirstPage = () => {
-        setCurrentPage(1);
-    };
-
-    const handleLastPage = () => {
-        setCurrentPage(totalPages);
-    };
-
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = event.currentTarget.value;
-        const numericValue = Number(value);
-        if (!isNaN(numericValue) && numericValue > 0 && numericValue <= totalPages) {
-            setPageInput(value);
-            setCurrentPage(numericValue); // Перейти на введенную страницу
-        } else {
-            setPageInput('');
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            onPageChange(pageNumber);
         }
     };
 
+    const handleFirstPage = () => {
+        onPageChange(1);
+    };
+
+    const handleLastPage = () => {
+        onPageChange(totalPages);
+    };
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;
+        setPageInput(value);
+
+        const numericValue = Number(value);
+        if (!isNaN(numericValue) && numericValue > 0 && numericValue <= totalPages) {
+            onPageChange(numericValue);
+        }
+    };
+
+    const handleTasksPerPageChange = (value: number) => {
+        onTasksPerPageChange(value);
+        onPageChange(1);
+    };
+
+    const getVisiblePages = () => {
+        const pages = [];
+        const maxVisible = 5;
+
+        let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let end = Math.min(totalPages, start + maxVisible - 1);
+
+        if (end - start < maxVisible - 1) {
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+
+        return pages;
+    };
+
+    const visiblePages = getVisiblePages();
+
     return (
-        <div className='pagination'>
-            <div className="taskOnPageContainer">
-                <label className='labelTasksPerPage' htmlFor="tasksPerPage">Task on page</label>
-                {/* <CustomSelect
-                    options={[10, 25, 50, 100]}
+        <div className={styles.pagination}>
+            <div className={styles.taskOnPageContainer}>
+                <label className={styles.labelTasksPerPage} htmlFor="tasksPerPage">
+                    Task on page
+                </label>
+                <CustomSelect
+                    options={[5, 10, 15]}
                     value={tasksPerPage}
-                /> */}
+                    onChange={handleTasksPerPageChange}
+                />
             </div>
-            <div className="paginationPageNumber">
-                <img
-                    src={chevronsLeft}
+
+            <div className={styles.paginationPageNumber}>
+                <button
+                    className={styles.paginationButton}
                     onClick={handleFirstPage}
-                    style={{filter: currentPage === 1 ? 'invert(77%) sepia(8%) saturate(356%) hue-rotate(165deg) brightness(100%) contrast(83%)' : ''}}
-                    alt="First Page"
-                />
-                <img
-                    src={chevronLeft}
+                    disabled={currentPage === 1}
+                >
+                    <img
+                        src={chevronsLeft}
+                        alt="First Page"
+                        className={currentPage === 1 ? styles.disabledArrow : ''}
+                    />
+                </button>
+
+                <button
+                    className={styles.paginationButton}
                     onClick={handlePrevPage}
-                    style={{filter: currentPage === 1 ? 'invert(77%) sepia(8%) saturate(356%) hue-rotate(165deg) brightness(100%) contrast(83%)' : ''}}
-                    alt="Previous Page"
-                />
-                {totalPages > 0 && [...Array(totalPages)].map((_, index) => (
+                    disabled={currentPage === 1}
+                >
+                    <img
+                        src={chevronLeft}
+                        alt="Previous Page"
+                        className={currentPage === 1 ? styles.disabledArrow : ''}
+                    />
+                </button>
+
+                {visiblePages.map((page) => (
                     <button
-                        key={index + 1}
-                        onClick={() => handlePageClick(index + 1)}
-                        className={currentPage === index + 1 ? 'active pageActiveNumberButton' : 'pageNumberButton'}
+                        key={page}
+                        onClick={() => handlePageClick(page)}
+                        className={
+                            currentPage === page
+                                ? `${styles.pageButton} ${styles.activePage}`
+                                : styles.pageButton
+                        }
                     >
-                        {index + 1}
+                        {page}
                     </button>
                 ))}
-                <img
-                    src={chevronRight} onClick={handleNextPage}
-                    style={{filter: currentPage === totalPages ? 'invert(77%) sepia(8%) saturate(356%) hue-rotate(165deg) brightness(100%) contrast(83%)' : ''}}
-                    alt="Next Page"
-                />
-                <img
-                    src={chevronsRight} onClick={handleLastPage}
-                    style={{filter: currentPage === totalPages ? 'invert(77%) sepia(8%) saturate(356%) hue-rotate(165deg) brightness(100%) contrast(83%)' : ''}}
-                    alt="Last Page"
-                />
+
+                <button
+                    className={styles.paginationButton}
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                >
+                    <img
+                        src={chevronRight}
+                        alt="Next Page"
+                        className={currentPage === totalPages ? styles.disabledArrow : ''}
+                    />
+                </button>
+
+                <button
+                    className={styles.paginationButton}
+                    onClick={handleLastPage}
+                    disabled={currentPage === totalPages}
+                >
+                    <img
+                        src={chevronsRight}
+                        alt="Last Page"
+                        className={currentPage === totalPages ? styles.disabledArrow : ''}
+                    />
+                </button>
             </div>
-            <div className='pageInputContainer'>
-                <p className='labelGoTo'>Go to page</p>
+
+            <div className={styles.pageInputContainer}>
+                <p className={styles.labelGoTo}>Go to page</p>
                 <input
                     type="text"
                     value={pageInput}
                     onChange={handleInputChange}
-                    min="1"
-                    max={totalPages}
                     placeholder={currentPage.toString()}
-                    className="taskOnPageInput"
+                    className={styles.taskOnPageInput}
                 />
             </div>
         </div>

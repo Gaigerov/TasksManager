@@ -1,118 +1,115 @@
 .pagination {
-    display: flex;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 0 32px;
-    padding-bottom: 16px;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: auto;
+  display: flex;
+  width: 100%;
+  padding: 16px 0;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px solid var(--secondary-light);
+}
+
+.notFound {
+  text-align: center;
+  padding: 20px;
+  color: var(--secondary);
+  font-size: 16px;
 }
 
 .taskOnPageContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 8px;
-    padding: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
 }
 
 .pageInputContainer {
-    display: flex;
-    flex-direction: row;
-    width: auto;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
 }
 
-.labelTasksPerPage {
-    min-width: max-content;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0%;
-    text-align: left;
-    margin: 0;
-}
-
+.labelTasksPerPage,
 .labelGoTo {
-    min-width: max-content;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0%;
-    text-align: left;
-    margin: 0;
-}
-
-.taskPerPageInput {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 16px 8px 16px;
-    box-sizing: border-box;
-    border: 1px solid rgb(179, 189, 199);
-    border-radius: 8px;
-}
-
-.taskPerPageSelect {
-    margin: 0;
-    padding: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--dark);
+  margin: 0;
+  white-space: nowrap;
 }
 
 .taskOnPageInput {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 16px 8px 16px;
-    box-sizing: border-box;
-    border: 1px solid rgb(179, 189, 199);
-    border-radius: 8px;
-    width: 50px;
-    height: 36px;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
+  padding: 4px 6px;
+  border: 1px solid var(--white);
+  border-radius: 4px;
+  width: 40px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.taskOnPageInput:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .paginationPageNumber {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0;
-    gap: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
 }
 
-.pageActiveNumberButton {
-    border: none;
-    color: var(--primary);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
-    font-weight: bold;
-    background-color: var(--white);
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
+.paginationButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
 }
 
-.pageNumberButton {
-    border: none;
-    color: var(--dark);
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
-    background-color: var(--white);
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
+.paginationButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #f0f0f0;
+}
+
+.pageButton {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 50%;
+}
+
+.pageButton:hover {
+  background-color: var(--white);
+}
+
+.activePage {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: bold;
+}
+
+.activePage:hover {
+  background-color: var(--secondary);
+}
+
+.disabledArrow {
+  opacity: 0.3;
 }
