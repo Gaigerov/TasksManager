@@ -7,9 +7,9 @@ import {AppLifecycleProvider} from './components/AppLifeCycleContext/AppLifeCycl
 import {AuthPage} from './components/AuthPage/AuthPage';
 import {MainPage} from './components/MainPage/MainPage';
 import Cookies from 'js-cookie';
-import TaskManager from './components/TaskManager/TaskManager';
-// import TaskCalendar from './components/TaskCalendar/TaskCalendar';
-// import TaskBoard from './components/TaskBoard/TaskBoard';
+import TasksManager from './components/TasksManager/TasksManager';
+import TasksCalendar from './components/TasksCalendar/TasksCalendar';
+// import TasksBoard from './components/TaskBoard/TaskBoard';
 
 const AppRouter = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -53,9 +53,9 @@ const AppRouter = () => {
                 <AuthPage onAuthSuccess={handleAuthSuccess} />
             ),
             children: [
-                {index: true, element: <TaskManager />},
-                // { path: "calendar", element: <TaskCalendar /> },
-                // { path: "board", element: <TaskBoard /> },
+                {index: true, element: <TasksManager />},
+                { path: "calendar", element: <TasksCalendar /> },
+                // { path: "board", element: <TasksBoard /> },
             ]
         },
     ]);

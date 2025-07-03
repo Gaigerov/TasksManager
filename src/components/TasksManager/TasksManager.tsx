@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import {observer} from 'mobx-react-lite';
 import TasksList from '../TasksList/TasksList';
 import TasksTable from '../TasksTable/TasksTable';
-import styles from './TaskManager.module.css';
+import styles from './TasksManager.module.css';
 import {useBreakpoint} from '../../hooks/useBreakpoints';
 import {Pagination} from '../Pagination/Pagination';
 import {useTaskStore} from '../../stores/storeContext';
 
-const TaskManager: React.FC = observer(() => {
+const TasksManager: React.FC = observer(() => {
     const breakpoint = useBreakpoint();
     const taskStore = useTaskStore();
     const {filteredTasks} = taskStore;
@@ -18,7 +18,7 @@ const TaskManager: React.FC = observer(() => {
     const currentTasks = filteredTasks.slice(indexOfFirstTask, indexOfLastTask);
 
     return (
-        <div className={styles.taskManager}>
+        <div className={styles.tasksManager}>
             {breakpoint === 'desktop' ? <TasksTable tasks={currentTasks} /> : <TasksList />}
             {breakpoint === 'desktop' && <Pagination
                 currentPage={currentPage}
@@ -32,4 +32,4 @@ const TaskManager: React.FC = observer(() => {
     );
 });
 
-export default TaskManager;
+export default TasksManager;

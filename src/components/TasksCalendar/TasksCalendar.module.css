@@ -1,0 +1,118 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.navButton {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 16px;
+    color: #333;
+}
+
+.dateDisplay {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.tasksContainer {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.hourBlock {
+    margin-bottom: 24px;
+}
+
+.hourHeader {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 12px;
+}
+
+.noTasks {
+    text-align: center;
+    padding: 40px 0;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Стили для планшетного режима */
+.tabletLayout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tabletHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #fff;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.tabletDates {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.tabletDateColumn {
+    flex: 1;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.tabletTasksContainer {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.tabletHourBlock {
+    margin-bottom: 24px;
+}
+
+.tabletHourHeader {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    padding: 8px 0;
+    margin-bottom: 12px;
+}
+
+.tabletDayColumns {
+    display: flex;
+    gap: 16px; /* Отступ между колонками */
+}
+
+.tabletDayColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Отступ между задачами */
+}
