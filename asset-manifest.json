@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/TasksManager/static/css/main.4d34befe.css",
+    "main.js": "/TasksManager/static/js/main.223f64b5.js",
+    "static/media/Montserrat-Regular.ttf": "/TasksManager/static/media/Montserrat-Regular.2a2d37bf7680d86811db.ttf",
+    "static/media/Montserrat-SemiBold.ttf": "/TasksManager/static/media/Montserrat-SemiBold.2f7a846126c7d5ee9163.ttf",
+    "static/media/Montserrat-Medium.ttf": "/TasksManager/static/media/Montserrat-Medium.647f0e61af3a76a138c3.ttf",
+    "static/media/Montserrat-Thin.ttf": "/TasksManager/static/media/Montserrat-Thin.53139ad3e8e638609181.ttf",
+    "static/media/messageCircle.svg": "/TasksManager/static/media/messageCircle.f841e19100751ca802e6af5ad7ad0e2e.svg",
+    "static/media/helpCircle.svg": "/TasksManager/static/media/helpCircle.e2aa7ffedf2409c42396d47314028633.svg",
+    "static/media/сheckСircle.svg": "/TasksManager/static/media/сheckСircle.a703b1a1250b5063403c5d4dd5487abd.svg",
+    "static/media/calendar-todo-line.svg": "/TasksManager/static/media/calendar-todo-line.ee23d58a053f13ab6d19366b054d164f.svg",
+    "static/media/alertCircle.svg": "/TasksManager/static/media/alertCircle.f97cf88c430bcc786efb0d4d9add9938.svg",
+    "static/media/xCircle.svg": "/TasksManager/static/media/xCircle.339074e504199e8a8347b07fb879e960.svg",
+    "static/media/delete.svg": "/TasksManager/static/media/delete.4cde6cf6920bc0095507d84686670872.svg",
+    "static/media/ChevronsRight.svg": "/TasksManager/static/media/ChevronsRight.66a3d5c6c1f3c70f67b7faaa61f27f45.svg",
+    "static/media/list-check-2.svg": "/TasksManager/static/media/list-check-2.8ec2ca753a48ff3ee54260a6fb47222b.svg",
+    "static/media/ChevronsLeft.svg": "/TasksManager/static/media/ChevronsLeft.ce80424190382b41deaab41b4de27de0.svg",
+    "static/media/ChevronDown.svg": "/TasksManager/static/media/ChevronDown.24f13d0981642ce50d3a11063ab04964.svg",
+    "static/media/ChevronRight.svg": "/TasksManager/static/media/ChevronRight.38838dd2183991526d6063f077f9e556.svg",
+    "static/media/ChevronLeft.svg": "/TasksManager/static/media/ChevronLeft.5d00e60d559edc0f3ef24447b15fc85f.svg",
+    "static/media/web-board.svg": "/TasksManager/static/media/web-board.a2eae54a46b62e06d8fe8eb962509247.svg",
+    "static/media/clone.svg": "/TasksManager/static/media/clone.60e0badc80b9e16881f0f0b0a53e1e14.svg",
+    "index.html": "/TasksManager/index.html",
+    "static/media/edit.svg": "/TasksManager/static/media/edit.9d0a515b853f811da4e99b5b1e381216.svg",
+    "main.4d34befe.css.map": "/TasksManager/static/css/main.4d34befe.css.map",
+    "main.223f64b5.js.map": "/TasksManager/static/js/main.223f64b5.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4d34befe.css",
+    "static/js/main.223f64b5.js"
+  ]
+}
