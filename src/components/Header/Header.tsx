@@ -126,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     </div>
                 )}
             </div>
-                        <Menu
+            <Menu
                 anchorEl={menuAnchorEl}
                 open={Boolean(menuAnchorEl)}
                 onClose={handleMenuClose}
@@ -167,13 +167,13 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     selected={isActive('/')}
                 >
                     <ListItemIcon>
-                        <img 
-                            src={listCheckIcon} 
-                            alt="Tasks" 
+                        <img
+                            src={listCheckIcon}
+                            alt="Tasks"
                             className={`${styles.menuItemIcon} ${isActive('/') ? styles.menuItemIconActive : ''}`}
                         />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                         className={isActive('/') ? styles.activeText : ''}
                     >
                         Tasks
@@ -184,13 +184,13 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     selected={isActive('/calendar')}
                 >
                     <ListItemIcon>
-                        <img 
-                            src={calendarCheckIcon} 
-                            alt="Calendar" 
+                        <img
+                            src={calendarCheckIcon}
+                            alt="Calendar"
                             className={`${styles.menuItemIcon} ${isActive('/calendar') ? styles.menuItemIconActive : ''}`}
                         />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                         className={isActive('/calendar') ? styles.activeText : ''}
                     >
                         Calendar
@@ -201,13 +201,13 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     selected={isActive('/board')}
                 >
                     <ListItemIcon>
-                        <img 
-                            src={boardCheckIcon} 
-                            alt="Board" 
+                        <img
+                            src={boardCheckIcon}
+                            alt="Board"
                             className={`${styles.menuItemIcon} ${isActive('/board') ? styles.menuItemIconActive : ''}`}
                         />
                     </ListItemIcon>
-                    <ListItemText 
+                    <ListItemText
                         className={isActive('/board') ? styles.activeText : ''}
                     >
                         Board
