@@ -96,7 +96,6 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
         return location.pathname === path;
     };
 
-    const isDesktop = breakpoint === 'desktop';
     return (
         <header className={styles.header}>
             <div ref={searchContainerRef} className={styles.searchArea}>
@@ -104,7 +103,7 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     <SearchInput />
                 ) : (
                     <div className={styles.iconContainers}>
-                        {isDesktop &&
+                        {breakpoint === 'desktop' &&
                             <div
                                 className={styles.menuIconContainer}
                                 onClick={handleMenuOpen}
@@ -131,7 +130,7 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     </div>
                 )}
             </div>
-            {isDesktop &&
+            {breakpoint === 'desktop' &&
                 <Menu
                     anchorEl={menuAnchorEl}
                     open={Boolean(menuAnchorEl)}
