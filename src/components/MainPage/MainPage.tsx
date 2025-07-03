@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import Header from '../Header/Header';
-import TaskManager from '../TaskManager/TaskManager';
 import Footer from '../Footer/Footer';
 import styles from './MainPage.module.css';
 import {useTaskStore} from '../../stores/storeContext';
@@ -8,6 +7,8 @@ import TaskModal from '../TaskModal/TaskModal';
 import {useNavigate, useLocation} from 'react-router-dom';
 import {VALID_MODE} from '../../config/constant';
 import Cookies from 'js-cookie';
+import {Outlet} from 'react-router-dom';
+import {useBreakpoint} from '../../hooks/useBreakpoints';
 
 interface MainPageProps {
     onLogout: () => void;
@@ -17,7 +18,7 @@ export const MainPage: React.FC<MainPageProps> = ({onLogout}) => {
     const taskStore = useTaskStore();
     const navigate = useNavigate();
     const location = useLocation();
-
+    const breakpoint = useBreakpoint();
     const params = new URLSearchParams(location.search);
     const taskId = params.get('id');
     const mode = location.pathname.substring(1);
@@ -54,9 +55,9 @@ export const MainPage: React.FC<MainPageProps> = ({onLogout}) => {
                 onLogout={onLogout}
             />
             <main className={styles.content}>
-                <TaskManager />
+                <Outlet />
             </main>
-            <Footer />
+            {breakpoint !== 'desktop' && <Footer />}
             <TaskModal />
         </div>
     );

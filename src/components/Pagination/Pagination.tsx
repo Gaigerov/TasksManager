@@ -29,7 +29,7 @@ export const Pagination: FC<PaginationProps> = ({
     }, [currentPage]);
 
     if (totalPages === 0) {
-        return <div className={styles.notFound}>Tasks not found</div>;
+        return <div className={styles.notFound}>Нет задач</div>;
     }
 
     const handleNextPage = () => {

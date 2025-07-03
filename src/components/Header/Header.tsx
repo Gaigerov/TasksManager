@@ -7,23 +7,20 @@ import SearchInput from '../SearchInput/SearchInput';
 import {VALID_MODE} from '../../config/constant';
 import {useTaskStore} from '../../stores/storeContext';
 import Badge from '@mui/material/Badge';
-import {styled} from '@mui/material';
+import {
+    Menu,
+    MenuItem,
+    ListItemIcon,
+    ListItemText
+} from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import MenuIcon from '@mui/icons-material/Menu';
+import {useNavigate, useLocation} from 'react-router-dom';
+import listCheckIcon from '../../images/list-check-2.svg';
+import calendarCheckIcon from '../../images/calendar-todo-line.svg';
+import boardCheckIcon from '../../images/web-board.svg';
 
-const RedBadge = styled(Badge)(({theme}) => ({
-    '& .MuiBadge-badge': {
-        backgroundColor: theme.palette.error.main,
-        color: theme.palette.error.contrastText,
-        zIndex: 100,
-        '&::after': {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            borderRadius: '50%',
-            content: '""',
-        },
-    },
-}));
+const RedBadge = Badge;
 
 interface HeaderProps {
     onOpenModal?: () => void;
@@ -32,9 +29,12 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLDivElement>(null);
     const taskStore = useTaskStore();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const filterCount =
         (taskStore.filters.status ? 1 : 0) +
@@ -77,6 +77,23 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
         setIsSearchOpen(true);
     };
 
+    const handleMenuOpen = (event: React.MouseEvent<HTMLDivElement>) => {
+        setMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setMenuAnchorEl(null);
+    };
+
+    const handleMenuItemClick = (path: string) => {
+        navigate(path);
+        handleMenuClose();
+    };
+
+    const isActive = (path: string) => {
+        return location.pathname === path;
+    };
+
     return (
         <header className={styles.header}>
             <div ref={searchContainerRef} className={styles.searchArea}>
@@ -84,6 +101,12 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     <SearchInput />
                 ) : (
                     <div className={styles.iconContainers}>
+                        <div
+                            className={styles.menuIconContainer}
+                            onClick={handleMenuOpen}
+                        >
+                            <MenuIcon />
+                        </div>
                         <div
                             className={styles.searchIconContainer}
                             onClick={handleSearchToggle}
@@ -103,7 +126,94 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                     </div>
                 )}
             </div>
-
+                        <Menu
+                anchorEl={menuAnchorEl}
+                open={Boolean(menuAnchorEl)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                sx={{
+                    '& .MuiPaper-root': {
+                        borderRadius: '8px',
+                    },
+                    '& .MuiList-root': {
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                    },
+                    '& .MuiMenuItem-root': {
+                        minHeight: 'auto',
+                        padding: '6px 12px',
+                        borderRadius: 0,
+                    },
+                    '& .MuiListItemText-root': {
+                        margin: 0,
+                    },
+                    '& .MuiListItemText-primary': {
+                        fontSize: '0.875rem',
+                    },
+                    '& .Mui-selected': {
+                        backgroundColor: 'transparent !important',
+                    }
+                }}
+            >
+                <MenuItem
+                    onClick={() => handleMenuItemClick('/')}
+                    selected={isActive('/')}
+                >
+                    <ListItemIcon>
+                        <img 
+                            src={listCheckIcon} 
+                            alt="Tasks" 
+                            className={`${styles.menuItemIcon} ${isActive('/') ? styles.menuItemIconActive : ''}`}
+                        />
+                    </ListItemIcon>
+                    <ListItemText 
+                        className={isActive('/') ? styles.activeText : ''}
+                    >
+                        Tasks
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleMenuItemClick('/calendar')}
+                    selected={isActive('/calendar')}
+                >
+                    <ListItemIcon>
+                        <img 
+                            src={calendarCheckIcon} 
+                            alt="Calendar" 
+                            className={`${styles.menuItemIcon} ${isActive('/calendar') ? styles.menuItemIconActive : ''}`}
+                        />
+                    </ListItemIcon>
+                    <ListItemText 
+                        className={isActive('/calendar') ? styles.activeText : ''}
+                    >
+                        Calendar
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleMenuItemClick('/board')}
+                    selected={isActive('/board')}
+                >
+                    <ListItemIcon>
+                        <img 
+                            src={boardCheckIcon} 
+                            alt="Board" 
+                            className={`${styles.menuItemIcon} ${isActive('/board') ? styles.menuItemIconActive : ''}`}
+                        />
+                    </ListItemIcon>
+                    <ListItemText 
+                        className={isActive('/board') ? styles.activeText : ''}
+                    >
+                        Board
+                    </ListItemText>
+                </MenuItem>
+            </Menu>
             <Button
                 variant="primary"
                 className={styles.createButton}

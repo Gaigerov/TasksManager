@@ -1,11 +1,15 @@
 import React from 'react';
+import {useNavigate, useLocation} from 'react-router-dom';
 import styles from './Footer.module.css';
 import Button from '../Button/Button';
 import listCheckIcon from '../../images/list-check-2.svg';
 import calendarCheckIcon from '../../images/calendar-todo-line.svg';
-import boardCheckIcon from '../../images/web-board.svg'
+import boardCheckIcon from '../../images/web-board.svg';
 
 const Footer: React.FC = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     return (
         <footer className={styles.footer}>
             <div className={styles.buttonGroup}>
@@ -13,8 +17,9 @@ const Footer: React.FC = () => {
                     variant="icon"
                     iconSrc={listCheckIcon}
                     alt="List check icon"
-                    className={styles.footerButton}
-                    onClick={() => console.log('Icon button clicked')}
+                    className={`${styles.footerButton} ${location.pathname === '/' ? styles.active : ''
+                        }`}
+                    onClick={() => navigate('/')}
                 >
                     Tasks
                 </Button>
@@ -22,8 +27,9 @@ const Footer: React.FC = () => {
                     variant="icon"
                     iconSrc={calendarCheckIcon}
                     alt="Calendar check icon"
-                    className={styles.footerButton}
-                    onClick={() => console.log('Icon button clicked')}
+                    className={`${styles.footerButton} ${location.pathname === '/calendar' ? styles.active : ''
+                        }`}
+                    onClick={() => navigate('/calendar')}
                 >
                     Calendar
                 </Button>
@@ -31,8 +37,9 @@ const Footer: React.FC = () => {
                     variant="icon"
                     iconSrc={boardCheckIcon}
                     alt="Board check icon"
-                    className={styles.footerButton}
-                    onClick={() => console.log('Icon button clicked')}
+                    className={`${styles.footerButton} ${location.pathname === '/board' ? styles.active : ''
+                        }`}
+                    onClick={() => navigate('/board')}
                 >
                     Board
                 </Button>

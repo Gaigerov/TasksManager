@@ -35,6 +35,10 @@
     transform: translateY(-2px);
 }
 
+.active {
+    filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%);
+}
+
 @media (max-width: 480px) {
     .buttonGroup {
         gap: 20px;

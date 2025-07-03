@@ -7,11 +7,15 @@ import {AppLifecycleProvider} from './components/AppLifeCycleContext/AppLifeCycl
 import {AuthPage} from './components/AuthPage/AuthPage';
 import {MainPage} from './components/MainPage/MainPage';
 import Cookies from 'js-cookie';
+import TaskManager from './components/TaskManager/TaskManager';
+// import TaskCalendar from './components/TaskCalendar/TaskCalendar';
+// import TaskBoard from './components/TaskBoard/TaskBoard';
 
 const AppRouter = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
     const taskStore = useTaskStore();
+
     useEffect(() => {
         const authToken = Cookies.get('authToken');
         const user = Cookies.get('user');
@@ -43,9 +47,16 @@ const AppRouter = () => {
     const router = createHashRouter([
         {
             path: "/*",
-            element: isAuthenticated ?
-                <MainPage onLogout={handleLogout} /> :
+            element: isAuthenticated ? (
+                <MainPage onLogout={handleLogout} />
+            ) : (
                 <AuthPage onAuthSuccess={handleAuthSuccess} />
+            ),
+            children: [
+                {index: true, element: <TaskManager />},
+                // { path: "calendar", element: <TaskCalendar /> },
+                // { path: "board", element: <TaskBoard /> },
+            ]
         },
     ]);
 

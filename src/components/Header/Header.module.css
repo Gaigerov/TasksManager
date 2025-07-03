@@ -21,6 +21,7 @@
     box-sizing: border-box;
     min-width: 0;
     overflow: hidden;
+    flex-direction: row;
 }
 
 .iconContainers {
@@ -28,6 +29,10 @@
     flex-direction: row;
     min-width: 0;
     overflow: hidden;
+}
+
+.menuIconContainer {
+    margin-right: 8px;
 }
 
 .logoutButton {
@@ -43,13 +48,14 @@
     color: var(--primary-light);
 }
 
+.menuIconContainer,
 .searchIconContainer,
 .filterIconContainer {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--dark);
+    color: var(--secondary);
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -59,6 +65,7 @@
     overflow: hidden;
 }
 
+.menuIconContainer:hover,
 .searchIconContainer:hover,
 .filterIconContainer:hover {
     background-color: rgba(0, 0, 0, 0.04);
@@ -103,6 +110,20 @@
     font-size: 24px;
 }
 
+.menuItemIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.menuItemIconActive {
+    filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%) !important;
+}
+
+.activeText {
+    filter: invert(26%) sepia(87%) saturate(1316%) hue-rotate(199deg) brightness(99%) contrast(114%) !important;
+    font-weight: 500;
+}
+
 @media (max-width: 480px) {
     .header {
         gap: 8px;
@@ -116,7 +137,8 @@
     }
 
     .searchIconContainer,
-    .filterIconContainer {
+    .filterIconContainer,
+    .menuIconContainer {
         width: 36px;
         height: 36px;
     }
