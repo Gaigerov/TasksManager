@@ -1,3 +1,4 @@
+import {observer} from 'mobx-react-lite';
 import {useTaskStore} from '../../../stores/storeContext';
 import Button from '../../Button/Button';
 import styles from './ModalFooter.module.css';
@@ -105,4 +106,4 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
     );
 };
 
-export default ModalFooter;
+export default observer(ModalFooter);

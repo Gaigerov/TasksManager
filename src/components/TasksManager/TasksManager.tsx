@@ -4,7 +4,7 @@ import TasksList from '../TasksList/TasksList';
 import TasksTable from '../TasksTable/TasksTable';
 import styles from './TasksManager.module.css';
 import {useBreakpoint} from '../../hooks/useBreakpoints';
-import {Pagination} from '../Pagination/Pagination';
+import Pagination from '../Pagination/Pagination';
 import {useTaskStore} from '../../stores/storeContext';
 
 const TasksManager: React.FC = observer(() => {

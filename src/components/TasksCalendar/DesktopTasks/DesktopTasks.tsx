@@ -30,7 +30,7 @@ export const DesktopTasks: FC<Props> = observer(({task, onView}) => {
             case TASK_STATUS.DONE:
                 return STATUS_COLOR.DONE;
             case TASK_STATUS.INPROGRESS:
-                return STATUS_COLOR.INPROGRESS;
+                return STATUS_COLOR.INPROGRESS_LIGHT;
             case TASK_STATUS.TO_DO:
             default:
                 return STATUS_COLOR.TO_DO_LIGHT;

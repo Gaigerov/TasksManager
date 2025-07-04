@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useState, useEffect} from 'react';
 import styles from './DateInput.module.css';
+import {observer} from 'mobx-react-lite';
 
 interface DateInputProps {
     value: string;
@@ -41,4 +42,4 @@ const DateInput: React.FC<DateInputProps> = ({value, onChange, hasError = false}
     );
 };
 
-export default DateInput;
+export default observer(DateInput);

@@ -5,6 +5,7 @@ import chevronsRight from "../../images/ChevronsRight.svg";
 import chevronsLeft from "../../images/ChevronsLeft.svg";
 import {CustomSelect} from '../Pagination/CustomSelect/CustomSelect';
 import styles from './Pagination.module.css';
+import {observer} from 'mobx-react-lite';
 
 interface PaginationProps {
     currentPage: number;
@@ -14,7 +15,7 @@ interface PaginationProps {
     onTasksPerPageChange: (value: number) => void;
 }
 
-export const Pagination: FC<PaginationProps> = ({
+const Pagination: FC<PaginationProps> = ({
     currentPage,
     tasksPerPage,
     totalTasks,
@@ -183,3 +184,5 @@ export const Pagination: FC<PaginationProps> = ({
         </div>
     );
 };
+
+export default observer(Pagination);

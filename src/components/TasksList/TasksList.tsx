@@ -41,8 +41,8 @@ const TasksList = observer(() => {
                             rowRenderer={rowRenderer}
                             overscanRowCount={5}
                             style={{
-                                paddingTop: 20,
-                                paddingBottom: 30,
+                                paddingTop: 35,
+                                paddingBottom: 35,
                                 boxSizing: 'border-box',
                                 overflowY: 'auto'
                             }}

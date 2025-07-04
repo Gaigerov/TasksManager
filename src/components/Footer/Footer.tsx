@@ -5,6 +5,7 @@ import Button from '../Button/Button';
 import listCheckIcon from '../../images/list-check-2.svg';
 import calendarCheckIcon from '../../images/calendar-todo-line.svg';
 import boardCheckIcon from '../../images/web-board.svg';
+import {observer} from 'mobx-react-lite';
 
 const Footer: React.FC = () => {
     const navigate = useNavigate();
@@ -48,4 +49,4 @@ const Footer: React.FC = () => {
     );
 };
 
-export default Footer;
+export default observer(Footer);

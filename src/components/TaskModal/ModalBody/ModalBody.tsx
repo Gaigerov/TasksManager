@@ -3,6 +3,7 @@ import styles from './ModalBody.module.css';
 import {TaskItem} from '../../../types/types';
 import DatePicker from '../../DatePicker/DatePicker';
 import {TaskValidationErrors} from '../../../utils/taskValidation';
+import {observer} from 'mobx-react-lite';
 
 interface ModalBodyProps {
     task: TaskItem;
@@ -145,4 +146,4 @@ const ModalBody: React.FC<ModalBodyProps> = ({
     );
 };
 
-export default ModalBody;
+export default observer(ModalBody);

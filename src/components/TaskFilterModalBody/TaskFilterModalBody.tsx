@@ -2,6 +2,7 @@ import React, {useState, useCallback} from 'react';
 import styles from './TaskFilterModalBody.module.css';
 import DatePicker from '../DatePicker/DatePicker';
 import {TASK_STATUS, TASK_STATUSES} from '../../config/constant';
+import {observer} from 'mobx-react-lite';
 
 
 interface TaskFilterModalBodyProps {
@@ -95,4 +96,4 @@ const TaskFilterModalBody: React.FC<TaskFilterModalBodyProps> = ({
     );
 };
 
-export default TaskFilterModalBody;
+export default observer(TaskFilterModalBody);

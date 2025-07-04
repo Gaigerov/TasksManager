@@ -7,6 +7,7 @@ import {useTaskStore} from '../../../stores/storeContext';
 import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
 import Cookies from 'js-cookie';
 import {TaskStatus} from '../../../types/types';
+import {observer} from 'mobx-react-lite';
 
 interface TaskRowProps {
     task: {
@@ -153,4 +154,4 @@ const TaskRow: React.FC<TaskRowProps> = ({
     );
 };
 
-export default TaskRow;
+export default observer(TaskRow);

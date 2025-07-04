@@ -44,6 +44,7 @@ export const STATUS_COLOR = {
     TO_DO: 'var(--secondary)',
     TO_DO_LIGHT: 'var(--secondary-light)',
     INPROGRESS: 'var(--primary)',
+    INPROGRESS_LIGHT: 'var(--primary-light)',
     DONE: 'var(--success)',
     PAST_DUE: 'var(--danger-light)'
 } as const;
