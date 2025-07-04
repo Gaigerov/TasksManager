@@ -54,13 +54,9 @@ export const MainPage: React.FC<MainPageProps> = ({onLogout}) => {
                 onOpenModal={() => taskStore.openModal(VALID_MODE.CREATE)}
                 onLogout={onLogout}
             />
-            <div className={styles.contentWrapper}>
-                <div className={styles.fadeTop}></div>
                 <main className={styles.content}>
                     <Outlet />
                 </main>
-                <div className={styles.fadeBottom}></div>
-            </div>
             {breakpoint !== 'desktop' && <Footer />}
             <TaskModal />
         </div>

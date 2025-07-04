@@ -31,24 +31,30 @@ const TasksList = observer(() => {
     return (
         <div className={styles.tasksContainer}>
             {filteredTasks.length > 0 ? (
-                <AutoSizer>
-                    {({width, height}) => (
-                        <List
-                            width={width}
-                            height={height}
-                            rowCount={filteredTasks.length}
-                            rowHeight={130}
-                            rowRenderer={rowRenderer}
-                            overscanRowCount={5}
-                            style={{
-                                paddingTop: 35,
-                                paddingBottom: 35,
-                                boxSizing: 'border-box',
-                                overflowY: 'auto'
-                            }}
-                        />
-                    )}
-                </AutoSizer>
+                <div className={styles.contentWrapper}>
+                    <div className={styles.fadeTop}></div>
+                    <AutoSizer>
+                        {({width, height}) => (
+
+                            <List
+                                width={width}
+                                height={height}
+                                rowCount={filteredTasks.length}
+                                rowHeight={130}
+                                rowRenderer={rowRenderer}
+                                overscanRowCount={5}
+                                style={{
+                                    paddingTop: 35,
+                                    paddingBottom: 35,
+                                    boxSizing: 'border-box',
+                                    overflowY: 'auto'
+                                }}
+                            />
+
+                        )}
+                    </AutoSizer>
+                    <div className={styles.fadeBottom}></div>
+                </div>
             ) : (
                 <div className={styles.emptyList}>
                     <p>Нет задач</p>
