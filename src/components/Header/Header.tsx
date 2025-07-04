@@ -44,6 +44,11 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
         (taskStore.filters.status ? 1 : 0) +
         (taskStore.filters.date ? 1 : 0);
 
+    // Закрываем меню при смене страницы
+    useEffect(() => {
+        setMenuAnchorEl(null);
+    }, [location.pathname]);
+
     const handleCloseSearch = useCallback(() => {
         setIsSearchOpen(false);
     }, []);
@@ -100,39 +105,67 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
 
     return (
         <header className={styles.header}>
-            <div ref={searchContainerRef} className={styles.searchArea}>
-                {isSearchOpen ? (
-                    <SearchInput />
-                ) : (
-                    <div className={styles.iconContainers}>
-                        {breakpoint === 'desktop' &&
-                            <div
-                                className={styles.menuIconContainer}
-                                onClick={handleMenuOpen}
-                            >
-                                <MenuIcon />
+            {/* Левая секция - иконки меню и поиска */}
+            <div className={styles.leftSection}>
+                {/* Иконка меню всегда отображается для desktop на всех страницах */}
+                {breakpoint === 'desktop' && (
+                    <div
+                        className={styles.menuIconContainer}
+                        onClick={handleMenuOpen}
+                    >
+                        <MenuIcon />
+                    </div>
+                )}
+                
+                {/* Область поиска показываем только на главной странице */}
+                {location.pathname === '/' && (
+                    <div ref={searchContainerRef} className={styles.searchArea}>
+                        {isSearchOpen ? (
+                            <SearchInput />
+                        ) : (
+                            <div className={styles.iconContainers}>
+                                <div
+                                    className={styles.searchIconContainer}
+                                    onClick={handleSearchToggle}
+                                >
+                                    <SearchIcon />
+                                </div>
+                                <div className={styles.filterIconContainer} onClick={handleOpenFilter}>
+                                    <RedBadge
+                                        badgeContent={filterCount}
+                                        color="error"
+                                        invisible={filterCount === 0}
+                                        overlap="circular"
+                                    >
+                                        <FilterAltOutlinedIcon />
+                                    </RedBadge>
+                                </div>
                             </div>
-                        }
-                        <div
-                            className={styles.searchIconContainer}
-                            onClick={handleSearchToggle}
-                        >
-                            <SearchIcon />
-                        </div>
-                        <div className={styles.filterIconContainer} onClick={handleOpenFilter}>
-                            <RedBadge
-                                badgeContent={filterCount}
-                                color="error"
-                                invisible={filterCount === 0}
-                                overlap="circular"
-                            >
-                                <FilterAltOutlinedIcon />
-                            </RedBadge>
-                        </div>
+                        )}
                     </div>
                 )}
             </div>
-            {breakpoint === 'desktop' &&
+            
+            {/* Правая секция - кнопки Create и Logout */}
+            <div className={styles.rightSection}>
+                <Button
+                    variant="primary"
+                    className={styles.createButton}
+                    onClick={() => onOpenModal && onOpenModal()}
+                >
+                    Create
+                </Button>
+                <button
+                    className={styles.logoutButton}
+                    onClick={onLogout}
+                    title="Выйти"
+                >
+                    <ExitToAppIcon />
+                </button>
+            </div>
+            
+            {/* Меню показываем всегда для desktop на всех страницах */}
+            {breakpoint === 'desktop' && (
                 <Menu
                     anchorEl={menuAnchorEl}
                     open={Boolean(menuAnchorEl)}
@@ -221,21 +254,7 @@ const Header: React.FC<HeaderProps> = ({onOpenModal, onLogout}) => {
                         </ListItemText>
                     </MenuItem>
                 </Menu>
-            }
-            <Button
-                variant="primary"
-                className={styles.createButton}
-                onClick={() => onOpenModal && onOpenModal()}
-            >
-                Create
-            </Button>
-            <button
-                className={styles.logoutButton}
-                onClick={onLogout}
-                title="Выйти"
-            >
-                <ExitToAppIcon />
-            </button>
+            )}
         </header>
     );
 };

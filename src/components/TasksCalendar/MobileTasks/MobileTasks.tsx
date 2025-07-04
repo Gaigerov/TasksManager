@@ -1,4 +1,5 @@
-import {FC, useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {observer} from 'mobx-react-lite';
 import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
 import {TaskItem, TaskStatus} from '../../../types/types';
 import {useTaskStore} from '../../../stores/storeContext';
@@ -9,7 +10,7 @@ interface Props {
     task: TaskItem;
 }
 
-export const MobileTasks: FC<Props> = ({task}) => {
+export const MobileTasks = observer(({task}: Props) => {
     const taskStore = useTaskStore();
     const isPastDue = taskStore.isTaskPastDue(task);
     const [isStatusOpen, setIsStatusOpen] = useState(false);
@@ -94,7 +95,7 @@ export const MobileTasks: FC<Props> = ({task}) => {
                     <div className={styles.frameOfTaskDate}>
                         <p
                             className={styles.taskTime}
-                            style={{color: isPastDue ? 'red' : 'var(--dark)'}}
+                            style={{color: isPastDue ? 'var(--danger)' : 'var(--dark)'}}
                         >
                             {task.time}
                         </p>
@@ -103,4 +104,4 @@ export const MobileTasks: FC<Props> = ({task}) => {
             </div>
         </div>
     );
-};
+});

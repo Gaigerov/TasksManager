@@ -17,12 +17,10 @@ interface TaskRowProps {
         date: string;
         time: string;
     };
-    isPastDue: boolean;
 }
 
 const TaskRow: React.FC<TaskRowProps> = ({
     task,
-    isPastDue,
 }) => {
     const taskStore = useTaskStore();
     const user = Cookies.get('user') || '';
@@ -30,7 +28,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const statusButtonRef = useRef<HTMLButtonElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
     const rowClassName = `${styles.row} ${isStatusOpen ? styles.statusPopupOpen : ''}`;
-
+    const isPastDue = taskStore.isTaskPastDue(task);
     const openEditModal = (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         taskStore.openModal(VALID_MODE.EDIT, task);
@@ -57,7 +55,6 @@ const TaskRow: React.FC<TaskRowProps> = ({
 
     return (
         <div className={rowClassName} onClick={openViewModal}>
-            {/* Status Column */}
             <div className={`${styles.column} ${styles.statusColumn}`} style={{width: '110px'}}>
                 <div className={styles.statusContainer}>
                     <button

@@ -1,4 +1,5 @@
 import {FC} from 'react';
+import {observer} from 'mobx-react-lite';
 import styles from './DesktopTasks.module.css';
 import {TaskItem} from '../../../types/types';
 import {STATUS_COLOR, TASK_STATUS} from '../../../config/constant';
@@ -9,9 +10,10 @@ interface Props {
     onView: (task: TaskItem) => void;
 }
 
-export const DesktopTasks: FC<Props> = ({task, onView}) => {
+export const DesktopTasks: FC<Props> = observer(({task, onView}) => {
     const taskStore = useTaskStore();
     const isPastDue = taskStore.isTaskPastDue(task);
+
     const handleClick = () => {
         onView(task);
     };
@@ -48,10 +50,13 @@ export const DesktopTasks: FC<Props> = ({task, onView}) => {
                 {task.description && (
                     <p className={styles.description}>{task.description}</p>
                 )}
-                <p className={styles.time} style={{color: isPastDue ? 'var(--danger)' : 'var(--white)'}}>
+                <p
+                    className={styles.time}
+                    style={{color: isPastDue ? 'var(--danger)' : 'var(--white)'}}
+                >
                     {task.time}
                 </p>
             </div>
         </div>
     );
-};
+});

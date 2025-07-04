@@ -8,6 +8,7 @@ import styles from './TasksCalendar.module.css';
 import chevronLeft from '../../images/ChevronLeft.svg'
 import chevronRight from '../../images/ChevronRight.svg'
 import Button from '../Button/Button';
+import {observer} from 'mobx-react-lite';
 
 const parseDate = (dateString: string): Date => {
     const [day, month, year] = dateString.split('.');
@@ -368,4 +369,4 @@ const TasksCalendar: FC = () => {
     );
 };
 
-export default TasksCalendar;
+export default observer(TasksCalendar);

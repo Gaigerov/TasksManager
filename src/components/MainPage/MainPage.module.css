@@ -9,7 +9,7 @@
 .content {
     flex: 1 1 auto;
     padding: 0;
-    background-color: lightsteelblue;
+
     box-sizing: border-box;
     display: flex;
     flex-direction: column;

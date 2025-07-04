@@ -316,9 +316,18 @@ export default class TaskStore {
 
     changeTaskStatus(taskId: string, newStatus: TaskStatus, user: string) {
         const task = this.tasks.find(t => t.id === taskId);
-        if (task) {
-            this.updateTask({...task, status: newStatus}, user);
-        }
+        if (!task) return;
+        runInAction(() => {
+            task.status = newStatus;
+        });
+        this.debouncedSave(user);
+    }
+    private debounceTimer: any;
+    private debouncedSave(user: string) {
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(() => {
+            this.saveTasksToServer(user);
+        }, 500);
     }
 
     setCurrentTask(task: TaskItem | null) {

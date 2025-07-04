@@ -11,11 +11,6 @@ const TasksTable: React.FC<TasksTableProps> = ({tasks}) => {
     const currentDate = new Date();
     currentDate.setHours(0, 0, 0, 0);
 
-    const parseDDMMYYYY = (dateString: string) => {
-        const [day, month, year] = dateString.split('.');
-        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-    };
-
     return (
         <div className={styles.tableContainer}>
             <div className={styles.tableHeader}>
@@ -28,13 +23,10 @@ const TasksTable: React.FC<TasksTableProps> = ({tasks}) => {
 
             <div className={styles.tableBody}>
                 {tasks.map((task) => {
-                    const taskDate = parseDDMMYYYY(task.date);
-                    const isPastDue = taskDate < currentDate;
                     return (
                         <TaskRow
                             key={task.id}
                             task={task}
-                            isPastDue={isPastDue}
                         />
                     );
                 })}
