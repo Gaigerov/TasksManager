@@ -35,4 +35,22 @@ export const APP_LIFECYCLE_STATUS = {
     READY: 'READY',
     DESTROYING: 'DESTROYING',
     ERROR: 'ERROR',
-};
+} as const;
+
+export type AppLifecycleStatus =
+    typeof APP_LIFECYCLE_STATUS[keyof typeof APP_LIFECYCLE_STATUS];
+
+export const STATUS_COLOR = {
+    TO_DO: 'var(--secondary)',
+    INPROGRESS: 'var(--primary)',
+    DONE: 'var(--success)',
+    PAST_DUE: 'var(--danger-light)'
+} as const;
+
+export const TASK_STATUS_COLORS = {
+    'To Do': STATUS_COLOR.TO_DO,
+    'In Progress': STATUS_COLOR.INPROGRESS,
+    'Done': STATUS_COLOR.DONE,
+    'Past Due': STATUS_COLOR.PAST_DUE,
+} as const;
+

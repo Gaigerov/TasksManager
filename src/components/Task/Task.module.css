@@ -115,7 +115,7 @@
     color: var(--secondary);
 }
 
-.overdue {
+.isPastDue {
     color: var(--danger) !important;
     font-weight: bold;
 }

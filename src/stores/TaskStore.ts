@@ -36,6 +36,32 @@ export default class TaskStore {
         this.loadStorageId();
     }
 
+    isTaskPastDue(task: TaskItem): boolean {
+        if (!task.date) return false;
+
+        try {
+            const [day, month, year] = task.date.split('.').map(Number);
+            const taskDate = new Date(year, month - 1, day);
+            const today = new Date();
+
+            const taskDateOnly = new Date(
+                taskDate.getFullYear(),
+                taskDate.getMonth(),
+                taskDate.getDate()
+            );
+
+            const todayDateOnly = new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                today.getDate()
+            );
+
+            return taskDateOnly < todayDateOnly && task.status !== 'Done';
+        } catch {
+            return false;
+        }
+    }
+
     private saveStorageId() {
         if (this.storageId) {
             localStorage.setItem(STORAGE_ID_KEY, this.storageId);

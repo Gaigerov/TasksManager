@@ -1,10 +1,9 @@
-import {FC} from 'react';
-// import { Popover } from '../Popover/Popover';
-import {VALID_MODE} from '../../../config/constant';
-import {TaskItem} from '../../../types/types';
+import {FC, useEffect, useRef, useState} from 'react';
+import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
+import {TaskItem, TaskStatus} from '../../../types/types';
 import {useTaskStore} from '../../../stores/storeContext';
 import styles from './MobileTasks.module.css';
-
+import Cookies from 'js-cookie';
 
 interface Props {
     task: TaskItem;
@@ -12,16 +11,28 @@ interface Props {
 
 export const MobileTasks: FC<Props> = ({task}) => {
     const taskStore = useTaskStore();
+    const isPastDue = taskStore.isTaskPastDue(task);
+    const [isStatusOpen, setIsStatusOpen] = useState(false);
+    const statusButtonRef = useRef<HTMLButtonElement>(null);
+    const popupRef = useRef<HTMLDivElement>(null);
+    const user = Cookies.get('user') || '';
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node) &&
+                statusButtonRef.current && !statusButtonRef.current.contains(event.target as Node)) {
+                setIsStatusOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleNavigateToView = () => {
         taskStore.openModal(VALID_MODE.VIEW, task);
     };
 
-    const taskDate = new Date(task.date.split('.').reverse().join('-'));
-    const currentDate = new Date();
-    const isPastDue = taskDate < currentDate && task.status !== 'Done';
-
-    // Проверяем, является ли текущая задача выбранной
     const isActive = taskStore.currentTask?.id === task.id;
 
     return (
@@ -40,7 +51,46 @@ export const MobileTasks: FC<Props> = ({task}) => {
                     </div>
                 </div>
                 <div className={styles.frameOfFooterTask}>
-                    {/* <Popover tableTask={task} /> */}
+                    <div className={styles.statusContainer}>
+                        <button
+                            ref={statusButtonRef}
+                            className={styles.statusButton}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsStatusOpen(!isStatusOpen);
+                            }}
+                            style={{backgroundColor: TASK_STATUS_COLORS[task.status], color: 'var(--white)'}}
+                        >
+                            {task.status}
+                        </button>
+
+                        {isStatusOpen && (
+                            <div
+                                ref={popupRef}
+                                className={styles.statusPopup}
+                                onClick={e => e.stopPropagation()}
+                            >
+                                {(['To Do', 'In Progress', 'Done'] as TaskStatus[]).map((stat) => (
+                                    <button
+                                        key={stat}
+                                        className={styles.statusOption}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsStatusOpen(false);
+                                            taskStore.changeTaskStatus(task.id, stat, user);
+                                        }}
+                                        style={{
+                                            backgroundColor: task.status === stat ? TASK_STATUS_COLORS[stat] : '',
+                                            fontWeight: task.status === stat ? 'bold' : 'normal',
+                                            color: task.status === stat ? 'var(--white)' : 'inherit'
+                                        }}
+                                    >
+                                        {stat}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                     <div className={styles.frameOfTaskDate}>
                         <p
                             className={styles.taskTime}

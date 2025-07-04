@@ -4,6 +4,7 @@ import {TaskStatus} from '../../types/types';
 import styles from './TaskViewModalBody.module.css';
 import {useTaskStore} from '../../stores/storeContext';
 import Cookies from 'js-cookie';
+import {TASK_STATUS_COLORS} from '../../config/constant';
 
 interface TaskViewModalBodyProps {
     taskId: string;
@@ -37,12 +38,6 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
 
     const {id, status, description, time, date} = task;
 
-    const statusColors = {
-        'To Do': 'var(--secondary)',
-        'In Progress': 'var(--primary)',
-        'Done': 'var(--success)'
-    };
-
     return (
         <div className={styles.modalBody}>
             <div>
@@ -54,7 +49,7 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
                             e.stopPropagation();
                             setIsStatusOpen(!isStatusOpen);
                         }}
-                        style={{backgroundColor: statusColors[status], color: 'var(--white)'}}
+                        style={{backgroundColor: TASK_STATUS_COLORS[status], color: 'var(--white)'}}
                     >
                         {status}
                     </button>
@@ -75,7 +70,7 @@ const TaskViewModalBody: React.FC<TaskViewModalBodyProps> = observer(({taskId, o
                                         taskStore.changeTaskStatus(id, stat, user);
                                     }}
                                     style={{
-                                        backgroundColor: status === stat ? statusColors[stat] : '',
+                                        backgroundColor: status === stat ? TASK_STATUS_COLORS[stat] : '',
                                         fontWeight: status === stat ? 'bold' : 'normal',
                                         color: status === stat ? 'var(--white)' : 'inherit'
                                     }}

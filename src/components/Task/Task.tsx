@@ -1,4 +1,4 @@
-import {useState, useRef, useEffect, useMemo} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import styles from './Task.module.css';
 import {TaskItem, TaskStatus} from '../../types/types';
 import deleteIcon from '../../images/delete.svg';
@@ -6,7 +6,7 @@ import editIcon from '../../images/edit.svg';
 import cloneIcon from '../../images/clone.svg';
 import {observer} from 'mobx-react-lite';
 import {useTaskStore} from '../../stores/storeContext';
-import {VALID_MODE} from '../../config/constant';
+import {TASK_STATUS_COLORS, VALID_MODE} from '../../config/constant';
 import Cookies from 'js-cookie';
 
 interface TaskProps {
@@ -22,19 +22,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
     const taskStore = useTaskStore();
     const user = Cookies.get('user') || '';
     const isActive = taskStore.currentTask?.id === id;
-    const isOverdue = useMemo(() => {
-        if (!date) return false;
-
-        try {
-            const [day, month, year] = date.split('.').map(Number);
-            const taskDate = new Date(year, month - 1, day);
-            const today = new Date();
-            const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            return taskDate < todayDateOnly && status !== 'Done';
-        } catch {
-            return false;
-        }
-    }, [date, status]);
+    const isPastDue = taskStore.isTaskPastDue(task);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -47,12 +35,6 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
-
-    const statusColors = {
-        'To Do': 'var(--secondary)',
-        'In Progress': 'var(--primary)',
-        'Done': 'var(--success)'
-    };
 
     const openEditModal = (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
@@ -134,7 +116,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                             e.stopPropagation();
                             setIsStatusOpen(!isStatusOpen);
                         }}
-                        style={{backgroundColor: statusColors[status], color: 'var(--white)'}}
+                        style={{backgroundColor: TASK_STATUS_COLORS[status], color: 'var(--white)'}}
                     >
                         {status}
                     </button>
@@ -155,7 +137,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                                         taskStore.changeTaskStatus(id, stat, user);
                                     }}
                                     style={{
-                                        backgroundColor: status === stat ? statusColors[stat] : '',
+                                        backgroundColor: status === stat ? TASK_STATUS_COLORS[stat] : '',
                                         fontWeight: status === stat ? 'bold' : 'normal',
                                         color: status === stat ? 'var(--white)' : 'inherit'
                                     }}
@@ -167,7 +149,7 @@ const Task = observer(({task, isLastTask = false}: TaskProps) => {
                     )}
                 </div>
 
-                <div className={`${styles.datetime} ${isOverdue ? styles.overdue : ''}`}>
+                <div className={`${styles.datetime} ${isPastDue ? styles.isPastDue : ''}`}>
                     <span className={styles.time}>{time}</span>
                     <span className={styles.date}>{date}</span>
                 </div>

@@ -1,25 +1,27 @@
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import styles from './Header.module.css';
-import SearchIcon from '@mui/icons-material/Search';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import Button from '../Button/Button';
 import SearchInput from '../SearchInput/SearchInput';
 import {VALID_MODE} from '../../config/constant';
 import {useTaskStore} from '../../stores/storeContext';
-import Badge from '@mui/material/Badge';
-import {
-    Menu,
-    MenuItem,
-    ListItemIcon,
-    ListItemText
-} from '@mui/material';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from 'react-router-dom';
+import {useBreakpoint} from '../../hooks/useBreakpoints';
 import listCheckIcon from '../../images/list-check-2.svg';
 import calendarCheckIcon from '../../images/calendar-todo-line.svg';
 import boardCheckIcon from '../../images/web-board.svg';
-import {useBreakpoint} from '../../hooks/useBreakpoints';
+import { 
+  Badge,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText 
+} from '@mui/material';
+import { 
+  Search as SearchIcon,
+  FilterAltOutlined as FilterAltOutlinedIcon,
+  ExitToApp as ExitToAppIcon,
+  Menu as MenuIcon 
+} from '@mui/icons-material';
 
 const RedBadge = Badge;
 

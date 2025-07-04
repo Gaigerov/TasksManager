@@ -1,15 +1,10 @@
 import {createContext, useContext, useEffect, useState, FC, ReactNode} from 'react';
-
-export enum APP_LIFECYCLE_STATUS {
-    INITIALIZATION = 'INITIALIZATION',
-    READY = 'READY',
-    ERROR = 'ERROR'
-}
+import {APP_LIFECYCLE_STATUS, AppLifecycleStatus} from '../../config/constant';
 
 interface AppLifecycleContextType {
-    lifecycleStatus: APP_LIFECYCLE_STATUS;
+    lifecycleStatus: AppLifecycleStatus;
 }
- 
+
 export const AppLifecycleContext = createContext<AppLifecycleContextType | undefined>(undefined);
 
 interface Props {
@@ -17,8 +12,7 @@ interface Props {
 }
 
 export const AppLifecycleProvider: FC<Props> = ({children}) => {
-    const [lifecycleStatus, setLifecycleStatus] = useState<APP_LIFECYCLE_STATUS>(APP_LIFECYCLE_STATUS.INITIALIZATION);
-    const [isLoading, setIsLoading] = useState(true);
+    const [lifecycleStatus, setLifecycleStatus] = useState<AppLifecycleStatus>(APP_LIFECYCLE_STATUS.INITIALIZATION); const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const initializeApp = async () => {

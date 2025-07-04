@@ -58,6 +58,71 @@
 
 .taskTime {
     margin: 0;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.statusContainer {
+    position: relative;
+}
+
+.statusButton {
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 12px;
+    width: auto;
+    transition: all 0.2s;
+}
+
+.statusButton:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+.statusPopup {
+    position: absolute;
+    top: 100%;
+    bottom: auto;
+    left: 0;
+    z-index: 10;
+    background: var(--white);
+    color: var(--dark);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    overflow: hidden;
+    gap: 6px;
+    min-width: 100px;
+}
+
+.statusPopup:hover {
+    color: var(--dark);
+    background: var(--white);
+}
+
+.statusOption {
+    width: max-content;
+    border-radius: 6px;
+    margin: 2px 8px;
+    padding: 4px 8px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.statusOption:hover {
+    background-color: var(--light);
+    color: var(--secondary);
+    font-weight: bold;
 }

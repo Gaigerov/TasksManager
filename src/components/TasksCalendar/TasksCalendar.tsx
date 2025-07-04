@@ -2,8 +2,50 @@ import {FC, useState, useMemo, useCallback} from 'react';
 import {useTaskStore} from '../../stores/storeContext';
 import {useBreakpoint} from '../../hooks/useBreakpoints';
 import {MobileTasks} from '../TasksCalendar/MobileTasks/MobileTasks';
+import {DesktopTasks} from './DesktopTasks/DesktopTasks';
 import {TaskItem} from '../../types/types';
 import styles from './TasksCalendar.module.css';
+import chevronLeft from '../../images/ChevronLeft.svg'
+import chevronRight from '../../images/ChevronRight.svg'
+import Button from '../Button/Button';
+
+const parseDate = (dateString: string): Date => {
+    const [day, month, year] = dateString.split('.');
+    return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+};
+
+const isToday = (date: Date) => {
+    const today = new Date();
+    return isSameDay(date, today);
+};
+
+const isSameDay = (date1: Date, date2: Date): boolean => {
+    return date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate();
+};
+
+const getWeekDates = (startDate: Date): {date: Date, day: string}[] => {
+    const dates = [];
+    const current = new Date(startDate);
+
+    // Найдем понедельник (начало недели)
+    const dayOfWeek = current.getDay();
+    const diff = current.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    const monday = new Date(current.setDate(diff));
+
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(monday);
+        date.setDate(monday.getDate() + i);
+
+        dates.push({
+            date,
+            day: date.toLocaleDateString('ru-RU', {weekday: 'short'})
+        });
+    }
+
+    return dates;
+};
 
 const TasksCalendar: FC = () => {
     const taskStore = useTaskStore();
@@ -18,6 +60,7 @@ const TasksCalendar: FC = () => {
         return `${day}.${month}.${year}`;
     }, []);
 
+    // Форматирование даты для отображения (dd.mm.yyyy)
     const formatDisplayDate = useCallback((date: Date): string => {
         return date.toLocaleDateString('ru-RU', {
             day: '2-digit',
@@ -26,6 +69,7 @@ const TasksCalendar: FC = () => {
         });
     }, []);
 
+    // Навигация по дням (для mobile/tablet)
     const handlePrevDay = () => {
         setSelectedDate(prev => {
             const newDate = new Date(prev);
@@ -38,6 +82,23 @@ const TasksCalendar: FC = () => {
         setSelectedDate(prev => {
             const newDate = new Date(prev);
             newDate.setDate(newDate.getDate() + 1);
+            return newDate;
+        });
+    };
+
+    // Навигация по неделям (для desktop)
+    const handlePrevWeek = () => {
+        setSelectedDate(prev => {
+            const newDate = new Date(prev);
+            newDate.setDate(newDate.getDate() - 7);
+            return newDate;
+        });
+    };
+
+    const handleNextWeek = () => {
+        setSelectedDate(prev => {
+            const newDate = new Date(prev);
+            newDate.setDate(newDate.getDate() + 7);
             return newDate;
         });
     };
@@ -103,6 +164,35 @@ const TasksCalendar: FC = () => {
         };
     }, [breakpoint, filteredTasks, selectedDate, formatDate]);
 
+    // Данные для desktop-режима
+    const desktopData = useMemo(() => {
+        if (breakpoint !== 'desktop') return null;
+        const weekDates = getWeekDates(selectedDate);
+        const weekTasks = filteredTasks.filter(task => {
+            const taskDate = parseDate(task.date);
+            return weekDates.some(day => isSameDay(day.date, taskDate));
+        });
+
+        const groupedByTime: Record<string, TaskItem[]> = {};
+        weekTasks.forEach(task => {
+            const hour = task.time.split(':')[0].padStart(2, '0');
+            if (!groupedByTime[hour]) groupedByTime[hour] = [];
+            groupedByTime[hour].push(task);
+        });
+
+        const uniqueTimes = Object.keys(groupedByTime).sort();
+
+        return {
+            weekDates,
+            groupedByTime,
+            uniqueTimes
+        };
+    }, [breakpoint, filteredTasks, selectedDate]);
+
+    const handleViewTask = useCallback((task: TaskItem) => {
+        taskStore.openModal('view', task);
+    }, [taskStore]);
+
     // Рендер под mobile
     const renderMobileView = () => {
         if (!mobileTasks) return null;
@@ -113,9 +203,21 @@ const TasksCalendar: FC = () => {
         return (
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <button onClick={handlePrevDay} className={styles.navButton}>←</button>
+                    <Button
+                        variant="icon"
+                        iconSrc={chevronLeft}
+                        alt="clickLeft"
+                        className={styles.navButton}
+                        onClick={handlePrevDay}
+                    />
                     <div className={styles.dateDisplay}>{currentDate}</div>
-                    <button onClick={handleNextDay} className={styles.navButton}>→</button>
+                    <Button
+                        variant="icon"
+                        iconSrc={chevronRight}
+                        alt="clickRight"
+                        className={styles.navButton}
+                        onClick={handleNextDay}
+                    />
                 </div>
 
                 <div className={styles.tasksContainer}>
@@ -147,12 +249,24 @@ const TasksCalendar: FC = () => {
         return (
             <div className={styles.tabletLayout}>
                 <div className={styles.tabletHeader}>
-                    <button onClick={handlePrevDay} className={styles.navButton}>←</button>
+                    <Button
+                        variant="icon"
+                        iconSrc={chevronLeft}
+                        alt="clickLeft"
+                        className={styles.navButton}
+                        onClick={handlePrevDay}
+                    />
                     <div className={styles.tabletDates}>
                         <div className={styles.tabletDateColumn}>{currentDate}</div>
                         <div className={styles.tabletDateColumn}>{nextDate}</div>
                     </div>
-                    <button onClick={handleNextDay} className={styles.navButton}>→</button>
+                    <Button
+                        variant="icon"
+                        iconSrc={chevronRight}
+                        alt="clickRight"
+                        className={styles.navButton}
+                        onClick={handleNextDay}
+                    />
                 </div>
 
                 <div className={styles.tabletTasksContainer}>
@@ -180,10 +294,76 @@ const TasksCalendar: FC = () => {
         );
     };
 
+    // Рендер под desktop
+    const renderDesktopView = () => {
+        if (!desktopData) return null;
+
+        const {weekDates, groupedByTime, uniqueTimes} = desktopData;
+
+        return (
+            <div className={styles.desktopLayout}>
+                <div className={styles.desktopHeader}>
+                    <Button
+                        variant="icon"
+                        iconSrc={chevronLeft}
+                        alt="previous week"
+                        className={styles.navButton}
+                        onClick={handlePrevWeek}
+                    />
+                    <div className={styles.weekDays}>
+                        {weekDates.map((day, index) => (
+                            <div key={index} className={`${styles.weekDay} ${isToday(day.date) ? styles.today : ''}`}>
+                                <span className={styles.weekDate}>{formatDisplayDate(day.date)}</span>
+                                <span className={styles.weekDayName}>{day.day}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <Button
+                        variant="icon"
+                        iconSrc={chevronRight}
+                        alt="next week"
+                        className={styles.navButton}
+                        onClick={handleNextWeek}
+                    />
+                </div>
+
+                <div className={styles.desktopTasksContainer}>
+                    {uniqueTimes.map(time => (
+                        <div key={`time-${time}`} className={styles.desktopHourBlock}>
+                            <div className={styles.desktopHourHeader}>{time}:00</div>
+
+                            <div className={styles.desktopDayColumns}>
+                                {weekDates.map((day, dayIndex) => {
+                                    const tasksForSlot = groupedByTime[time].filter(task => {
+                                        const taskDate = parseDate(task.date);
+                                        return isSameDay(taskDate, day.date);
+                                    });
+
+                                    return (
+                                        <div key={`day-${dayIndex}`} className={styles.dayColumn}>
+                                            {tasksForSlot.map(task => (
+                                                <DesktopTasks
+                                                    key={task.id}
+                                                    task={task}
+                                                    onView={handleViewTask}
+                                                />
+                                            ))}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
     return (
         <>
             {breakpoint === 'mobile' && renderMobileView()}
             {breakpoint === 'tablet' && renderTableView()}
+            {breakpoint === 'desktop' && renderDesktopView()}
         </>
     );
 };

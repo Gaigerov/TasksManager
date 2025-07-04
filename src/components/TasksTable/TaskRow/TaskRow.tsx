@@ -4,7 +4,7 @@ import deleteIcon from '../../../images/delete.svg';
 import editIcon from '../../../images/edit.svg';
 import cloneIcon from '../../../images/clone.svg';
 import {useTaskStore} from '../../../stores/storeContext';
-import {VALID_MODE} from '../../../config/constant';
+import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
 import Cookies from 'js-cookie';
 import {TaskStatus} from '../../../types/types';
 
@@ -29,7 +29,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const [isStatusOpen, setIsStatusOpen] = useState(false);
     const statusButtonRef = useRef<HTMLButtonElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
-    const rowClassName = `${styles.row} ${isPastDue ? styles.pastDue : ''} ${isStatusOpen ? styles.statusPopupOpen : ''}`;
+    const rowClassName = `${styles.row} ${isStatusOpen ? styles.statusPopupOpen : ''}`;
 
     const openEditModal = (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
@@ -55,12 +55,6 @@ const TaskRow: React.FC<TaskRowProps> = ({
         };
     }, []);
 
-    const statusColors: Record<TaskStatus, string> = {
-        'To Do': 'var(--secondary)',
-        'In Progress': 'var(--primary)',
-        'Done': 'var(--success)'
-    };
-
     return (
         <div className={rowClassName} onClick={openViewModal}>
             {/* Status Column */}
@@ -74,7 +68,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                             setIsStatusOpen(!isStatusOpen);
                         }}
                         style={{
-                            backgroundColor: statusColors[task.status],
+                            backgroundColor: TASK_STATUS_COLORS[task.status],
                             color: 'var(--white)'
                         }}
                     >
@@ -97,7 +91,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
                                         taskStore.changeTaskStatus(task.id, stat, user);
                                     }}
                                     style={{
-                                        backgroundColor: task.status === stat ? statusColors[stat] : '',
+                                        backgroundColor: task.status === stat ? TASK_STATUS_COLORS[stat] : '',
                                         fontWeight: task.status === stat ? 'bold' : 'normal',
                                         color: task.status === stat ? 'var(--white)' : 'inherit'
                                     }}
@@ -110,27 +104,23 @@ const TaskRow: React.FC<TaskRowProps> = ({
                 </div>
             </div>
             
-            {/* Title Column */}
             <div className={styles.column} style={{width: '200px'}} title={task.title}>
                 <div className={styles.textContainer}>
                     {task.title}
                 </div>
             </div>
             
-            {/* Description Column */}
             <div className={styles.column} style={{flex: 1}} title={task.description}>
                 <div className={styles.textContainer}>
                     {task.description}
                 </div>
             </div>
             
-            {/* Date/Time Column */}
-            <div className={styles.timedate} style={{width: '120px'}}>
+            <div className={`${styles.timedate} ${isPastDue ? styles.pastDue : ''}`} style={{width: '120px'}}>
                 <div>{task.time}</div>
                 <div>{task.date}</div>
             </div>
             
-            {/* Actions Column */}
             <div className={styles.column} style={{width: '140px'}}>
                 <div className={styles.actions}>
                     <div
