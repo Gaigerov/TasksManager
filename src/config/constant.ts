@@ -42,6 +42,7 @@ export type AppLifecycleStatus =
 
 export const STATUS_COLOR = {
     TO_DO: 'var(--secondary)',
+    TO_DO_LIGHT: 'var(--secondary-light)',
     INPROGRESS: 'var(--primary)',
     DONE: 'var(--success)',
     PAST_DUE: 'var(--danger-light)'
@@ -49,6 +50,7 @@ export const STATUS_COLOR = {
 
 export const TASK_STATUS_COLORS = {
     'To Do': STATUS_COLOR.TO_DO,
+    'To Do Light': STATUS_COLOR.TO_DO_LIGHT,
     'In Progress': STATUS_COLOR.INPROGRESS,
     'Done': STATUS_COLOR.DONE,
     'Past Due': STATUS_COLOR.PAST_DUE,

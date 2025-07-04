@@ -145,6 +145,7 @@
     align-items: center;
     padding: 8px 12px;
     min-width: 80px;
+    width: 143px;
 }
 
 .weekDate {
@@ -195,7 +196,8 @@
 
 /* Контейнер для колонок дней */
 .desktopDayColumns {
-    display: grid;
+    display: flex;
+    justify-content: space-around;
     grid-template-columns: repeat(7, 1fr);
     gap: 16px;
 }
@@ -204,6 +206,6 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    width: 142.86px;
+    width: 143px;
     min-height: 100px;
 }

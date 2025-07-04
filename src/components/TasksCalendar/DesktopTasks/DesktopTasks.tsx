@@ -31,7 +31,7 @@ export const DesktopTasks: FC<Props> = ({task, onView}) => {
                 return STATUS_COLOR.INPROGRESS;
             case TASK_STATUS.TO_DO:
             default:
-                return STATUS_COLOR.TO_DO;
+                return STATUS_COLOR.TO_DO_LIGHT;
         }
     };
 
