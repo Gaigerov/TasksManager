@@ -9,6 +9,8 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     onEndIconClick?: () => void;
     fullWidth?: boolean;
     className?: string;
+    inputClassName?: string;
+    error?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({
@@ -19,6 +21,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
     onEndIconClick,
     fullWidth = false,
     className = '',
+    inputClassName = '',
+    error = false,
     ...props
 }, ref) => {
     return (
@@ -26,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
             {startIcon && <div className={styles.startIcon}>{startIcon}</div>}
             <input
                 ref={ref}
-                className={`${styles.input} ${styles[variant]} ${styles[inputSize]}`}
+                className={`${styles.input} ${styles[variant]} ${styles[inputSize]} ${inputClassName} ${error ? styles.inputError : ''}`}
                 {...props}
             />
             {endIcon && (

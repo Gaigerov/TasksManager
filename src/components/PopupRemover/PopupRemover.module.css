@@ -1,0 +1,25 @@
+.popper {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--light);
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  z-index: 100;
+  min-width: 200px;
+}
+
+.modalRemoveParagraph {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}

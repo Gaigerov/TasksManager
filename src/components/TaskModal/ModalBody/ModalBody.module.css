@@ -37,19 +37,7 @@
     height: 36px;
 }
 
-.inputContainer {
-    position: relative;
-}
-
-.inputContainer .input {
-    padding-right: 30px;
-}
-
 .clearButton {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
     background: none;
     border: none;
     cursor: pointer;
@@ -67,38 +55,23 @@
 }
 
 .inputError {
-    border-color: #e53e3e;
-    background-color: var(--var(--white))5f5;
-}
-
-.errorContainer {
-    background-color: var(--var(--white))5f5;
-    border: 1px solid #fc8181;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 15px;
-}
-
-.error {
-    color: #e53e3e;
-    font-size: 14px;
-    margin: 5px 0;
+    border-color: var(--danger);
+    background-color: rgba(229, 62, 62, 0.05);
 }
 
 .errorText {
-    color: #e53e3e;
+    color: var(--danger);
     font-size: 12px;
-    margin-top: 4px;
 }
 
 .requiredStar {
-    color: #e53e3e;
+    color: var(--danger)
 }
 
 .timeInput {
     appearance: none;
     -webkit-appearance: none;
     height: 36px;
-    padding: 8px 12px;
+    padding: 8px 16px;
     color: var(--secondary);
 }

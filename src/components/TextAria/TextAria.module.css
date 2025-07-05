@@ -5,6 +5,7 @@
 
 .textareaContainer {
     position: relative;
+    max-height: max-content;
 }
 
 .textarea {
@@ -24,13 +25,19 @@
 
 .textarea:focus {
     outline: none;
-    border-color: #4a90e2;
+    border-color: var(--primary-light);
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .error {
-    border-color: #e53e3e;
-    background-color: rgba(229, 62, 62, 0.05);
+    border-color: var(--danger)!important;
+    background-color: rgba(229, 62, 62, 0.05) !important;
+}
+
+.error:focus {
+    outline: none;
+    border-color: var(--danger);
+    box-shadow: 0 0 0 2px rgba(229, 62, 62, 0.2);
 }
 
 .clearButton {

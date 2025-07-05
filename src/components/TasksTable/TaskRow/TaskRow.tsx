@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect, useCallback} from 'react';
 import styles from './TaskRow.module.css';
 import deleteIcon from '../../../images/delete.svg';
 import editIcon from '../../../images/edit.svg';
@@ -8,6 +8,7 @@ import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
 import Cookies from 'js-cookie';
 import {TaskStatus} from '../../../types/types';
 import {observer} from 'mobx-react-lite';
+import PopupRemover from '../../PopupRemover/PopupRemover';
 
 interface TaskRowProps {
     task: {
@@ -30,6 +31,9 @@ const TaskRow: React.FC<TaskRowProps> = ({
     const popupRef = useRef<HTMLDivElement>(null);
     const rowClassName = `${styles.row} ${isStatusOpen ? styles.statusPopupOpen : ''}`;
     const isPastDue = taskStore.isTaskPastDue(task);
+    const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+    const deleteContainerRef = useRef<HTMLDivElement>(null);
+
     const openEditModal = (e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         taskStore.openModal(VALID_MODE.EDIT, task);
@@ -40,11 +44,21 @@ const TaskRow: React.FC<TaskRowProps> = ({
         taskStore.openModal(VALID_MODE.VIEW, task);
     };
 
+    const handleDelete = useCallback(() => {
+        taskStore.deleteTask(task.id, user);
+        setIsDeletePopupOpen(false);
+    }, [task.id, user, taskStore]);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (popupRef.current &&
                 !popupRef.current.contains(event.target as Node)) {
                 setIsStatusOpen(false);
+            }
+            if (isDeletePopupOpen &&
+                deleteContainerRef.current &&
+                !deleteContainerRef.current.contains(event.target as Node)) {
+                setIsDeletePopupOpen(false);
             }
         };
 
@@ -52,7 +66,7 @@ const TaskRow: React.FC<TaskRowProps> = ({
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [isStatusOpen, isDeletePopupOpen]);
 
     return (
         <div className={rowClassName} onClick={openViewModal}>
@@ -101,24 +115,24 @@ const TaskRow: React.FC<TaskRowProps> = ({
                     )}
                 </div>
             </div>
-            
+
             <div className={styles.column} style={{width: '200px'}} title={task.title}>
                 <div className={styles.textContainer}>
                     {task.title}
                 </div>
             </div>
-            
+
             <div className={styles.column} style={{flex: 1}} title={task.description}>
                 <div className={styles.textContainer}>
                     {task.description}
                 </div>
             </div>
-            
+
             <div className={`${styles.timedate} ${isPastDue ? styles.pastDue : ''}`} style={{width: '120px'}}>
                 <div>{task.time}</div>
                 <div>{task.date}</div>
             </div>
-            
+
             <div className={styles.column} style={{width: '140px'}}>
                 <div className={styles.actions}>
                     <div
@@ -140,13 +154,24 @@ const TaskRow: React.FC<TaskRowProps> = ({
                         <img src={cloneIcon} alt="Clone" className={styles.icon} />
                     </div>
                     <div
-                        className={styles.iconWrapper}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            taskStore.deleteTask(task.id, user);
-                        }}
+                        ref={deleteContainerRef}
+                        className={styles.deleteContainer}
                     >
-                        <img src={deleteIcon} alt="Delete" className={styles.icon} />
+                        <div
+                            className={styles.iconWrapper}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setIsDeletePopupOpen(!isDeletePopupOpen);
+                            }}
+                        >
+                            <img src={deleteIcon} alt="Delete" className={styles.icon} />
+                        </div>
+                        {isDeletePopupOpen && (
+                            <PopupRemover
+                                onRemove={handleDelete}
+                                onCancel={() => setIsDeletePopupOpen(false)}
+                            />
+                        )}
                     </div>
                 </div>
             </div>

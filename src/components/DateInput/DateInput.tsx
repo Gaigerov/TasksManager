@@ -5,10 +5,10 @@ import {observer} from 'mobx-react-lite';
 interface DateInputProps {
     value: string;
     onChange: (value: string) => void;
-    hasError?: boolean;
+    error?: boolean;
 }
 
-const DateInput: React.FC<DateInputProps> = ({value, onChange, hasError = false}) => {
+const DateInput: React.FC<DateInputProps> = ({value, onChange, error = false}) => {
     const [displayValue, setDisplayValue] = useState(value);
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const DateInput: React.FC<DateInputProps> = ({value, onChange, hasError = false}
             value={displayValue}
             onChange={handleChange}
             onBlur={handleBlur}
-            className={`${styles.input} ${hasError ? styles.inputError : ''}`}
+            className={`${styles.input} ${error ? styles.inputError : ''}`}
             placeholder="ДД.ММ.ГГГГ"
         />
     );

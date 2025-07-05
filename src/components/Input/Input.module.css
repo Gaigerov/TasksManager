@@ -91,3 +91,13 @@
 .inputContainer:has(.endIcon) .input {
     padding-right: 32px;
 }
+
+.inputError {
+    border-color: var(--danger) !important;
+    background-color: rgba(229, 62, 62, 0.05) !important;
+}
+
+.inputError:focus {
+    border-color: var(--danger)  !important;
+    box-shadow: 0 0 0 1px rgba(229, 62, 62, 0.3) !important;
+}

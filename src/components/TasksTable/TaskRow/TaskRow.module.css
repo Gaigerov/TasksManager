@@ -178,3 +178,14 @@
 .iconWrapper:nth-child(3):hover .icon {
     filter: invert(31%) sepia(24%) saturate(5892%) hue-rotate(333deg) brightness(83%) contrast(94%);
 }
+
+.deleteContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  position: relative;
+}

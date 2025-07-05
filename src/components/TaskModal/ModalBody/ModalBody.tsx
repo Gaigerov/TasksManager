@@ -5,6 +5,7 @@ import DatePicker from '../../DatePicker/DatePicker';
 import {TaskValidationErrors} from '../../../utils/taskValidation';
 import {observer} from 'mobx-react-lite';
 import TextArea from '../../TextAria/TextAria';
+import Input from '../../Input/Input';
 
 interface ModalBodyProps {
     task: TaskItem;
@@ -62,17 +63,15 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                     Title
                     {titleError && <span className={styles.requiredStar}> *</span>}
                 </label>
-                <div className={styles.inputContainer}>
-                    <input
-                        id="title"
-                        type="text"
-                        className={`${styles.input} ${titleError ? styles.inputError : ''}`}
-                        value={task.title}
-                        onChange={handleInputChange('title')}
-                        placeholder="Введите заголовок задачи"
-                        required
-                    />
-                    {task.title && (
+                <Input
+                    id="title"
+                    type="text"
+                    value={task.title}
+                    onChange={handleInputChange('title')}
+                    placeholder="Введите заголовок задачи"
+                    required
+                    fullWidth
+                    endIcon={task.title ? (
                         <button
                             type="button"
                             className={styles.clearButton}
@@ -80,8 +79,10 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                         >
                             &times;
                         </button>
-                    )}
-                </div>
+                    ) : undefined}
+                    inputClassName={styles.input}
+                    error={!!titleError}
+                />
                 {titleError && <div className={styles.errorText}>{titleError}</div>}
             </div>
 
@@ -108,12 +109,14 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                         Time
                         {timeError && <span className={styles.requiredStar}> *</span>}
                     </label>
-                    <input
+                    <Input
                         id="time"
                         type="time"
-                        className={`${styles.input} ${styles.timeInput} ${timeError ? styles.inputError : ''}`}
                         value={task.time}
                         onChange={handleInputChange('time')}
+                        fullWidth
+                        inputClassName={`${styles.timeInput} ${styles.input}`}
+                        error={!!timeError}
                     />
                     {timeError && <div className={styles.errorText}>{timeError}</div>}
                 </div>
