@@ -22,10 +22,13 @@
 .frameOfHeaderTask {
     display: flex;
     margin-bottom: 8px;
+    min-width: 0;
 }
 
 .textOfTask {
     flex-grow: 1;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .taskName {
@@ -33,6 +36,12 @@
     font-size: 16px;
     font-weight: 600;
     color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    width: 100%;
+    display: block;
 }
 
 .taskDescription {

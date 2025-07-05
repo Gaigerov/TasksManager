@@ -4,6 +4,7 @@ import {TaskItem} from '../../../types/types';
 import DatePicker from '../../DatePicker/DatePicker';
 import {TaskValidationErrors} from '../../../utils/taskValidation';
 import {observer} from 'mobx-react-lite';
+import TextArea from '../../TextAria/TextAria';
 
 interface ModalBodyProps {
     task: TaskItem;
@@ -89,25 +90,15 @@ const ModalBody: React.FC<ModalBodyProps> = ({
                     Description
                     {descriptionError && <span className={styles.requiredStar}> *</span>}
                 </label>
-                <div className={styles.inputContainer}>
-                    <input
-                        id="description"
-                        type="text"
-                        className={`${styles.input} ${descriptionError ? styles.inputError : ''}`}
-                        value={task.description}
-                        onChange={handleInputChange('description')}
-                        placeholder="Введите описание задачи"
-                    />
-                    {task.description && (
-                        <button
-                            type="button"
-                            className={styles.clearButton}
-                            onClick={handleClearDescription}
-                        >
-                            &times;
-                        </button>
-                    )}
-                </div>
+                <TextArea
+                    id="description"
+                    value={task.description}
+                    onChange={(value) => onChange('description', value)}
+                    placeholder="Введите описание задачи"
+                    error={!!descriptionError}
+                    onClear={handleClearDescription}
+                    maxLength={200}
+                />
                 {descriptionError && <div className={styles.errorText}>{descriptionError}</div>}
             </div>
 
