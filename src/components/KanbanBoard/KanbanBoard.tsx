@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { observer } from 'mobx-react-lite';
+import React, {useMemo} from 'react';
+import {DragDropContext, Droppable, Draggable, DropResult} from '@hello-pangea/dnd';
+import {observer} from 'mobx-react-lite';
 import Task from '../Task/Task';
-import { useTaskStore } from '../../stores/storeContext';
+import {useTaskStore} from '../../stores/storeContext';
 import Cookies from 'js-cookie';
 import styles from './KanbanBoard.module.css';
-import { TASK_STATUS, TaskStatus } from '../../config/constant';
-import { TaskItem } from '../../types/types';
+import {TASK_STATUS, TASK_STATUS_COLORS, TaskStatus} from '../../config/constant';
+import {TaskItem} from '../../types/types';
 
 const KanbanBoard: React.FC = observer(() => {
     const taskStore = useTaskStore();
@@ -14,9 +14,24 @@ const KanbanBoard: React.FC = observer(() => {
 
     const columns = useMemo(() => {
         return [
-            { id: TASK_STATUS.TO_DO, title: TASK_STATUS.TO_DO },
-            { id: TASK_STATUS.INPROGRESS, title: TASK_STATUS.INPROGRESS },
-            { id: TASK_STATUS.DONE, title: TASK_STATUS.DONE }
+            {
+                id: TASK_STATUS.TO_DO,
+                title: TASK_STATUS.TO_DO,
+                color: TASK_STATUS_COLORS[TASK_STATUS.TO_DO],
+                lightColor: 'var(--secondary-light)'
+            },
+            {
+                id: TASK_STATUS.INPROGRESS,
+                title: TASK_STATUS.INPROGRESS,
+                color: TASK_STATUS_COLORS[TASK_STATUS.INPROGRESS],
+                lightColor: 'var(--primary-light)'
+            },
+            {
+                id: TASK_STATUS.DONE,
+                title: TASK_STATUS.DONE,
+                color: TASK_STATUS_COLORS[TASK_STATUS.DONE],
+                lightColor: 'var(--success-light)'
+            }
         ];
     }, []);
 
@@ -28,8 +43,8 @@ const KanbanBoard: React.FC = observer(() => {
         };
 
         taskStore.tasks.forEach(task => {
-            if (task.status === TASK_STATUS.TO_DO || 
-                task.status === TASK_STATUS.INPROGRESS || 
+            if (task.status === TASK_STATUS.TO_DO ||
+                task.status === TASK_STATUS.INPROGRESS ||
                 task.status === TASK_STATUS.DONE) {
                 grouped[task.status].push(task);
             }
@@ -56,11 +71,11 @@ const KanbanBoard: React.FC = observer(() => {
     const handleDragEnd = (result: DropResult) => {
         if (!result.destination) return;
 
-        const { source, destination, draggableId } = result;
-        
+        const {source, destination, draggableId} = result;
+
         if (source.droppableId !== destination.droppableId) {
             taskStore.changeTaskStatus(
-                draggableId, 
+                draggableId,
                 destination.droppableId as TaskStatus,
                 user
             );
@@ -76,11 +91,23 @@ const KanbanBoard: React.FC = observer(() => {
                         <div
                             key={column.id}
                             className={styles.column}
+                            style={{
+                                backgroundColor: column.lightColor,
+                                borderTop: `4px solid ${column.color}`
+                            }}
                         >
-                            <h2 className={styles.columnHeader}>
+                            <h2
+                                className={styles.columnHeader}
+                                style={{
+                                    backgroundColor: column.color,
+                                    borderRadius: 16,
+                                    textAlign: 'center',
+                                    color: 'white'
+                                }}
+                            >
                                 {column.title} ({tasks.length})
                             </h2>
-                            <Droppable 
+                            <Droppable
                                 droppableId={column.id}
                                 key={column.id}
                             >
@@ -88,9 +115,8 @@ const KanbanBoard: React.FC = observer(() => {
                                     <div
                                         ref={provided.innerRef}
                                         {...provided.droppableProps}
-                                        className={`${styles.droppableArea} ${
-                                            snapshot.isDraggingOver ? styles.droppableAreaDraggingOver : ''
-                                        }`}
+                                        className={`${styles.droppableArea} ${snapshot.isDraggingOver ? styles.droppableAreaDraggingOver : ''
+                                            }`}
                                     >
                                         {tasks.map((task, index) => (
                                             <Draggable
@@ -103,9 +129,8 @@ const KanbanBoard: React.FC = observer(() => {
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
-                                                        className={`${styles.taskContainer} ${
-                                                            snapshot.isDragging ? styles.taskContainerDragging : ''
-                                                        }`}
+                                                        className={`${styles.taskContainer} ${snapshot.isDragging ? styles.taskContainerDragging : ''
+                                                            }`}
                                                     >
                                                         <Task
                                                             task={task}

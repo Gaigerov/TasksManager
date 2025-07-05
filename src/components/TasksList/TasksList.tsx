@@ -1,27 +1,26 @@
-import { observer } from 'mobx-react-lite';
-import { List, AutoSizer, ListRowRenderer } from 'react-virtualized';
+import {observer} from 'mobx-react-lite';
+import {List, AutoSizer, ListRowRenderer} from 'react-virtualized';
 import 'react-virtualized/styles.css';
 import Task from '../Task/Task';
-import { useTaskStore } from '../../stores/storeContext';
-import { useCallback } from 'react';
+import {useTaskStore} from '../../stores/storeContext';
+import {useCallback} from 'react';
 import styles from './TasksList.module.css';
-import { Loader } from '../Loader/Loader';
-import { motion, AnimatePresence } from 'framer-motion';
-
+import {Loader} from '../Loader/Loader';
+import {motion, AnimatePresence} from 'framer-motion';
 
 const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: { 
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08
+    hidden: {opacity: 0},
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.08
+        }
     }
-  }
 };
 
 const TasksList = observer(() => {
     const taskStore = useTaskStore();
-    const { filteredTasks } = taskStore;
+    const {filteredTasks} = taskStore;
 
     const isNewTask = useCallback(
         (taskId: string) => taskStore.newTaskIds.has(taskId),
@@ -33,21 +32,21 @@ const TasksList = observer(() => {
             const task = filteredTasks[index];
             const isLast = index === filteredTasks.length - 1;
             const isNew = isNewTask(task.id);
-            
+
             return (
                 <motion.div
                     key={key}
                     style={style}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ 
-                        opacity: 1, 
+                    initial={{opacity: 0, y: 20}}
+                    animate={{
+                        opacity: 1,
                         y: 0,
-                        transition: { 
+                        transition: {
                             duration: 0.5,
                             delay: isNew ? 0 : 0.1 * index
                         }
                     }}
-                    exit={{ opacity: 0 }}
+                    exit={{opacity: 0}}
                     custom={index}
                 >
                     <Task task={task} isLastTask={isLast} />
@@ -67,13 +66,13 @@ const TasksList = observer(() => {
                 <div className={styles.contentWrapper}>
                     <div className={styles.fadeTop}></div>
                     <AutoSizer>
-                        {({ width, height }) => (
+                        {({width, height}) => (
                             <AnimatePresence>
                                 <motion.div
                                     initial="hidden"
                                     animate="visible"
                                     variants={containerVariants}
-                                    style={{ width, height }}
+                                    style={{width, height}}
                                 >
                                     <List
                                         width={width}
@@ -96,11 +95,11 @@ const TasksList = observer(() => {
                     <div className={styles.fadeBottom}></div>
                 </div>
             ) : (
-                <motion.div 
+                <motion.div
                     className={styles.emptyList}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{duration: 0.3}}
                 >
                     <p>Нет задач</p>
                 </motion.div>
