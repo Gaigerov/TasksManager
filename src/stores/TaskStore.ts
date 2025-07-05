@@ -28,6 +28,7 @@ export default class TaskStore {
     isLoading = false;
     showNotification: NotificationContextType;
     storageId: string | null = null;
+    newTaskIds = new Set<string>();
 
     constructor(showNotification: NotificationContextType) {
         this.showNotification = showNotification;
@@ -250,15 +251,25 @@ export default class TaskStore {
             id: uuidv4(),
         };
         const originalTasks = [...this.tasks];
+        
         try {
             runInAction(() => {
                 this.tasks = [...this.tasks, newTask];
+                this.newTaskIds.add(newTask.id);
             });
+            
             await this.saveTasksToServer(user);
             this.showNotification(`Задача "${newTask.title}" создана`, 'success');
+            
+            setTimeout(() => {
+                runInAction(() => {
+                    this.newTaskIds.delete(newTask.id);
+                });
+            }, 3000);
         } catch (error) {
             runInAction(() => {
                 this.tasks = originalTasks;
+                this.newTaskIds.delete(newTask.id);
             });
             const message = error instanceof Error ? error.message : 'Неизвестная ошибка';
             this.showNotification(`Ошибка создания задачи: ${message}`, 'error');

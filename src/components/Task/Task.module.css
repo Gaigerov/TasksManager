@@ -5,7 +5,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 8px 16px;
     box-sizing: border-box;
-    margin: 8px 0;
+    margin: 8px 10px;
     position: relative;
     display: flex;
     flex-direction: column;
