@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 import {observer} from 'mobx-react-lite';
-import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
-import {TaskItem, TaskStatus} from '../../../types/types';
+import {TASK_STATUS_COLORS, TaskStatus, VALID_MODE} from '../../../config/constant';
+import {TaskItem} from '../../../types/types';
 import {useTaskStore} from '../../../stores/storeContext';
 import styles from './MobileTasks.module.css';
 import Cookies from 'js-cookie';

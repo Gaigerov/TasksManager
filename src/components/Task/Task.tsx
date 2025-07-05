@@ -1,12 +1,12 @@
 import {useState, useRef, useEffect} from 'react';
 import styles from './Task.module.css';
-import {TaskItem, TaskStatus} from '../../types/types';
+import {TaskItem} from '../../types/types';
 import deleteIcon from '../../images/delete.svg';
 import editIcon from '../../images/edit.svg';
 import cloneIcon from '../../images/clone.svg';
 import {observer} from 'mobx-react-lite';
 import {useTaskStore} from '../../stores/storeContext';
-import {TASK_STATUS_COLORS, VALID_MODE} from '../../config/constant';
+import {TASK_STATUS_COLORS, TaskStatus, VALID_MODE} from '../../config/constant';
 import Cookies from 'js-cookie';
 
 interface TaskProps {

@@ -4,9 +4,8 @@ import deleteIcon from '../../../images/delete.svg';
 import editIcon from '../../../images/edit.svg';
 import cloneIcon from '../../../images/clone.svg';
 import {useTaskStore} from '../../../stores/storeContext';
-import {TASK_STATUS_COLORS, VALID_MODE} from '../../../config/constant';
+import {TASK_STATUS_COLORS, TaskStatus, VALID_MODE} from '../../../config/constant';
 import Cookies from 'js-cookie';
-import {TaskStatus} from '../../../types/types';
 import {observer} from 'mobx-react-lite';
 import PopupRemover from '../../PopupRemover/PopupRemover';
 

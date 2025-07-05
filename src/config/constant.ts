@@ -21,10 +21,23 @@ export const TASK_STATUS = {
     TO_DO: 'To Do',
     INPROGRESS: 'In Progress',
     DONE: 'Done',
-};
+} as const;
 
-export const TASK_STATUSES = [
+export type TaskStatus = 
+    | typeof TASK_STATUS.TO_DO 
+    | typeof TASK_STATUS.INPROGRESS 
+    | typeof TASK_STATUS.DONE;
+
+export type TaskStatusWithEmpty = TaskStatus | typeof TASK_STATUS.EMPTY;
+
+export const ALL_TASK_STATUSES: TaskStatusWithEmpty[] = [
     TASK_STATUS.EMPTY,
+    TASK_STATUS.TO_DO,
+    TASK_STATUS.INPROGRESS,
+    TASK_STATUS.DONE,
+];
+
+export const WORK_TASK_STATUSES: TaskStatus[] = [
     TASK_STATUS.TO_DO,
     TASK_STATUS.INPROGRESS,
     TASK_STATUS.DONE,

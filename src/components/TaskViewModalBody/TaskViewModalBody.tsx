@@ -1,10 +1,9 @@
 import {observer} from 'mobx-react-lite';
 import {useEffect, useRef, useState} from 'react';
-import {TaskStatus} from '../../types/types';
 import styles from './TaskViewModalBody.module.css';
 import {useTaskStore} from '../../stores/storeContext';
 import Cookies from 'js-cookie';
-import {TASK_STATUS_COLORS} from '../../config/constant';
+import {TASK_STATUS_COLORS, TaskStatus} from '../../config/constant';
 
 interface TaskViewModalBodyProps {
     taskId: string;

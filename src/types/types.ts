@@ -1,3 +1,5 @@
+import {TaskStatus} from '../config/constant';
+
 export interface TaskItem {
     id: string;
     title: string;
@@ -6,5 +8,3 @@ export interface TaskItem {
     date: string; 
     status: TaskStatus;
 }
-
-export type TaskStatus = 'To Do' | 'In Progress' | 'Done';

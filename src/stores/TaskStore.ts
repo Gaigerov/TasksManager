@@ -1,6 +1,6 @@
 import {makeAutoObservable, runInAction} from "mobx";
-import {TaskItem, TaskStatus} from '../types/types';
-import {VALID_MODE} from '../config/constant';
+import {TaskItem} from '../types/types';
+import {TaskStatus, VALID_MODE} from '../config/constant';
 import Cookies from 'js-cookie';
 import {NotificationContextType} from '../components/Notification/NotificationContext';
 import {v4 as uuidv4} from 'uuid';
@@ -251,16 +251,16 @@ export default class TaskStore {
             id: uuidv4(),
         };
         const originalTasks = [...this.tasks];
-        
+
         try {
             runInAction(() => {
                 this.tasks = [...this.tasks, newTask];
                 this.newTaskIds.add(newTask.id);
             });
-            
+
             await this.saveTasksToServer(user);
             this.showNotification(`Задача "${newTask.title}" создана`, 'success');
-            
+
             setTimeout(() => {
                 runInAction(() => {
                     this.newTaskIds.delete(newTask.id);
@@ -325,14 +325,22 @@ export default class TaskStore {
         }
     }
 
-    changeTaskStatus(taskId: string, newStatus: TaskStatus, user: string) {
-        const task = this.tasks.find(t => t.id === taskId);
-        if (!task) return;
+    changeTaskStatus = (taskId: string, newStatus: TaskStatus, user: string) => {
+        const taskIndex = this.tasks.findIndex(t => t.id === taskId);
+        if (taskIndex === -1) return;
+
         runInAction(() => {
-            task.status = newStatus;
+            const newTasks = [...this.tasks];
+            newTasks[taskIndex] = {
+                ...newTasks[taskIndex],
+                status: newStatus
+            };
+            this.tasks = newTasks;
         });
+
         this.debouncedSave(user);
-    }
+    };
+
     private debounceTimer: any;
     private debouncedSave(user: string) {
         clearTimeout(this.debounceTimer);
@@ -344,6 +352,13 @@ export default class TaskStore {
     setCurrentTask(task: TaskItem | null) {
         this.currentTask = task;
     }
+
+    moveTask = (taskId: string, newStatus: TaskStatus) => {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (task) {
+            task.status = newStatus;
+        }
+    };
 
     openModal(
         mode: typeof VALID_MODE.VIEW |

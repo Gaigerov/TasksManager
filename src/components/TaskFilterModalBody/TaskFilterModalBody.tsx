@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import styles from './TaskFilterModalBody.module.css';
 import DatePicker from '../DatePicker/DatePicker';
-import {TASK_STATUS, TASK_STATUSES} from '../../config/constant';
+import {ALL_TASK_STATUSES, TASK_STATUS} from '../../config/constant';
 import {observer} from 'mobx-react-lite';
 
 
@@ -67,7 +67,7 @@ const TaskFilterModalBody: React.FC<TaskFilterModalBodyProps> = ({
                     )}
                     {isDropdownOpen && (
                         <div className={styles.statusesFilter}>
-                            {TASK_STATUSES.filter(status => status !== TASK_STATUS.EMPTY).map(status => (
+                            {ALL_TASK_STATUSES.filter(status => status !== TASK_STATUS.EMPTY).map(status => (
                                 <div
                                     key={status}
                                     className={styles.customStatus}

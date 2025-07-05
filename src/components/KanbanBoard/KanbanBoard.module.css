@@ -1,0 +1,93 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.column {
+    flex: 1;
+    min-width: 300px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    margin-bottom: 16px;
+}
+
+@media (min-width: 1200px) {
+    .column {
+        min-width: calc(33.333% - 32px);
+        max-width: calc(33.333% - 32px);
+    }
+}
+
+@media (max-width: 1199px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .column {
+        min-width: 100%;
+        max-width: 100%;
+        flex: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .column {
+        padding: 6px;
+    }
+    
+    .columnHeader {
+        padding: 8px;
+        font-size: 1rem;
+    }
+    
+    .droppableArea {
+        padding: 4px;
+    }
+}
+
+.columnHeader {
+    text-align: center;
+    padding: 12px;
+    margin: 0;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.droppableArea {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    overflow-y: auto;
+    max-height: 70vh;
+}
+
+.droppableAreaDraggingOver {
+    background-color: #e3f2fd;
+}
+
+.taskContainer {
+    margin-bottom: 12px;
+    cursor: grab;
+    user-select: none;
+}
+
+.taskContainer:active {
+    cursor: grabbing;
+}
+
+.taskContainerDragging {
+    opacity: 0.7;
+    transform: rotate(3deg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}

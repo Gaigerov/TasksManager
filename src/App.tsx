@@ -9,7 +9,7 @@ import {MainPage} from './components/MainPage/MainPage';
 import Cookies from 'js-cookie';
 import TasksManager from './components/TasksManager/TasksManager';
 import TasksCalendar from './components/TasksCalendar/TasksCalendar';
-// import TasksBoard from './components/TaskBoard/TaskBoard';
+import KanbanBoard from './components/KanbanBoard/KanbanBoard';
 
 const AppRouter = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -55,7 +55,7 @@ const AppRouter = () => {
             children: [
                 {index: true, element: <TasksManager />},
                 { path: "calendar", element: <TasksCalendar /> },
-                // { path: "board", element: <TasksBoard /> },
+                { path: "board", element: <KanbanBoard /> },
             ]
         },
     ]);
