@@ -1,12 +1,12 @@
 import React, {useMemo} from 'react';
 import {DragDropContext, Droppable, Draggable, DropResult} from '@hello-pangea/dnd';
 import {observer} from 'mobx-react-lite';
-import Task from '../Task/Task';
 import {useTaskStore} from '../../stores/storeContext';
 import Cookies from 'js-cookie';
 import styles from './KanbanBoard.module.css';
 import {TASK_STATUS, TASK_STATUS_COLORS, TaskStatus} from '../../config/constant';
 import {TaskItem} from '../../types/types';
+import KanbanTasks from './KanbanTasks/KanbanTasks';
 
 const KanbanBoard: React.FC = observer(() => {
     const taskStore = useTaskStore();
@@ -132,9 +132,8 @@ const KanbanBoard: React.FC = observer(() => {
                                                         className={`${styles.taskContainer} ${snapshot.isDragging ? styles.taskContainerDragging : ''
                                                             }`}
                                                     >
-                                                        <Task
+                                                        <KanbanTasks
                                                             task={task}
-                                                            isLastTask={index === tasks.length - 1}
                                                         />
                                                     </div>
                                                 )}
